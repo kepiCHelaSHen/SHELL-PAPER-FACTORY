@@ -7,7 +7,7 @@
 ## INPUTS — ALL PRE-FILLED
 
 PROJECT_NAME: Technological Lock-In as a Coordination Failure: A Formal Model of Path Dependency with Network Externalities
-SLUG: tech_lockin_2025
+SLUG: tech_lockin_2026
 AUTHOR: James P Rice Jr.
 TARGET_VENUE: Research Policy
 PIPELINE: PAPER
@@ -163,8 +163,8 @@ KNOWN_DRIFT_RISKS:
 ### Step 1 — Create project directory
 Create D:\EXPERIMENTS\TECH_LOCKIN\ with:
   spec/, state/, outputs/, results/raw/, results/validated/, results/final/,
-  devlog/, src/, papers/, papers/tech_lockin_2025/,
-  papers/tech_lockin_2025/figures/, prompts/
+  devlog/, src/, papers/, papers/tech_lockin_2026/,
+  papers/tech_lockin_2026/figures/, prompts/
 
 ### Step 2 — Write CLAUDE.md
 North star: formal model of technology lock-in as coordination failure.
@@ -191,16 +191,16 @@ Copy from D:\EXPERIMENTS\SHELL\prompts\ into D:\EXPERIMENTS\TECH_LOCKIN\prompts\
 Do NOT copy 00_init.md — SHELL-level only.
 
 Also write prompts/turn_prompts_log.md:
-  # TURN PROMPTS LOG — tech_lockin_2025
+  # TURN PROMPTS LOG — tech_lockin_2026
   # Every exact prompt logged here. Required for reproducibility.
   [No entries yet. First entry written at Turn 1 M1.]
 
 ### Step 5b — Write run_pipeline.ps1
 
 Write run_pipeline.ps1 in the project root (D:\EXPERIMENTS\TECH_LOCKIN\) with
-the slug set to "tech_lockin_2025". Use the template from
+the slug set to "tech_lockin_2026". Use the template from
 D:\EXPERIMENTS\SHELL\prompts\00_init.md Step 15, replacing [SLUG] with
-tech_lockin_2025 and [SLUG] paths with TECH_LOCKIN.
+tech_lockin_2026 and [SLUG] paths with TECH_LOCKIN.
 
 ### Step 6 — Write STATUS.md
 Phase: INIT -> PAPER PIPELINE
@@ -219,13 +219,13 @@ CHAIN_PROMPT.md must include:
   cd D:\EXPERIMENTS\TECH_LOCKIN
   git init
   git add -A
-  git commit -m "Turn 0 | Init | tech_lockin_2025"
+  git commit -m "Turn 0 | Init | tech_lockin_2026"
 
 ### Step 9 — Print confirmation and hand off:
-  PROJECT INITIALIZED: tech_lockin_2025
+  PROJECT INITIALIZED: tech_lockin_2026
   Spec locked. All files created. Git initialized.
   Beginning paper pipeline — M1 (Coordination Game Model + Definitions) first.
-  Output: papers/tech_lockin_2025/paper.md
+  Output: papers/tech_lockin_2026/paper.md
   Running. James P Rice Jr. reviews when done.
 
 ---
@@ -237,12 +237,12 @@ Load prompts/04_paper_orchestrator.md.
 Pass:
   PROBLEM: [full PROBLEM text above]
   DATA: No empirical data. All results derived analytically from the game model.
-  SLUG: tech_lockin_2025
+  SLUG: tech_lockin_2026
   DRIFT_RISKS: [paste KNOWN_DRIFT_RISKS into every Author and Reviewer prompt]
   FROZEN_SPEC: [pass full frozen_spec.md to Peer Reviewer on every pass]
 
 Run the full milestone pipeline: M1 -> M2 -> M3 -> M4.
 Do not skip milestones. Do not open M2 until M1 is Peer Reviewer ACCEPT.
 Halt only on HALT CONDITIONS.
-When done write papers/tech_lockin_2025/paper.md and halt.
+When done write papers/tech_lockin_2026/paper.md and halt.
 James P Rice Jr. reviews it.

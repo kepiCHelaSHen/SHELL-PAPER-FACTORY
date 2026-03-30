@@ -7,7 +7,7 @@
 ## INPUTS — ALL PRE-FILLED
 
 PROJECT_NAME: Induced Demand as a Nash Equilibrium: A Game-Theoretic Model of Why Wider Roads Create More Traffic
-SLUG: induced_demand_2025
+SLUG: induced_demand_2026
 AUTHOR: James P Rice Jr.
 TARGET_VENUE: Transportation Research Part B
 PIPELINE: PAPER
@@ -164,8 +164,8 @@ KNOWN_DRIFT_RISKS:
 ### Step 1 — Create project directory
 Create D:\EXPERIMENTS\INDUCED_DEMAND\ with:
   spec/, state/, outputs/, results/raw/, results/validated/, results/final/,
-  devlog/, src/, papers/, papers/induced_demand_2025/,
-  papers/induced_demand_2025/figures/, prompts/
+  devlog/, src/, papers/, papers/induced_demand_2026/,
+  papers/induced_demand_2026/figures/, prompts/
 
 ### Step 2 — Write CLAUDE.md
 North star: congestion game proving induced demand is Wardrop UE property.
@@ -192,16 +192,16 @@ Copy from D:\EXPERIMENTS\SHELL\prompts\ into D:\EXPERIMENTS\INDUCED_DEMAND\promp
 Do NOT copy 00_init.md — SHELL-level only.
 
 Also write prompts/turn_prompts_log.md:
-  # TURN PROMPTS LOG — induced_demand_2025
+  # TURN PROMPTS LOG — induced_demand_2026
   # Every exact prompt logged here. Required for reproducibility.
   [No entries yet. First entry written at Turn 1 M1.]
 
 ### Step 5b — Write run_pipeline.ps1
 
 Write run_pipeline.ps1 in the project root (D:\EXPERIMENTS\INDUCED_DEMAND\) with
-the slug set to "induced_demand_2025". Use the template from
+the slug set to "induced_demand_2026". Use the template from
 D:\EXPERIMENTS\SHELL\prompts\00_init.md Step 15, replacing [SLUG] with
-induced_demand_2025 and [SLUG] paths with INDUCED_DEMAND.
+induced_demand_2026 and [SLUG] paths with INDUCED_DEMAND.
 
 ### Step 6 — Write STATUS.md
 Phase: INIT -> PAPER PIPELINE
@@ -220,13 +220,13 @@ CHAIN_PROMPT.md must include:
   cd D:\EXPERIMENTS\INDUCED_DEMAND
   git init
   git add -A
-  git commit -m "Turn 0 | Init | induced_demand_2025"
+  git commit -m "Turn 0 | Init | induced_demand_2026"
 
 ### Step 9 — Print confirmation and hand off:
-  PROJECT INITIALIZED: induced_demand_2025
+  PROJECT INITIALIZED: induced_demand_2026
   Spec locked. All files created. Git initialized.
   Beginning paper pipeline — M1 (Congestion Game Model + Definitions) first.
-  Output: papers/induced_demand_2025/paper.md
+  Output: papers/induced_demand_2026/paper.md
   Running. James P Rice Jr. reviews when done.
 
 ---
@@ -239,12 +239,12 @@ Pass:
   PROBLEM: [full PROBLEM text above]
   DATA: No empirical data. All results derived analytically from the game model.
         Duranton & Turner 2011 referenced for empirical motivation only.
-  SLUG: induced_demand_2025
+  SLUG: induced_demand_2026
   DRIFT_RISKS: [paste KNOWN_DRIFT_RISKS into every Author and Reviewer prompt]
   FROZEN_SPEC: [pass full frozen_spec.md to Peer Reviewer on every pass]
 
 Run the full milestone pipeline: M1 -> M2 -> M3 -> M4.
 Do not skip milestones. Do not open M2 until M1 is Peer Reviewer ACCEPT.
 Halt only on HALT CONDITIONS.
-When done write papers/induced_demand_2025/paper.md and halt.
+When done write papers/induced_demand_2026/paper.md and halt.
 James P Rice Jr. reviews it.

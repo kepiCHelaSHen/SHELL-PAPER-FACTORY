@@ -7,7 +7,7 @@
 ## INPUTS — ALL PRE-FILLED
 
 PROJECT_NAME: Doomscrolling as Optimal Stopping Failure: A Formal Model of Infinite Scroll and Attention Traps
-SLUG: doomscrolling_2025
+SLUG: doomscrolling_2026
 AUTHOR: James P Rice Jr.
 TARGET_VENUE: Journal of Behavioral Decision Making
 PIPELINE: PAPER
@@ -179,8 +179,8 @@ KNOWN_DRIFT_RISKS:
 ### Step 1 — Create project directory
 Create D:\EXPERIMENTS\DOOMSCROLLING\ with:
   spec/, state/, outputs/, results/raw/, results/validated/, results/final/,
-  devlog/, src/, papers/, papers/doomscrolling_2025/,
-  papers/doomscrolling_2025/figures/, prompts/
+  devlog/, src/, papers/, papers/doomscrolling_2026/,
+  papers/doomscrolling_2026/figures/, prompts/
 
 ### Step 2 — Write CLAUDE.md
 North star: optimal stopping model proving algorithmic feeds create attention
@@ -209,16 +209,16 @@ Copy from D:\EXPERIMENTS\SHELL\prompts\ into D:\EXPERIMENTS\DOOMSCROLLING\prompt
 Do NOT copy 00_init.md — SHELL-level only.
 
 Also write prompts/turn_prompts_log.md:
-  # TURN PROMPTS LOG — doomscrolling_2025
+  # TURN PROMPTS LOG — doomscrolling_2026
   # Every exact prompt logged here. Required for reproducibility.
   [No entries yet. First entry written at Turn 1 M1.]
 
 ### Step 5b — Write run_pipeline.ps1
 
 Write run_pipeline.ps1 in the project root (D:\EXPERIMENTS\DOOMSCROLLING\) with
-the slug set to "doomscrolling_2025". Use the template from
+the slug set to "doomscrolling_2026". Use the template from
 D:\EXPERIMENTS\SHELL\prompts\00_init.md Step 15, replacing [SLUG] with
-doomscrolling_2025 and [SLUG] paths with DOOMSCROLLING.
+doomscrolling_2026 and [SLUG] paths with DOOMSCROLLING.
 
 ### Step 6 — Write STATUS.md
 Phase: INIT -> PAPER PIPELINE
@@ -237,13 +237,13 @@ CHAIN_PROMPT.md must include:
   cd D:\EXPERIMENTS\DOOMSCROLLING
   git init
   git add -A
-  git commit -m "Turn 0 | Init | doomscrolling_2025"
+  git commit -m "Turn 0 | Init | doomscrolling_2026"
 
 ### Step 9 — Print confirmation and hand off:
-  PROJECT INITIALIZED: doomscrolling_2025
+  PROJECT INITIALIZED: doomscrolling_2026
   Spec locked. All files created. Git initialized.
   Beginning paper pipeline — M1 (Optimal Stopping Model + Definitions) first.
-  Output: papers/doomscrolling_2025/paper.md
+  Output: papers/doomscrolling_2026/paper.md
   Running. James P Rice Jr. reviews when done.
 
 ---
@@ -256,12 +256,12 @@ Pass:
   PROBLEM: [full PROBLEM text above]
   DATA: No empirical data. All results derived analytically from the
         optimal stopping model.
-  SLUG: doomscrolling_2025
+  SLUG: doomscrolling_2026
   DRIFT_RISKS: [paste KNOWN_DRIFT_RISKS into every Author and Reviewer prompt]
   FROZEN_SPEC: [pass full frozen_spec.md to Peer Reviewer on every pass]
 
 Run the full milestone pipeline: M1 -> M2 -> M3 -> M4.
 Do not skip milestones. Do not open M2 until M1 is Peer Reviewer ACCEPT.
 Halt only on HALT CONDITIONS.
-When done write papers/doomscrolling_2025/paper.md and halt.
+When done write papers/doomscrolling_2026/paper.md and halt.
 James P Rice Jr. reviews it.

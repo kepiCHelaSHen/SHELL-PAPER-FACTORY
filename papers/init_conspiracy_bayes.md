@@ -7,7 +7,7 @@
 ## INPUTS — ALL PRE-FILLED
 
 PROJECT_NAME: Conspiracy Beliefs as Bayesian Updating on a Hidden Variable: A Formal Epistemological Model
-SLUG: conspiracy_bayes_2025
+SLUG: conspiracy_bayes_2026
 AUTHOR: James P Rice Jr.
 TARGET_VENUE: Episteme
 PIPELINE: PAPER
@@ -175,8 +175,8 @@ KNOWN_DRIFT_RISKS:
 ### Step 1 — Create project directory
 Create D:\EXPERIMENTS\CONSPIRACY_BAYES\ with:
   spec/, state/, outputs/, results/raw/, results/validated/, results/final/,
-  devlog/, src/, papers/, papers/conspiracy_bayes_2025/,
-  papers/conspiracy_bayes_2025/figures/, prompts/
+  devlog/, src/, papers/, papers/conspiracy_bayes_2026/,
+  papers/conspiracy_bayes_2026/figures/, prompts/
 
 ### Step 2 — Write CLAUDE.md
   # Conspiracy Beliefs as Bayesian Updating — NORTH STAR
@@ -224,16 +224,16 @@ Copy from D:\EXPERIMENTS\SHELL\prompts\ into D:\EXPERIMENTS\CONSPIRACY_BAYES\pro
 Do NOT copy 00_init.md — SHELL-level only.
 
 Also write prompts/turn_prompts_log.md:
-  # TURN PROMPTS LOG — conspiracy_bayes_2025
+  # TURN PROMPTS LOG — conspiracy_bayes_2026
   # Every exact prompt logged here. Required for reproducibility.
   [No entries yet. First entry written at Turn 1 M1.]
 
 ### Step 5b — Write run_pipeline.ps1
 
 Write run_pipeline.ps1 in the project root (D:\EXPERIMENTS\CONSPIRACY_BAYES\) with
-the slug set to "conspiracy_bayes_2025". Use the template from
+the slug set to "conspiracy_bayes_2026". Use the template from
 D:\EXPERIMENTS\SHELL\prompts\00_init.md Step 15, replacing [SLUG] with
-conspiracy_bayes_2025 and [SLUG] paths with CONSPIRACY_BAYES.
+conspiracy_bayes_2026 and [SLUG] paths with CONSPIRACY_BAYES.
 
 ### Step 6 — Write STATUS.md
 Phase: INIT -> PAPER PIPELINE
@@ -284,31 +284,31 @@ Write BEST_PRACTICES.md:
   - Lean-ready proofs: all hypotheses explicit, every derivation step justified.
 
 Write devlog/DEV_LOG.md:
-  # DEVELOPMENT LOG — conspiracy_bayes_2025
+  # DEVELOPMENT LOG — conspiracy_bayes_2026
   ## [today] — Session 1
   Initialized from SHELL v3. Spec locked. All files created. Git initialized.
   Pipeline: PAPER, Claude-only, milestone-by-milestone gating.
   Models: Claude (Author) -> Claude (Peer Reviewer) -> Claude (Editor).
 
 Write outputs/options.md:
-  # OPTIONS LOG — conspiracy_bayes_2025
+  # OPTIONS LOG — conspiracy_bayes_2026
   [No options yet.]
 
 Write outputs/state_vector_backup.md:
-  # STATE VECTOR BACKUP — conspiracy_bayes_2025
+  # STATE VECTOR BACKUP — conspiracy_bayes_2026
   [No backups yet.]
 
 ### Step 8 — Initialize git
   cd D:\EXPERIMENTS\CONSPIRACY_BAYES
   git init
   git add -A
-  git commit -m "Turn 0 | Init | conspiracy_bayes_2025"
+  git commit -m "Turn 0 | Init | conspiracy_bayes_2026"
 
 ### Step 9 — Print confirmation and hand off:
-  PROJECT INITIALIZED: conspiracy_bayes_2025
+  PROJECT INITIALIZED: conspiracy_bayes_2026
   Spec locked. All files created. Git initialized.
   Beginning paper pipeline — M1 (Bayesian Model + Evidence Classification) first.
-  Output: papers/conspiracy_bayes_2025/paper.md
+  Output: papers/conspiracy_bayes_2026/paper.md
   Running. James P Rice Jr. reviews when done.
 
 ---
@@ -320,12 +320,12 @@ Load prompts/04_paper_orchestrator.md.
 Pass:
   PROBLEM: [full PROBLEM text above]
   DATA: No empirical data. All results derived analytically from the Bayesian model.
-  SLUG: conspiracy_bayes_2025
+  SLUG: conspiracy_bayes_2026
   DRIFT_RISKS: [paste KNOWN_DRIFT_RISKS into every Author and Reviewer prompt]
   FROZEN_SPEC: [pass full frozen_spec.md to Peer Reviewer on every pass]
 
 Run the full milestone pipeline: M1 -> M2 -> M3 -> M4.
 Do not skip milestones. Do not open M2 until M1 is Peer Reviewer ACCEPT.
 Halt only on HALT CONDITIONS.
-When done write papers/conspiracy_bayes_2025/paper.md and halt.
+When done write papers/conspiracy_bayes_2026/paper.md and halt.
 James P Rice Jr. reviews it.

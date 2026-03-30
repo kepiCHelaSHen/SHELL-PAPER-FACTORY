@@ -7,7 +7,7 @@
 ## INPUTS — ALL PRE-FILLED
 
 PROJECT_NAME: Graph-Theoretic Fragility of Supply Chains: Percolation Thresholds and Cascading Failures
-SLUG: supply_chain_2025
+SLUG: supply_chain_2026
 AUTHOR: James P Rice Jr.
 TARGET_VENUE: Operations Research
 PIPELINE: PAPER
@@ -148,8 +148,8 @@ KNOWN_DRIFT_RISKS:
 ### Step 1 — Create project directory
 Create D:\EXPERIMENTS\SUPPLY_CHAIN\ with:
   spec/, state/, outputs/, results/raw/, results/validated/, results/final/,
-  devlog/, src/, papers/, papers/supply_chain_2025/,
-  papers/supply_chain_2025/figures/, prompts/
+  devlog/, src/, papers/, papers/supply_chain_2026/,
+  papers/supply_chain_2026/figures/, prompts/
 
 ### Step 2 — Write CLAUDE.md
   # Graph-Theoretic Fragility of Supply Chains — NORTH STAR
@@ -196,16 +196,16 @@ Copy from D:\EXPERIMENTS\SHELL\prompts\ into D:\EXPERIMENTS\SUPPLY_CHAIN\prompts
 Do NOT copy 00_init.md — SHELL-level only.
 
 Also write prompts/turn_prompts_log.md:
-  # TURN PROMPTS LOG — supply_chain_2025
+  # TURN PROMPTS LOG — supply_chain_2026
   # Every exact prompt logged here. Required for reproducibility.
   [No entries yet. First entry written at Turn 1 M1.]
 
 ### Step 5b — Write run_pipeline.ps1
 
 Write run_pipeline.ps1 in the project root (D:\EXPERIMENTS\SUPPLY_CHAIN\) with
-the slug set to "supply_chain_2025". Use the template from
+the slug set to "supply_chain_2026". Use the template from
 D:\EXPERIMENTS\SHELL\prompts\00_init.md Step 15, replacing [SLUG] with
-supply_chain_2025 and [SLUG] paths with SUPPLY_CHAIN.
+supply_chain_2026 and [SLUG] paths with SUPPLY_CHAIN.
 
 ### Step 6 — Write STATUS.md
 Phase: INIT -> PAPER PIPELINE
@@ -255,31 +255,31 @@ Write BEST_PRACTICES.md:
   - Lean-ready proofs: all hypotheses explicit, every derivation step justified.
 
 Write devlog/DEV_LOG.md:
-  # DEVELOPMENT LOG — supply_chain_2025
+  # DEVELOPMENT LOG — supply_chain_2026
   ## [today] — Session 1
   Initialized from SHELL v3. Spec locked. All files created. Git initialized.
   Pipeline: PAPER, Claude-only, milestone-by-milestone gating.
   Models: Claude (Author) -> Claude (Peer Reviewer) -> Claude (Editor).
 
 Write outputs/options.md:
-  # OPTIONS LOG — supply_chain_2025
+  # OPTIONS LOG — supply_chain_2026
   [No options yet.]
 
 Write outputs/state_vector_backup.md:
-  # STATE VECTOR BACKUP — supply_chain_2025
+  # STATE VECTOR BACKUP — supply_chain_2026
   [No backups yet.]
 
 ### Step 8 — Initialize git
   cd D:\EXPERIMENTS\SUPPLY_CHAIN
   git init
   git add -A
-  git commit -m "Turn 0 | Init | supply_chain_2025"
+  git commit -m "Turn 0 | Init | supply_chain_2026"
 
 ### Step 9 — Print confirmation and hand off:
-  PROJECT INITIALIZED: supply_chain_2025
+  PROJECT INITIALIZED: supply_chain_2026
   Spec locked. All files created. Git initialized.
   Beginning paper pipeline — M1 (Graph Model + Definitions) first.
-  Output: papers/supply_chain_2025/paper.md
+  Output: papers/supply_chain_2026/paper.md
   Running. James P Rice Jr. reviews when done.
 
 ---
@@ -292,12 +292,12 @@ Pass:
   PROBLEM: [full PROBLEM text above]
   DATA: No empirical data beyond cited topology parameters in frozen spec.
         All results derived analytically from directed graph percolation theory.
-  SLUG: supply_chain_2025
+  SLUG: supply_chain_2026
   DRIFT_RISKS: [paste KNOWN_DRIFT_RISKS into every Author and Reviewer prompt]
   FROZEN_SPEC: [pass full frozen_spec.md to Peer Reviewer on every pass]
 
 Run the full milestone pipeline: M1 -> M2 -> M3 -> M4.
 Do not skip milestones. Do not open M2 until M1 is Peer Reviewer ACCEPT.
 Halt only on HALT CONDITIONS.
-When done write papers/supply_chain_2025/paper.md and halt.
+When done write papers/supply_chain_2026/paper.md and halt.
 James P Rice Jr. reviews it.

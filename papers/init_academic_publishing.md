@@ -7,7 +7,7 @@
 ## INPUTS — ALL PRE-FILLED
 
 PROJECT_NAME: The Academic Publishing Game: A Game-Theoretic Model of Review, Revision, and Journal Selection
-SLUG: academic_publishing_2025
+SLUG: academic_publishing_2026
 AUTHOR: James P Rice Jr.
 TARGET_VENUE: Research Policy
 PIPELINE: PAPER
@@ -144,8 +144,8 @@ KNOWN_DRIFT_RISKS:
 ### Step 1 — Create project directory
 Create D:\EXPERIMENTS\ACADEMIC_PUBLISHING\ with:
   spec/, state/, outputs/, results/raw/, results/validated/, results/final/,
-  devlog/, src/, papers/, papers/academic_publishing_2025/,
-  papers/academic_publishing_2025/figures/, prompts/
+  devlog/, src/, papers/, papers/academic_publishing_2026/,
+  papers/academic_publishing_2026/figures/, prompts/
 
 ### Step 2 — Write CLAUDE.md
 North star: game-theoretic model of academic publishing. Three NE results +
@@ -173,16 +173,16 @@ Copy from D:\EXPERIMENTS\SHELL\prompts\ into D:\EXPERIMENTS\ACADEMIC_PUBLISHING\
 Do NOT copy 00_init.md — SHELL-level only.
 
 Also write prompts/turn_prompts_log.md:
-  # TURN PROMPTS LOG — academic_publishing_2025
+  # TURN PROMPTS LOG — academic_publishing_2026
   # Every exact prompt logged here. Required for reproducibility.
   [No entries yet. First entry written at Turn 1 M1.]
 
 ### Step 5b — Write run_pipeline.ps1
 
 Write run_pipeline.ps1 in the project root (D:\EXPERIMENTS\ACADEMIC_PUBLISHING\) with
-the slug set to "academic_publishing_2025". Use the template from
+the slug set to "academic_publishing_2026". Use the template from
 D:\EXPERIMENTS\SHELL\prompts\00_init.md Step 15, replacing [SLUG] with
-academic_publishing_2025 and [SLUG] paths with ACADEMIC_PUBLISHING.
+academic_publishing_2026 and [SLUG] paths with ACADEMIC_PUBLISHING.
 
 ### Step 6 — Write STATUS.md
 Phase: INIT -> PAPER PIPELINE
@@ -201,13 +201,13 @@ CHAIN_PROMPT.md must include:
   cd D:\EXPERIMENTS\ACADEMIC_PUBLISHING
   git init
   git add -A
-  git commit -m "Turn 0 | Init | academic_publishing_2025"
+  git commit -m "Turn 0 | Init | academic_publishing_2026"
 
 ### Step 9 — Print confirmation and hand off:
-  PROJECT INITIALIZED: academic_publishing_2025
+  PROJECT INITIALIZED: academic_publishing_2026
   Spec locked. All files created. Git initialized.
   Beginning paper pipeline — M1 (Game Structure + Definitions) first.
-  Output: papers/academic_publishing_2025/paper.md
+  Output: papers/academic_publishing_2026/paper.md
   Running. James P Rice Jr. reviews when done.
 
 ---
@@ -219,12 +219,12 @@ Load prompts/04_paper_orchestrator.md.
 Pass:
   PROBLEM: [full PROBLEM text above]
   DATA: No empirical data. All results derived analytically from the game model.
-  SLUG: academic_publishing_2025
+  SLUG: academic_publishing_2026
   DRIFT_RISKS: [paste KNOWN_DRIFT_RISKS into every Author and Reviewer prompt]
   FROZEN_SPEC: [pass full frozen_spec.md to Peer Reviewer on every pass]
 
 Run the full milestone pipeline: M1 -> M2 -> M3 -> M4.
 Do not skip milestones. Do not open M2 until M1 is Peer Reviewer ACCEPT.
 Halt only on HALT CONDITIONS.
-When done write papers/academic_publishing_2025/paper.md and halt.
+When done write papers/academic_publishing_2026/paper.md and halt.
 James P Rice Jr. reviews it.

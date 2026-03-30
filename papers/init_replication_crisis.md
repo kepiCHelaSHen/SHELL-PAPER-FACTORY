@@ -7,7 +7,7 @@
 ## INPUTS — ALL PRE-FILLED
 
 PROJECT_NAME: A Bayesian Model of the Replication Crisis: Prior Odds, Publication Bias, and the Positive Predictive Value of Science
-SLUG: replication_crisis_2025
+SLUG: replication_crisis_2026
 AUTHOR: James P Rice Jr.
 TARGET_VENUE: Proceedings of the National Academy of Sciences (Perspective)
 PIPELINE: PAPER
@@ -142,8 +142,8 @@ KNOWN_DRIFT_RISKS:
 ### Step 1 — Create project directory
 Create D:\EXPERIMENTS\REPLICATION_CRISIS\ with:
   spec/, state/, outputs/, results/raw/, results/validated/, results/final/,
-  devlog/, src/, papers/, papers/replication_crisis_2025/,
-  papers/replication_crisis_2025/figures/, prompts/
+  devlog/, src/, papers/, papers/replication_crisis_2026/,
+  papers/replication_crisis_2026/figures/, prompts/
 
 ### Step 2 — Write CLAUDE.md
   # Bayesian Model of the Replication Crisis — NORTH STAR
@@ -189,16 +189,16 @@ Copy from D:\EXPERIMENTS\SHELL\prompts\ into D:\EXPERIMENTS\REPLICATION_CRISIS\p
 Do NOT copy 00_init.md — SHELL-level only.
 
 Also write prompts/turn_prompts_log.md:
-  # TURN PROMPTS LOG — replication_crisis_2025
+  # TURN PROMPTS LOG — replication_crisis_2026
   # Every exact prompt logged here. Required for reproducibility.
   [No entries yet. First entry written at Turn 1 M1.]
 
 ### Step 5b — Write run_pipeline.ps1
 
 Write run_pipeline.ps1 in the project root (D:\EXPERIMENTS\REPLICATION_CRISIS\) with
-the slug set to "replication_crisis_2025". Use the template from
+the slug set to "replication_crisis_2026". Use the template from
 D:\EXPERIMENTS\SHELL\prompts\00_init.md Step 15, replacing [SLUG] with
-replication_crisis_2025 and [SLUG] paths with REPLICATION_CRISIS.
+replication_crisis_2026 and [SLUG] paths with REPLICATION_CRISIS.
 
 ### Step 6 — Write STATUS.md
 Phase: INIT -> PAPER PIPELINE
@@ -248,31 +248,31 @@ Write BEST_PRACTICES.md:
   - Lean-ready proofs: all hypotheses explicit, every derivation step justified.
 
 Write devlog/DEV_LOG.md:
-  # DEVELOPMENT LOG — replication_crisis_2025
+  # DEVELOPMENT LOG — replication_crisis_2026
   ## [today] — Session 1
   Initialized from SHELL v3. Spec locked. All files created. Git initialized.
   Pipeline: PAPER, Claude-only, milestone-by-milestone gating.
   Models: Claude (Author) -> Claude (Peer Reviewer) -> Claude (Editor).
 
 Write outputs/options.md:
-  # OPTIONS LOG — replication_crisis_2025
+  # OPTIONS LOG — replication_crisis_2026
   [No options yet.]
 
 Write outputs/state_vector_backup.md:
-  # STATE VECTOR BACKUP — replication_crisis_2025
+  # STATE VECTOR BACKUP — replication_crisis_2026
   [No backups yet.]
 
 ### Step 8 — Initialize git
   cd D:\EXPERIMENTS\REPLICATION_CRISIS
   git init
   git add -A
-  git commit -m "Turn 0 | Init | replication_crisis_2025"
+  git commit -m "Turn 0 | Init | replication_crisis_2026"
 
 ### Step 9 — Print confirmation and hand off:
-  PROJECT INITIALIZED: replication_crisis_2025
+  PROJECT INITIALIZED: replication_crisis_2026
   Spec locked. All files created. Git initialized.
   Beginning paper pipeline — M1 (Bayesian Framework + Definitions) first.
-  Output: papers/replication_crisis_2025/paper.md
+  Output: papers/replication_crisis_2026/paper.md
   Running. James P Rice Jr. reviews when done.
 
 ---
@@ -285,12 +285,12 @@ Pass:
   PROBLEM: [full PROBLEM text above]
   DATA: No empirical data beyond cited field-level estimates in frozen spec.
         All results derived analytically from the Bayesian model.
-  SLUG: replication_crisis_2025
+  SLUG: replication_crisis_2026
   DRIFT_RISKS: [paste KNOWN_DRIFT_RISKS into every Author and Reviewer prompt]
   FROZEN_SPEC: [pass full frozen_spec.md to Peer Reviewer on every pass]
 
 Run the full milestone pipeline: M1 -> M2 -> M3 -> M4.
 Do not skip milestones. Do not open M2 until M1 is Peer Reviewer ACCEPT.
 Halt only on HALT CONDITIONS.
-When done write papers/replication_crisis_2025/paper.md and halt.
+When done write papers/replication_crisis_2026/paper.md and halt.
 James P Rice Jr. reviews it.
