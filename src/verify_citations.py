@@ -434,9 +434,8 @@ def main() -> None:
     # --- Generate report ---
     report = generate_report(paper_path, citations, results)
 
-    # Ensure output directory exists
-    out_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "outputs")
-    out_dir = os.path.normpath(out_dir)
+    # Write to outputs/ in current working directory (the project root)
+    out_dir = os.path.join(os.getcwd(), "outputs")
     os.makedirs(out_dir, exist_ok=True)
 
     out_path = os.path.join(out_dir, "citation_verification.md")

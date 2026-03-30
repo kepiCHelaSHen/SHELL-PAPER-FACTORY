@@ -76,3 +76,41 @@
   3. state/dead_ends.md (what not to do)
   4. prompts/00_orchestrator.md (how to run the loop)
 - **Do not rely on chat history.** It will be gone. Everything important lives in files.
+
+---
+
+## Parallel Comparison (Statistical Validation for Papers)
+
+To validate that the pipeline produces consistent results — the paper-pipeline
+equivalent of multi-seed runs — run the same init file twice and compare:
+
+1. Run the init file:
+   ```powershell
+   cd D:\EXPERIMENTS\SHELL
+   claude --dangerously-skip-permissions papers/init_[topic].md
+   ```
+
+2. Archive the result:
+   ```powershell
+   cp D:\EXPERIMENTS\[SLUG]\papers\[slug]\paper.md D:\EXPERIMENTS\SHELL\archive\[slug]_run1\paper.md
+   ```
+
+3. Delete the project directory and run again:
+   ```powershell
+   rm -rf D:\EXPERIMENTS\[SLUG]
+   claude --dangerously-skip-permissions papers/init_[topic].md
+   ```
+
+4. Compare the two papers:
+   - Structural: do both have the same sections, same number of theorems, same definitions?
+   - Claims: are the central claims identical or do they diverge?
+   - Proofs: do both take the same proof path?
+   - Figures: do both produce the same figures with the same code?
+
+**What consistent results mean:** The pipeline is deterministic enough to trust.
+
+**What divergent results mean:** The varying sections reveal where the Author's
+(Grok-3) generation is stochastic. These sections need tighter prompting or
+additional frozen spec parameters to constrain.
+
+Run this on any new init file before producing a paper you intend to publish.

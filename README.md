@@ -1,7 +1,7 @@
 # SHELL — Autonomous Academic Paper Generation Framework
 
 **Author:** James P Rice Jr.
-**Version:** 4.0
+**Version:** 5.0
 **Last Updated:** 2026-03-30
 
 ---

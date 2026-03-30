@@ -15,6 +15,11 @@ the state vector. Exit. Do not run the next milestone. One milestone per call.
 ## ON STARTUP — READ THESE IN ORDER
 
 1. papers/[SLUG]/state_vector.md — identifies current milestone and status
+1b. Verify frozen spec integrity:
+    If state vector contains SPEC_FINGERPRINT:
+      Run: python -c "import hashlib; print(hashlib.sha256(open('spec/frozen_spec.md','rb').read()).hexdigest())"
+      Compare to stored fingerprint. Mismatch → HALT immediately.
+      Write: "SPEC INTEGRITY FAILURE — frozen_spec.md modified after lock."
 2. spec/frozen_spec.md — frozen parameters (pass to Peer Reviewer)
 3. results/raw/[SLUG]_M1.md — if exists, locked M1 content
 4. results/raw/[SLUG]_M2.md — if exists, locked M2 content
@@ -48,7 +53,7 @@ Multi-model triangulation:
   Peer Reviewer → call GPT-4o via OpenAI API (validation, temp 0.2)
   Editor → you (Claude) handle directly
 
-Load API keys from api.env:
+Load API keys from D:\EXPERIMENTS\SHELL\api.env (absolute path):
   XAI_API_KEY → xAI API for Author (Grok-3)
   OPENAI_API_KEY → OpenAI API for Peer Reviewer (GPT-4o)
 
@@ -92,4 +97,13 @@ M4: Abstract (last) + Related Work + Discussion + Conclusion + References
 ## INPUTS PASSED BY run_pipeline.ps1
 
 SLUG: [project slug]
-DRIFT_RISKS: [contents of KNOWN_DRIFT_RISKS from init file or frozen spec]
+
+## DRIFT_RISKS — EXTRACTED FROM FROZEN SPEC
+
+Do NOT rely on run_pipeline.ps1 to pass drift risks. Read them directly
+from spec/frozen_spec.md. The frozen spec contains a "KNOWN PRIOR DRIFT RISK"
+section — extract all entries and pass them to the Author on every call.
+
+If spec/frozen_spec.md has no drift risk section, log:
+  "WARNING: No drift risks found in frozen spec. Author will generate without
+   drift guidance."

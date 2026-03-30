@@ -210,11 +210,16 @@ Write state/state_vector.md:
 
 Write state/innovation_log.md:
   # INNOVATION LOG — [PROJECT_NAME]
-  # Append-only. Managed by Orchestrator.
+  # Append-only. Never edit previous entries. Add to bottom only.
+  # Managed by Orchestrator. One entry per milestone attempt.
+  # Format: YAML blocks inside markdown for machine + human readability.
 
   === EXPERIMENT: [PROJECT_NAME] ===
-  === INITIALIZED: [today] ===
+  === LOOP INITIALIZED: [today] ===
+  === FROZEN SPEC LOCKED: [spec/frozen_spec.md — confirmed] ===
   === MILESTONES: M1 | M2 | M3 | M4 ===
+
+  [Loop entries begin below on Turn 1]
 
 Write state/dead_ends.md:
   # DEAD ENDS — [PROJECT_NAME]
@@ -365,7 +370,7 @@ Run:
   git add -A
   git commit -m "Turn 0 | Init | [PROJECT_NAME]"
 
-### Step 16 — Print confirmation
+### Step 17 — Print confirmation
 
   ✅ PROJECT INITIALIZED: [PROJECT_NAME]
   📁 D:\EXPERIMENTS\[SLUG]\
@@ -373,7 +378,7 @@ Run:
   📝 All files created. Git initialized.
   ▶  Handing off to paper pipeline — M1 begins now.
 
-### Step 17 — Hand off
+### Step 18 — Hand off
 
 PAPER pipeline → load prompts/04_paper_orchestrator.md and begin M1.
 EXPERIMENT pipeline → load prompts/00_orchestrator.md and begin Turn 1.

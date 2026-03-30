@@ -42,10 +42,14 @@ orchestration. No model checks its own work.
 
 ## ENVIRONMENT
 
-Load from api.env:
+Load API keys from D:\EXPERIMENTS\SHELL\api.env (absolute path — single
+source of truth, never copied into project directories):
 - XAI_API_KEY → xAI API, model: grok-3 (Author role)
 - OPENAI_API_KEY → OpenAI API, model: gpt-4o (Peer Reviewer role)
 - Claude CLI handles your own calls natively (Editor + Orchestrator)
+
+Read the file, parse KEY="VALUE" lines. If the file is missing or a key
+is empty, HALT and report: "API key not found. Check D:\EXPERIMENTS\SHELL\api.env"
 
 ---
 
@@ -76,6 +80,11 @@ Before the loop begins:
      # Non-negotiable. Required for reproducibility.
 4. Write devlog/DEV_LOG.md with session 1 entry
 5. Initialize git: git init, git add -A, git commit -m "Turn 0 | Init | [SLUG]"
+6. Compute frozen spec fingerprint:
+     Run: python -c "import hashlib; print(hashlib.sha256(open('spec/frozen_spec.md','rb').read()).hexdigest())"
+     Store the output as SPEC_FINGERPRINT.
+     Append to papers/[SLUG]/state_vector.md:
+       SPEC_FINGERPRINT: [hash]
 
 ---
 
@@ -84,13 +93,72 @@ Before the loop begins:
 Run M1 → M2 → M3 → M4 in strict sequence.
 Each milestone follows the same pattern:
 
+  Before each milestone, verify spec integrity:
+    Run: python -c "import hashlib; print(hashlib.sha256(open('spec/frozen_spec.md','rb').read()).hexdigest())"
+    Compare result to SPEC_FINGERPRINT in papers/[SLUG]/state_vector.md.
+    If mismatch: HALT immediately.
+      Write: "SPEC INTEGRITY FAILURE — frozen_spec.md was modified after lock.
+              Expected: [stored hash]. Got: [current hash]."
+      This is a fatal error. The experiment is invalid.
+
   [Author call] → [Peer Reviewer call] → ACCEPT or loop back to Author
   Max 5 Author/Reviewer loops per milestone. Halt on loop 6.
+
+  After every xAI or OpenAI API call, record for cost tracking:
+    - Role + model
+    - Approximate input token count (estimate from prompt length)
+    - Output token count (from API response if available, else estimate)
+  Accumulate totals across the full run for the run manifest cost table.
+
+After each Author submission, append to state/innovation_log.md:
+
+  ```yaml
+  turn: [N]
+  timestamp: [ISO 8601]
+  milestone: [current]
+  role: AUTHOR
+  model: grok-3
+  action: SUBMIT
+  details:
+    notes: "[one-line summary of what was written]"
+  ```
+
+After each Peer Reviewer verdict, append to state/innovation_log.md:
+
+  ```yaml
+  turn: [N]
+  timestamp: [ISO 8601]
+  milestone: [current]
+  role: PEER_REVIEWER
+  model: gpt-4o
+  action: [ACCEPT/REJECT]
+  details:
+    checklist_items_failed: ["M2.1(a)", "U3"]
+    parameters_drifted:
+      - parameter: "[name]"
+        author_value: "[proposed]"
+        spec_value: "[correct]"
+        drift_type: "[PARAMETER_DRIFT/OVERCLAIM/etc.]"
+    notes: "[one-line summary]"
+  ```
+
+After each Editor verdict (M4 only), append to state/innovation_log.md:
+
+  ```yaml
+  turn: [N]
+  timestamp: [ISO 8601]
+  milestone: M4
+  role: EDITOR
+  model: claude
+  action: [ACCEPT/REJECT]
+  details:
+    checklist_items_failed: ["E6", "E14"]
+    notes: "[one-line summary]"
+  ```
 
 After each milestone ACCEPT:
   - Write output to results/raw/[SLUG]_M[N].md
   - Update papers/[SLUG]/state_vector.md
-  - Append to state/innovation_log.md
   - git add -A && git commit -m "Turn [N] | M[milestone] | LOCKED"
 
 ---
@@ -313,7 +381,20 @@ Peer Reviewer REJECT → pass numbered list back to Author (Grok-3). Loop. Max 5
   (GPT-4o) validation.
 
 Editor ACCEPT → write final paper → run figure generation.
-Editor REJECT → apply fixes, re-run Editor. Max 3 loops.
+Editor REJECT → send rejection list back to Author (Grok-3) for revision:
+
+  API: xAI | model: grok-3 | temperature: 0.7 | max_tokens: 12000
+  System: [full contents of prompts/05_author.md]
+  User:
+    MILESTONE: M4 — Editorial Revision
+    YOUR TASK: Fix every issue listed below. Do not introduce new problems.
+    Return the full revised paper.
+    EDITOR REJECTION LIST: [numbered list from Editor]
+    CURRENT DRAFT: [full contents of M4_draft.md]
+
+  Write revised output to papers/[SLUG]/M4_draft.md. Re-run Editor.
+  Max 3 Editor loops. If Editor still rejects after 3: log issues in
+  innovation log, write paper anyway with EDITORIAL_WARNING flag.
 
 ---
 
@@ -426,8 +507,13 @@ If the script fails (Python not found, network error, etc.):
 
 ## DRIFT REPORT
 
-After figure generation completes and before final output, parse the full
+After citation verification completes and before final output, parse the
 innovation log (state/innovation_log.md) and produce outputs/drift_report.md.
+
+The innovation log uses structured YAML entries. Extract all entries where
+action: REJECT. For each, read details.checklist_items_failed and
+details.parameters_drifted. Aggregate by parameter name across milestones.
+This is deterministic extraction, not interpretation.
 
 The drift report must contain:
 
@@ -435,7 +521,7 @@ The drift report must contain:
 
   Paper: [SLUG]
   Date: [timestamp]
-  SHELL Version: 4.0
+  SHELL Version: 5.0
   Models: Author=Grok-3 (xAI), Peer Reviewer=GPT-4o (OpenAI), Editor=Claude, Orchestrator=Claude
 
 ### 2. Rejection Summary Table
@@ -523,7 +609,7 @@ git add -A && git commit -m "FINAL | [SLUG] | AWAITING_REVIEW"
 Write: outputs/run_manifest.md with:
 
   # Run Manifest
-  SHELL_VERSION: 4.0
+  SHELL_VERSION: 5.0
   PAPER: [SLUG]
   DATE: [timestamp]
 
@@ -558,13 +644,25 @@ Write: outputs/run_manifest.md with:
   Verdict: [PROCESS_CLEAN / PROCESS_FLAG]
   See: outputs/orchestrator_audit.md
 
+  ## Estimated Cost
+  | Role | Model | Calls | Est. Input Tokens | Est. Output Tokens | Est. Cost |
+  |------|-------|-------|-------------------|-------------------|-----------|
+  | Author | Grok-3 | [N] | [N]K | [N]K | $[X.XX] |
+  | Peer Reviewer | GPT-4o | [N] | [N]K | [N]K | $[X.XX] |
+  | Orchestrator Audit | GPT-4o | 1 | [N]K | [N]K | $[X.XX] |
+  | Editor | Claude | [N] | CLI subscription | — | — |
+  | Total (excl. Claude) | | | | | $[X.XX] |
+
+  Pricing reference: Grok-3 ~$5/1M in, ~$15/1M out. GPT-4o ~$2.50/1M in, ~$10/1M out.
+
   ## Git
   Final commit: [hash]
+  Spec fingerprint: [SPEC_FINGERPRINT from state vector]
 
   ## Reproducibility
   All prompts logged: prompts/turn_prompts_log.md
-  Innovation log: state/innovation_log.md
-  Frozen spec: spec/frozen_spec.md (LOCKED — never modified)
+  Innovation log: state/innovation_log.md (structured YAML format)
+  Frozen spec: spec/frozen_spec.md (LOCKED — never modified — fingerprint verified)
 
 Print to terminal:
   ✅ PAPER COMPLETE — AWAITING REVIEW
