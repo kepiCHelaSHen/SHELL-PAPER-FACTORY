@@ -389,6 +389,94 @@ Append to state/innovation_log.md:
 
 ---
 
+## DRIFT REPORT
+
+After figure generation completes and before final output, parse the full
+innovation log (state/innovation_log.md) and produce outputs/drift_report.md.
+
+The drift report must contain:
+
+### 1. Header
+
+  Paper: [SLUG]
+  Date: [timestamp]
+  SHELL Version: 4.0
+  Models: Author=Grok-3 (xAI), Peer Reviewer=GPT-4o (OpenAI), Editor=Claude, Orchestrator=Claude
+
+### 2. Rejection Summary Table
+
+A summary table of every Peer Reviewer REJECT across all milestones:
+
+  | Milestone | Turn | Checklist Item | Author's Text/Value | Spec Value | Drift Type |
+  |-----------|------|----------------|---------------------|------------|------------|
+
+Where Drift Type is one of:
+  PARAMETER_DRIFT, OVERCLAIM, UNDERCLAIM, SYMBOLIC_ERROR, STRUCTURAL_ERROR, MISSING_SECTION
+
+### 3. Parameter-Level Drift Summary
+
+For each frozen spec parameter, was it ever proposed incorrectly by the Author?
+  - Parameter name
+  - Author's proposed value (incorrect)
+  - Correct value (from frozen spec)
+  - Milestone(s) where drift occurred
+
+### 4. Aggregate Statistics
+
+  - Total submissions across all milestones
+  - Total rejections across all milestones
+  - Rejection rate per milestone (rejections / submissions for that milestone)
+  - Most-drifted parameter (the frozen spec parameter that was incorrectly
+    proposed the most times)
+
+### 5. Interpretation
+
+One paragraph: "The Author (Grok-3) systematically drifted on [X] — this is
+consistent with [training prior behavior]."
+
+### If No Rejections
+
+If no rejections occurred (all milestones accepted first try), write:
+  "No drift detected. All milestones accepted on first submission."
+
+Write: outputs/drift_report.md
+
+---
+
+## ORCHESTRATOR ACCOUNTABILITY
+
+After writing the drift report, call GPT-4o for a meta-review of the
+orchestration process.
+
+  API: OpenAI | model: gpt-4o | temperature: 0.2 | max_tokens: 3000
+  System prompt:
+    "You are auditing an AI orchestration pipeline. You will receive the full
+     innovation log and the final paper. Your job is to check whether the
+     orchestrator (Claude) followed its own rules. You are not reviewing the
+     science — the Peer Reviewer already did that. You are reviewing the process."
+
+  User prompt:
+    INNOVATION LOG: [full contents of state/innovation_log.md]
+    FINAL PAPER: [full contents of papers/[SLUG]/paper.md]
+
+    Check:
+    1. Did the orchestrator skip any pipeline steps?
+    2. Did the orchestrator override any Peer Reviewer REJECT without justification?
+    3. Did the orchestrator weaken any Author claims during editing?
+    4. Were all milestones gated correctly (M1 locked before M2 started, etc.)?
+    5. Was the frozen spec passed to the Peer Reviewer on every review?
+    6. Were prompts logged in turn_prompts_log.md?
+
+    Verdict: PROCESS_CLEAN or PROCESS_FLAG
+    If PROCESS_FLAG: list each violation with evidence from the log.
+
+Write GPT-4o's response to outputs/orchestrator_audit.md.
+
+If PROCESS_FLAG: add a warning to the final terminal output.
+If PROCESS_CLEAN: no action needed beyond logging.
+
+---
+
 ## FINAL OUTPUT
 
 Write: papers/[SLUG]/paper.md (complete, clean, final)
@@ -396,6 +484,52 @@ Write: results/final/[SLUG]_final.md (copy)
 Update: papers/[SLUG]/state_vector.md → STATUS: AWAITING_REVIEW
 Update: state/innovation_log.md → full run summary
 git add -A && git commit -m "FINAL | [SLUG] | AWAITING_REVIEW"
+
+Write: outputs/run_manifest.md with:
+
+  # Run Manifest
+  SHELL_VERSION: 4.0
+  PAPER: [SLUG]
+  DATE: [timestamp]
+
+  ## Models
+  Author: Grok-3 (xAI) | temperature: 0.7
+  Peer Reviewer: GPT-4o (OpenAI) | temperature: 0.2
+  Editor: Claude
+  Orchestrator: Claude
+  Accountability Auditor: GPT-4o (OpenAI) | temperature: 0.2
+
+  ## Pipeline
+  | Milestone | Author Loops | Peer Reviewer Verdict | Editor Loops | Status |
+  |-----------|-------------|----------------------|-------------|--------|
+  | M1 | [N] | ACCEPT (loop [N]) | — | LOCKED |
+  | M2 | [N] | ACCEPT (loop [N]) | — | LOCKED |
+  | M3 | [N] | ACCEPT (loop [N]) | — | LOCKED |
+  | M4 | [N] | ACCEPT (loop [N]) | [N] | LOCKED |
+
+  ## Figures
+  Extracted: [N] | Rendered: [N] | Failed: [N]
+
+  ## Citations
+  [If verify_citations.py was run: Verified: X/Y | Unverified: Z]
+  [If not run: "Citation verification not run — execute manually: python src/verify_citations.py --paper papers/[SLUG]/paper.md"]
+
+  ## Drift
+  Total rejections: [N]
+  Most-drifted parameter: [name] ([N] rejections)
+  See: outputs/drift_report.md
+
+  ## Orchestrator Audit
+  Verdict: [PROCESS_CLEAN / PROCESS_FLAG]
+  See: outputs/orchestrator_audit.md
+
+  ## Git
+  Final commit: [hash]
+
+  ## Reproducibility
+  All prompts logged: prompts/turn_prompts_log.md
+  Innovation log: state/innovation_log.md
+  Frozen spec: spec/frozen_spec.md (LOCKED — never modified)
 
 Print to terminal:
   ✅ PAPER COMPLETE — AWAITING REVIEW
