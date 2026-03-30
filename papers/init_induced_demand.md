@@ -233,18 +233,18 @@ CHAIN_PROMPT.md must include:
 
 ## HAND OFF — EXECUTE PAPER PIPELINE
 
-Load prompts/04_paper_orchestrator.md.
+DO NOT STOP HERE. The setup is complete. Now you must execute the paper pipeline.
 
-Pass:
-  PROBLEM: [full PROBLEM text above]
-  DATA: No empirical data. All results derived analytically from the game model.
-        Duranton & Turner 2011 referenced for empirical motivation only.
+Read prompts/04_paper_orchestrator.md NOW and follow every instruction in it.
+You are the Orchestrator. Begin at the INITIALIZE section. This is not a file
+to summarize — it is your operating manual. Execute it.
+
+YOUR INPUTS:
+  PROBLEM: [the full PROBLEM text from the INPUTS section above]
+  DATA: No empirical data. All results derived analytically from the game model. Duranton & Turner 2011 referenced for empirical motivation only.
   SLUG: induced_demand_2026
-  DRIFT_RISKS: [paste KNOWN_DRIFT_RISKS into every Author and Reviewer prompt]
-  FROZEN_SPEC: [pass full frozen_spec.md to Peer Reviewer on every pass]
+  DRIFT_RISKS: [paste KNOWN_DRIFT_RISKS above into every Author and Reviewer prompt]
+  FROZEN_SPEC: [pass full frozen_spec.md to Peer Reviewer on every review pass]
 
-Run the full milestone pipeline: M1 -> M2 -> M3 -> M4.
-Do not skip milestones. Do not open M2 until M1 is Peer Reviewer ACCEPT.
-Halt only on HALT CONDITIONS.
-When done write papers/induced_demand_2026/paper.md and halt.
-James P Rice Jr. reviews it.
+BEGIN NOW. Run M1. Do not ask for confirmation. Do not summarize the orchestrator.
+Execute it. Write the paper.
