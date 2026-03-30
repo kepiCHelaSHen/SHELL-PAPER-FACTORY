@@ -261,6 +261,7 @@ Copy from SHELL/prompts/ into [SLUG]/prompts/:
   05_author.md
   06_peer_reviewer.md
   07_editor.md
+  run_milestone.md
 
 Do NOT copy 00_init.md or init_*.md into the project prompts.
 Those are SHELL-level files only.

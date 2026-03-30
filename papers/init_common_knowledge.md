@@ -163,14 +163,25 @@ Write state/state_vector.md, state/innovation_log.md, state/dead_ends.md
 with project name and today's timestamp. TURN: 0.
 
 ### Step 5 — Copy all prompts from SHELL
-Copy 04_paper_orchestrator.md, 05_author.md, 06_peer_reviewer.md,
-07_editor.md into D:\EXPERIMENTS\COMMON_KNOWLEDGE\prompts\
+Copy from D:\EXPERIMENTS\SHELL\prompts\ into D:\EXPERIMENTS\COMMON_KNOWLEDGE\prompts\:
+  04_paper_orchestrator.md
+  05_author.md
+  06_peer_reviewer.md
+  07_editor.md
+  run_milestone.md
 Do NOT copy 00_init.md — that is SHELL-level only.
 
 Also write prompts/turn_prompts_log.md:
   # TURN PROMPTS LOG — common_knowledge_2025
   # Every exact prompt logged here. Required for reproducibility.
   [No entries yet. First entry written at Turn 1 M1.]
+
+### Step 5b — Write run_pipeline.ps1
+
+Write run_pipeline.ps1 in the project root (D:\EXPERIMENTS\COMMON_KNOWLEDGE\) with
+the slug set to "common_knowledge_2025". Use the template from
+D:\EXPERIMENTS\SHELL\prompts\00_init.md Step 15, replacing [SLUG] with
+common_knowledge_2025 and [SLUG] paths with COMMON_KNOWLEDGE.
 
 ### Step 6 — Write STATUS.md
 Phase: INIT → PAPER PIPELINE

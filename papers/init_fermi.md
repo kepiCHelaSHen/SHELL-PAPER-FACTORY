@@ -190,9 +190,25 @@ state/innovation_log.md — header with project name and timestamp
 state/dead_ends.md — header with project name
 
 ### Step 5 — Copy all prompts from SHELL
-Copy 04_paper_orchestrator.md, 05_author.md, 06_peer_reviewer.md,
-07_editor.md into D:\EXPERIMENTS\FERMI\prompts\
+Copy from D:\EXPERIMENTS\SHELL\prompts\ into D:\EXPERIMENTS\FERMI\prompts\:
+  04_paper_orchestrator.md
+  05_author.md
+  06_peer_reviewer.md
+  07_editor.md
+  run_milestone.md
 Do NOT copy 00_init.md — SHELL-level only.
+
+Also write prompts/turn_prompts_log.md:
+  # TURN PROMPTS LOG — fermi_survival_2025
+  # Every exact prompt logged here. Required for reproducibility.
+  [No entries yet. First entry written at Turn 1 M1.]
+
+### Step 5b — Write run_pipeline.ps1
+
+Write run_pipeline.ps1 in the project root (D:\EXPERIMENTS\FERMI\) with
+the slug set to "fermi_survival_2025". Use the template from
+D:\EXPERIMENTS\SHELL\prompts\00_init.md Step 15, replacing [SLUG] with
+fermi_survival_2025 and [SLUG] paths with FERMI.
 
 ### Step 6 — Write STATUS.md
 Phase: INIT → PAPER PIPELINE
