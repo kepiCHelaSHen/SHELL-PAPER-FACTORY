@@ -1,7 +1,7 @@
-# PAPER ORCHESTRATOR v3
+# PAPER ORCHESTRATOR v4
 # Runs the full paper pipeline milestone by milestone.
 # Invoked by the CLI. You are the Orchestrator.
-# Updated: multi-model triangulation, formalism-first, adversarial stress-test,
+# Updated: Claude-only pipeline, formalism-first, adversarial stress-test,
 #          literature gap formula, Lean-ready proofs, milestone gating.
 
 ---
@@ -24,32 +24,33 @@ experiment. HALT immediately and tell the user:
 
 ---
 
-## MULTI-MODEL TRIANGULATION
+## ROLE SEPARATION
 
-This pipeline uses three different LLMs to prevent any single model's training
-prior from dominating the output. Different models have different priors —
-drift baked into one model gets caught by another.
+This pipeline uses Claude for all three roles: Author, Peer Reviewer, and Editor.
+Each role has a distinct persona, distinct prompt, and distinct checklist.
+The adversarial tension comes from the prompts, not from different models.
 
-  AUTHOR:        Grok-3 (xAI) | temperature 0.7 | generation role
-  PEER REVIEWER: GPT-4o (OpenAI) | temperature 0.2 | validation role
-  EDITOR:        Claude (you, the Orchestrator) | editorial quality
+  AUTHOR:        You (Claude) in Author mode — writes the paper
+  PEER REVIEWER: You (Claude) in Peer Reviewer mode — hostile validation
+  EDITOR:        You (Claude) in Editor mode — editorial quality
 
-The Author generates from its prior. The Peer Reviewer validates against the
-frozen spec using a DIFFERENT prior. You (Claude) handle editorial quality and
-orchestration. No model checks its own work.
+When switching roles, fully adopt the persona and checklist from the role's
+prompt file. The Author is confident and generates. The Peer Reviewer is hostile
+and looks for reasons to reject. The Editor has no patience for filler.
+Do not blend roles.
+
+NOTE: Multi-model triangulation (Grok-3 / GPT-4o / Claude) is used in the
+experiment pipeline (00_orchestrator.md) where specification drift detection
+requires different training priors. The paper pipeline uses Claude-only because
+writing quality and proof rigor matter more than prior diversity for prose.
 
 ---
 
 ## ENVIRONMENT
 
-Load API keys from D:\EXPERIMENTS\SHELL\api.env (absolute path — single
-source of truth, never copied into project directories):
-- XAI_API_KEY → xAI API, model: grok-3 (Author role)
-- OPENAI_API_KEY → OpenAI API, model: gpt-4o (Peer Reviewer role)
-- Claude CLI handles your own calls natively (Editor + Orchestrator)
-
-Read the file, parse KEY="VALUE" lines. If the file is missing or a key
-is empty, HALT and report: "API key not found. Check D:\EXPERIMENTS\SHELL\api.env"
+No external API keys needed. Claude CLI handles all roles natively.
+API keys in D:\EXPERIMENTS\SHELL\api.env are used only by the experiment
+pipeline (00_orchestrator.md) and the orchestrator accountability audit.
 
 ---
 
@@ -104,11 +105,8 @@ Each milestone follows the same pattern:
   [Author call] → [Peer Reviewer call] → ACCEPT or loop back to Author
   Max 5 Author/Reviewer loops per milestone. Halt on loop 6.
 
-  After every xAI or OpenAI API call, record for cost tracking:
-    - Role + model
-    - Approximate input token count (estimate from prompt length)
-    - Output token count (from API response if available, else estimate)
-  Accumulate totals across the full run for the run manifest cost table.
+  Track the number of Author/Reviewer/Editor loops per milestone for the
+  run manifest. The only external API cost is the GPT-4o accountability audit.
 
 After each Author submission, append to state/innovation_log.md:
 
@@ -117,7 +115,7 @@ After each Author submission, append to state/innovation_log.md:
   timestamp: [ISO 8601]
   milestone: [current]
   role: AUTHOR
-  model: grok-3
+  model: claude
   action: SUBMIT
   details:
     notes: "[one-line summary of what was written]"
@@ -130,7 +128,7 @@ After each Peer Reviewer verdict, append to state/innovation_log.md:
   timestamp: [ISO 8601]
   milestone: [current]
   role: PEER_REVIEWER
-  model: gpt-4o
+  model: claude
   action: [ACCEPT/REJECT]
   details:
     checklist_items_failed: ["M2.1(a)", "U3"]
@@ -183,33 +181,30 @@ Section B: INTRODUCTION
   - State the paper's contribution in one numbered list (3 items max)
   - Do NOT make claims that depend on results not yet proven
 
-**Author prompt — call Grok-3 via xAI API (log exactly in turn_prompts_log.md):**
+**Author — switch to Author mode (log exactly in turn_prompts_log.md):**
 
-  API: xAI | model: grok-3 | temperature: 0.7 | max_tokens: 8000
-  System: [full contents of prompts/05_author.md]
-  User:
+  Read prompts/05_author.md. Fully adopt the Author persona.
+  Write:
     MILESTONE: M1 — Foundations
     YOUR TASK: Write the Definitions Block and Introduction only.
     Do not write the proof. Do not write results.
     PROBLEM: [PROBLEM]
     DRIFT RISKS: [DRIFT_RISKS]
     FROZEN SPEC: [FROZEN_SPEC]
-    OUTPUT FILE: papers/[SLUG]/M1_draft.md
 
-  Store full response as author_output. Write to papers/[SLUG]/M1_draft.md.
+  Write output to papers/[SLUG]/M1_draft.md.
 
-**Peer Reviewer prompt — call GPT-4o via OpenAI API (log exactly):**
+**Peer Reviewer — switch to Peer Reviewer mode (log exactly):**
 
-  API: OpenAI | model: gpt-4o | temperature: 0.2 | max_tokens: 6000
-  System: [full contents of prompts/06_peer_reviewer.md]
-  User:
+  Read prompts/06_peer_reviewer.md. Fully adopt the Peer Reviewer persona.
+  Review:
     MILESTONE: M1 — Foundations
     DATA: [DATA]
     FROZEN SPEC: [FROZEN_SPEC]
     DRAFT: [full contents of M1_draft.md]
 
 Peer Reviewer ACCEPT → write results/raw/[SLUG]_M1.md, commit, open M2.
-Peer Reviewer REJECT → pass numbered list back to Author (Grok-3). Loop. Max 5.
+Peer Reviewer REJECT → pass numbered list back to Author. Loop. Max 5.
 
 ---
 
@@ -228,11 +223,10 @@ central claim. Proof structure must be Lean-ready:
 Author receives: locked M1 (Definitions + Introduction) for continuity.
 Author writes: proof section only. No application yet.
 
-**Author prompt — call Grok-3 via xAI API:**
+**Author — switch to Author mode:**
 
-  API: xAI | model: grok-3 | temperature: 0.7 | max_tokens: 8000
-  System: [full contents of prompts/05_author.md]
-  User:
+  Read prompts/05_author.md. Fully adopt the Author persona.
+  Write:
     MILESTONE: M2 — Core Proof
     YOUR TASK: Write the proof section only.
     Use only symbols defined in the locked M1 Definitions Block.
@@ -242,15 +236,13 @@ Author writes: proof section only. No application yet.
     PROBLEM: [PROBLEM]
     DRIFT RISKS: [DRIFT_RISKS]
     FROZEN SPEC: [FROZEN_SPEC]
-    OUTPUT FILE: papers/[SLUG]/M2_draft.md
 
-  Store full response as author_output. Write to papers/[SLUG]/M2_draft.md.
+  Write output to papers/[SLUG]/M2_draft.md.
 
-**Peer Reviewer prompt — call GPT-4o via OpenAI API:**
+**Peer Reviewer — switch to Peer Reviewer mode:**
 
-  API: OpenAI | model: gpt-4o | temperature: 0.2 | max_tokens: 6000
-  System: [full contents of prompts/06_peer_reviewer.md]
-  User:
+  Read prompts/06_peer_reviewer.md. Fully adopt the Peer Reviewer persona.
+  Review:
     MILESTONE: M2 — Core Proof
     DATA: [DATA]
     FROZEN SPEC: [FROZEN_SPEC]
@@ -258,7 +250,7 @@ Author writes: proof section only. No application yet.
     DRAFT: [full contents of M2_draft.md]
 
 Peer Reviewer ACCEPT → write results/raw/[SLUG]_M2.md, commit, open M3.
-Peer Reviewer REJECT → pass numbered list back to Author (Grok-3). Loop. Max 5.
+Peer Reviewer REJECT → pass numbered list back to Author. Loop. Max 5.
 
 ---
 
@@ -287,11 +279,10 @@ Section B: BOUNDARY CONDITIONS (adversarial stress-test — MANDATORY)
 
 Author receives: locked M1 + M2 for continuity.
 
-**Author prompt — call Grok-3 via xAI API:**
+**Author — switch to Author mode:**
 
-  API: xAI | model: grok-3 | temperature: 0.7 | max_tokens: 8000
-  System: [full contents of prompts/05_author.md]
-  User:
+  Read prompts/05_author.md. Fully adopt the Author persona.
+  Write:
     MILESTONE: M3 — Application + Boundary Conditions
     YOUR TASK: Write the Application section and the Boundary Conditions section.
     The application must invoke theorems from M2 by name — do not re-derive.
@@ -303,15 +294,13 @@ Author receives: locked M1 + M2 for continuity.
     PROBLEM: [PROBLEM]
     DRIFT RISKS: [DRIFT_RISKS]
     FROZEN SPEC: [FROZEN_SPEC]
-    OUTPUT FILE: papers/[SLUG]/M3_draft.md
 
-  Store full response as author_output. Write to papers/[SLUG]/M3_draft.md.
+  Write output to papers/[SLUG]/M3_draft.md.
 
-**Peer Reviewer prompt — call GPT-4o via OpenAI API:**
+**Peer Reviewer — switch to Peer Reviewer mode:**
 
-  API: OpenAI | model: gpt-4o | temperature: 0.2 | max_tokens: 6000
-  System: [full contents of prompts/06_peer_reviewer.md]
-  User:
+  Read prompts/06_peer_reviewer.md. Fully adopt the Peer Reviewer persona.
+  Review:
     MILESTONE: M3 — Application + Boundary Conditions
     DATA: [DATA]
     FROZEN SPEC: [FROZEN_SPEC]
@@ -320,7 +309,7 @@ Author receives: locked M1 + M2 for continuity.
     DRAFT: [M3_draft.md]
 
 Peer Reviewer ACCEPT → write results/raw/[SLUG]_M3.md, commit, open M4.
-Peer Reviewer REJECT → pass numbered list back to Author (Grok-3). Loop. Max 5.
+Peer Reviewer REJECT → pass numbered list back to Author. Loop. Max 5.
 
 ---
 
@@ -338,61 +327,57 @@ Assemble M1 + M2 + M3 into a complete paper, adding:
 The Abstract must be written after everything else is complete. It must stand
 alone: problem, method, result, implication in 4 sentences or fewer per topic.
 
-**Author prompt — call Grok-3 via xAI API:**
+**Author — switch to Author mode:**
 
-  API: xAI | model: grok-3 | temperature: 0.7 | max_tokens: 12000
-  System: [full contents of prompts/05_author.md]
-  User:
+  Read prompts/05_author.md. Fully adopt the Author persona.
+  Write:
     MILESTONE: M4 — Full Paper Assembly
     YOUR TASK: Assemble the complete paper from the locked milestones.
     Write the Abstract LAST. Write Related Work as comparative critique
     (use the literature gap formula for each major prior work).
     Do not introduce new claims. Do not re-derive results.
+    The Related Work section MUST add analytical depth beyond the Introduction's
+    literature gap formula. If a paragraph duplicates the Introduction, cut it
+    and write deeper analysis instead.
     LOCKED M1: [results/raw/[SLUG]_M1.md]
     LOCKED M2: [results/raw/[SLUG]_M2.md]
     LOCKED M3: [results/raw/[SLUG]_M3.md]
     PROBLEM: [PROBLEM]
     DRIFT RISKS: [DRIFT_RISKS]
     FROZEN SPEC: [FROZEN_SPEC]
-    OUTPUT FILE: papers/[SLUG]/M4_draft.md
 
-  Store full response as author_output. Write to papers/[SLUG]/M4_draft.md.
+  Write output to papers/[SLUG]/M4_draft.md.
 
-**Peer Reviewer prompt — call GPT-4o via OpenAI API:**
+**Peer Reviewer — switch to Peer Reviewer mode:**
 
-  API: OpenAI | model: gpt-4o | temperature: 0.2 | max_tokens: 6000
-  System: [full contents of prompts/06_peer_reviewer.md]
-  User:
+  Read prompts/06_peer_reviewer.md. Fully adopt the Peer Reviewer persona.
+  Review:
     MILESTONE: M4 — Full Paper (final review)
     DATA: [DATA]
     FROZEN SPEC: [FROZEN_SPEC]
     DRAFT: [M4_draft.md]
     [include all locked milestone files for cross-check]
 
-Peer Reviewer (GPT-4o) ACCEPT → pass to Editor (Claude).
-Peer Reviewer REJECT → pass numbered list back to Author (Grok-3). Loop. Max 5.
+Peer Reviewer ACCEPT → pass to Editor.
+Peer Reviewer REJECT → pass numbered list back to Author. Loop. Max 5.
 
-**Editor — you (Claude, the Orchestrator) handle this directly:**
+**Editor — switch to Editor mode:**
 
-  Switch to Editor mode. Read prompts/07_editor.md.
+  Read prompts/07_editor.md. Fully adopt the Editor persona.
   Apply the editorial checklist to the Peer Reviewer-accepted M4 draft.
-  You are the third model in the triangulation — your editorial judgment
-  is independent of the Author's (Grok-3) generation and the Peer Reviewer's
-  (GPT-4o) validation.
 
 Editor ACCEPT → write final paper → run figure generation.
-Editor REJECT → send rejection list back to Author (Grok-3) for revision:
+Editor REJECT → switch back to Author mode for revision:
 
-  API: xAI | model: grok-3 | temperature: 0.7 | max_tokens: 12000
-  System: [full contents of prompts/05_author.md]
-  User:
+  Read prompts/05_author.md. Fully adopt the Author persona.
+  Write:
     MILESTONE: M4 — Editorial Revision
     YOUR TASK: Fix every issue listed below. Do not introduce new problems.
     Return the full revised paper.
     EDITOR REJECTION LIST: [numbered list from Editor]
     CURRENT DRAFT: [full contents of M4_draft.md]
 
-  Write revised output to papers/[SLUG]/M4_draft.md. Re-run Editor.
+  Write revised output to papers/[SLUG]/M4_draft.md. Switch back to Editor.
   Max 3 Editor loops. If Editor still rejects after 3: log issues in
   innovation log, write paper anyway with EDITORIAL_WARNING flag.
 
@@ -522,7 +507,7 @@ The drift report must contain:
   Paper: [SLUG]
   Date: [timestamp]
   SHELL Version: 5.0
-  Models: Author=Grok-3 (xAI), Peer Reviewer=GPT-4o (OpenAI), Editor=Claude, Orchestrator=Claude
+  Models: Author=Claude, Peer Reviewer=Claude, Editor=Claude, Orchestrator=Claude, Audit=GPT-4o
 
 ### 2. Rejection Summary Table
 
@@ -567,7 +552,9 @@ Write: outputs/drift_report.md
 ## ORCHESTRATOR ACCOUNTABILITY
 
 After writing the drift report, call GPT-4o for a meta-review of the
-orchestration process.
+orchestration process. This is the ONE external API call in the paper pipeline —
+GPT-4o audits whether Claude (the orchestrator) followed its own rules.
+Load OPENAI_API_KEY from D:\EXPERIMENTS\SHELL\api.env.
 
   API: OpenAI | model: gpt-4o | temperature: 0.2 | max_tokens: 3000
   System prompt:
@@ -614,11 +601,11 @@ Write: outputs/run_manifest.md with:
   DATE: [timestamp]
 
   ## Models
-  Author: Grok-3 (xAI) | temperature: 0.7
-  Peer Reviewer: GPT-4o (OpenAI) | temperature: 0.2
-  Editor: Claude
-  Orchestrator: Claude
-  Accountability Auditor: GPT-4o (OpenAI) | temperature: 0.2
+  Author: Claude (via CLI)
+  Peer Reviewer: Claude (via CLI)
+  Editor: Claude (via CLI)
+  Orchestrator: Claude (via CLI)
+  Accountability Auditor: GPT-4o (OpenAI) | temperature: 0.2 — sole external call
 
   ## Pipeline
   | Milestone | Author Loops | Peer Reviewer Verdict | Editor Loops | Status |
@@ -645,15 +632,16 @@ Write: outputs/run_manifest.md with:
   See: outputs/orchestrator_audit.md
 
   ## Estimated Cost
-  | Role | Model | Calls | Est. Input Tokens | Est. Output Tokens | Est. Cost |
-  |------|-------|-------|-------------------|-------------------|-----------|
-  | Author | Grok-3 | [N] | [N]K | [N]K | $[X.XX] |
-  | Peer Reviewer | GPT-4o | [N] | [N]K | [N]K | $[X.XX] |
-  | Orchestrator Audit | GPT-4o | 1 | [N]K | [N]K | $[X.XX] |
-  | Editor | Claude | [N] | CLI subscription | — | — |
-  | Total (excl. Claude) | | | | | $[X.XX] |
+  | Role | Model | Calls | Cost |
+  |------|-------|-------|------|
+  | Author | Claude (CLI) | [N] | CLI subscription |
+  | Peer Reviewer | Claude (CLI) | [N] | CLI subscription |
+  | Editor | Claude (CLI) | [N] | CLI subscription |
+  | Orchestrator Audit | GPT-4o (API) | 1 | ~$0.10-0.30 |
+  | Total external API cost | | | ~$0.10-0.30 |
 
-  Pricing reference: Grok-3 ~$5/1M in, ~$15/1M out. GPT-4o ~$2.50/1M in, ~$10/1M out.
+  Note: All roles except Orchestrator Audit run via Claude CLI subscription.
+  The only per-run API cost is the single GPT-4o accountability audit call.
 
   ## Git
   Final commit: [hash]

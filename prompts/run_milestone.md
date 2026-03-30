@@ -48,14 +48,12 @@ Instead, go directly to the Peer Reviewer with the existing draft.
 
 Follow the milestone spec in prompts/04_paper_orchestrator.md exactly.
 
-Multi-model triangulation:
-  Author → call Grok-3 via xAI API (generation, temp 0.7)
-  Peer Reviewer → call GPT-4o via OpenAI API (validation, temp 0.2)
-  Editor → you (Claude) handle directly
+All roles are handled by you (Claude) with distinct personas:
+  Author → read prompts/05_author.md, adopt Author persona, write
+  Peer Reviewer → read prompts/06_peer_reviewer.md, adopt Peer Reviewer persona, review
+  Editor → read prompts/07_editor.md, adopt Editor persona, edit
 
-Load API keys from D:\EXPERIMENTS\SHELL\api.env (absolute path):
-  XAI_API_KEY → xAI API for Author (Grok-3)
-  OPENAI_API_KEY → OpenAI API for Peer Reviewer (GPT-4o)
+No external API keys needed for the paper pipeline.
 
 Author call → Peer Reviewer call → loop until ACCEPT (max 5) → lock milestone.
 

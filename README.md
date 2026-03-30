@@ -19,17 +19,31 @@ paper in `papers/[slug]/paper.md`. You read it. When approved, you upload to Zen
 
 ---
 
-## Multi-Model Triangulation
+## Two Pipelines, Two Strategies
 
-SHELL uses three different LLMs so no single model's training prior dominates.
-This is the core mechanism from Rice (2026) — different priors catch each other's
-drift. See: https://zenodo.org/records/19217024
+SHELL has two pipelines with different model strategies:
 
-| Role | Model | Persona | Purpose |
-|------|-------|---------|---------|
-| Author / Builder | Grok-3 (xAI), temp 0.7 | Senior researcher — confident, precise, no hedging | Generates from its own prior |
-| Peer Reviewer / Critic | GPT-4o (OpenAI), temp 0.2 | Associate editor — 80% rejection rate, hostile to weak reasoning | Validates against frozen spec with a different prior |
-| Editor / Reviewer | Claude | Copy editor — 15 years at academic press, no patience for filler | Third prior for quality and orchestration |
+**Paper Pipeline** (04_paper_orchestrator.md) — Claude-only. All three roles
+(Author, Peer Reviewer, Editor) are Claude with distinct personas and checklists.
+Adversarial tension comes from the prompts. Writing quality and proof rigor are
+the priority. No external API keys needed.
+
+| Role | Model | Persona |
+|------|-------|---------|
+| Author | Claude | Senior researcher — confident, precise, no hedging |
+| Peer Reviewer | Claude | Associate editor — 80% rejection rate, hostile to weak reasoning |
+| Editor | Claude | Copy editor — 15 years at academic press, no patience for filler |
+
+**Experiment Pipeline** (00_orchestrator.md) — Multi-model triangulation.
+Three different LLMs prevent any single model's training prior from dominating.
+This is the core mechanism from Rice (2026) for detecting specification drift.
+See: https://zenodo.org/records/19217024
+
+| Role | Model | Purpose |
+|------|-------|---------|
+| Builder | Grok-3 (xAI), temp 0.7 | Generates from its own prior |
+| Critic | GPT-4o (OpenAI), temp 0.2 | Validates against frozen spec with a different prior |
+| Reviewer | Claude | Third prior for quality and orchestration |
 
 ---
 
@@ -38,12 +52,12 @@ drift. See: https://zenodo.org/records/19217024
 Every paper runs through four milestones in strict sequence. No milestone opens
 until the previous one is approved by the Peer Reviewer.
 
-| Milestone | What the Author (Grok-3) Writes | Gate (GPT-4o reviews) |
+| Milestone | What the Author Writes | Gate |
 |-----------|----------------------|------|
 | M1 | Definitions Block + Introduction | Peer Reviewer ACCEPT |
 | M2 | Core Proof (lemmas, theorems, corollaries) | Peer Reviewer ACCEPT |
 | M3 | Application + Boundary Conditions | Peer Reviewer ACCEPT |
-| M4 | Abstract + Related Work + Discussion + Conclusion + References | Peer Reviewer ACCEPT → Editor (Claude) ACCEPT |
+| M4 | Abstract + Related Work + Discussion + Conclusion + References | Peer Reviewer ACCEPT → Editor ACCEPT |
 
 The Abstract is written last, after all sections are locked.
 

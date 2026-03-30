@@ -1,5 +1,15 @@
 # PROMPT LIBRARY — INDEX
-# All prompts for SHELL v3. Copy-paste ready.
+# All prompts for SHELL v5. Copy-paste ready.
+
+## Paper Pipeline (Claude-only — all roles via CLI)
+
+| File | Purpose | Role | Run how |
+|------|---------|------|---------|
+| `04_paper_orchestrator.md` | Milestone-gated paper pipeline | Orchestrator | `claude --dangerously-skip-permissions prompts/04_paper_orchestrator.md` |
+| `05_author.md` | Author — writes paper sections | Author persona | Orchestrator reads and adopts persona |
+| `06_peer_reviewer.md` | Peer Reviewer — science gate | Peer Reviewer persona | Orchestrator reads and adopts persona |
+| `07_editor.md` | Editor — editorial quality | Editor persona | Orchestrator reads and adopts persona |
+| `run_milestone.md` | Single milestone runner | Orchestrator | Called by `run_pipeline.ps1` |
 
 ## Experiment Pipeline (multi-model: Grok + GPT-4o + Claude)
 
@@ -9,16 +19,6 @@
 | `01_builder.md` | Builder — generates implementations | Grok-3 (xAI) | Injected by orchestrator via API |
 | `02_critic.md` | Critic — validates against frozen spec | GPT-4o (OpenAI) | Injected by orchestrator via API |
 | `03_reviewer.md` | Reviewer — audits quality | Claude | Orchestrator switches into this mode |
-
-## Paper Pipeline (multi-model: Grok + GPT-4o + Claude)
-
-| File | Purpose | Model | Run how |
-|------|---------|-------|---------|
-| `04_paper_orchestrator.md` | Milestone-gated paper pipeline | Claude (orchestrator) | `claude --dangerously-skip-permissions prompts/04_paper_orchestrator.md` |
-| `05_author.md` | Author — writes paper sections | Grok-3 (xAI) | Injected by orchestrator via API |
-| `06_peer_reviewer.md` | Peer Reviewer — science gate | GPT-4o (OpenAI) | Injected by orchestrator via API |
-| `07_editor.md` | Editor — editorial quality | Claude | Orchestrator switches into this mode |
-| `run_milestone.md` | Single milestone runner | Claude | Called by `run_pipeline.ps1` |
 
 ## Init Files (project scaffolding)
 
@@ -47,14 +47,13 @@ Pre-filled paper init files live in `papers/`:
 |------|---------|
 | `turn_prompts_log.md` | Exact prompts sent each turn. Written by orchestrator. |
 
-## Multi-Model Triangulation
+## Model Strategy
 
-SHELL uses three different LLMs to prevent any single model's training prior
-from dominating. This is the core mechanism from Rice (2026) — different priors
-catch each other's drift.
+**Paper pipeline:** Claude-only. All three roles (Author, Peer Reviewer, Editor)
+are Claude with distinct personas and adversarial checklists. Writing quality
+and proof rigor are the priority. No external API keys needed (except one
+GPT-4o call for orchestrator accountability audit).
 
-| Role | Model | Why this model |
-|------|-------|---------------|
-| Generation (Builder/Author) | Grok-3 (xAI), temp 0.7 | Creative generation from its own prior |
-| Validation (Critic/Peer Reviewer) | GPT-4o (OpenAI), temp 0.2 | Low-temp validation with a different prior |
-| Quality (Reviewer/Editor) | Claude, temp default | Third prior for quality and orchestration |
+**Experiment pipeline:** Multi-model triangulation (Grok-3 / GPT-4o / Claude).
+Three different training priors catch each other's specification drift.
+This is the core mechanism from Rice (2026) — see https://zenodo.org/records/19217024
