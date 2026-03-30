@@ -389,6 +389,41 @@ Append to state/innovation_log.md:
 
 ---
 
+## CITATION VERIFICATION
+
+After figure generation completes, verify every citation in the References
+section against the CrossRef public API. This catches hallucinated citations
+that the Peer Reviewer cannot detect by reading alone.
+
+Run:
+
+  python D:\EXPERIMENTS\SHELL\src\verify_citations.py --paper papers/[SLUG]/paper.md
+
+The script:
+  1. Parses every citation in the ## References section
+  2. Queries CrossRef (free, no API key) for each one
+  3. Fuzzy-matches on author, year, and title
+  4. Writes outputs/citation_verification.md with a verification table
+
+After the script completes, read outputs/citation_verification.md.
+
+If ALL citations are VERIFIED:
+  Log: "CITATIONS: All [N] citations verified against CrossRef."
+  Continue to drift report.
+
+If any citations are UNVERIFIED:
+  Log: "CITATION WARNING: [N] of [M] citations could not be verified."
+  DO NOT block the paper. Unverified citations may be correct but absent
+  from CrossRef (conference papers, working papers, books).
+  Add to the final terminal output:
+    "⚠️  [N] citation(s) unverified — check outputs/citation_verification.md"
+
+If the script fails (Python not found, network error, etc.):
+  Log: "CITATION CHECK SKIPPED — verify_citations.py failed: [error]"
+  Continue. Do not halt the pipeline for a verification tool failure.
+
+---
+
 ## DRIFT REPORT
 
 After figure generation completes and before final output, parse the full
@@ -511,8 +546,8 @@ Write: outputs/run_manifest.md with:
   Extracted: [N] | Rendered: [N] | Failed: [N]
 
   ## Citations
-  [If verify_citations.py was run: Verified: X/Y | Unverified: Z]
-  [If not run: "Citation verification not run — execute manually: python src/verify_citations.py --paper papers/[SLUG]/paper.md"]
+  Verified: [X]/[Y] | Unverified: [Z]
+  See: outputs/citation_verification.md
 
   ## Drift
   Total rejections: [N]
@@ -534,7 +569,11 @@ Write: outputs/run_manifest.md with:
 Print to terminal:
   ✅ PAPER COMPLETE — AWAITING REVIEW
   📄 papers/[SLUG]/paper.md
-  📊 papers/[SLUG]/figures/ — [N figures rendered, M failed]
+  📊 Figures: [N rendered, M failed] — papers/[SLUG]/figures/
+  📚 Citations: [X/Y verified] — outputs/citation_verification.md
+  📉 Drift: [N rejections] — outputs/drift_report.md
+  🔍 Audit: [PROCESS_CLEAN/PROCESS_FLAG] — outputs/orchestrator_audit.md
+  📋 Manifest: outputs/run_manifest.md
   Open in VS Code or Obsidian.
   When approved, upload manually to Zenodo.
 
