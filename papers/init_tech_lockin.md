@@ -139,6 +139,18 @@ KNOWN_DRIFT_RISKS:
   lock-in is stable, not that it is inevitable)
 - Missing the policy discussion — escape velocity has direct antitrust
   implications; include this in Discussion but keep it brief
+- PROOF STRATEGY: Escape velocity must be derived via coalition stability
+  analysis — define a coalition of size s that switches simultaneously, show
+  each member's payoff is higher iff s >= s*(alpha, q_A - q_B, N), derive
+  s* in closed form. Do NOT just state "there exists a threshold."
+- PROOF STRATEGY: The scaling result (s*/N increases with N) must be a
+  proven theorem with the exact functional form, not an asymptotic claim.
+  Show whether s*/N converges to a constant, grows logarithmically, or
+  grows linearly.
+- FORMALIZATION: The network externality function must be formally defined
+  with explicit properties (increasing, concave, etc.) and the Nash
+  equilibria must be characterized for the general case before specializing
+  to linear externalities. Two equilibria must be proven to exist, not assumed.
 - Orphan figure references — every figure must have clear formal content:
     Figure 1: Payoff functions showing two equilibria and lock-in region
     Figure 2: Escape velocity s* as a function of N for various alpha

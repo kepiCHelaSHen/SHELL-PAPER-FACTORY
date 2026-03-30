@@ -153,6 +153,20 @@ KNOWN_DRIFT_RISKS:
   function, strategy space, and information set
 - Failing to quantify welfare loss — must quantify HOW MUCH, not just sign
 - Missing boundary conditions — high opportunity cost agents escape; derive
+- PROOF STRATEGY: The baseline optimal stopping rule must be derived via
+  the standard Bellman equation — V(s) = max(s, delta * E[V(s')]) — and
+  the finite stopping time must be proven via a threshold rule s* where
+  s* = delta * E[max(s', s*)]. Show existence and uniqueness of s*.
+- PROOF STRATEGY: The trap theorem must show that the algorithmic feed's
+  ordering creates a non-stationary reward process where E[r_{t+1}|history]
+  is always above the stopping threshold. Prove this formally — the feed
+  learns the agent's s* and ensures every next item exceeds it. This is
+  the adversarial mechanism. Do NOT just say "the feed optimizes engagement."
+- FORMALIZATION: The platform's objective must be a formal optimization
+  problem: max sum_{t=0}^{T} delta^t * 1_{agent scrolls at t}, subject to
+  the constraint that items are drawn from a fixed pool and reordered.
+  Prove the optimal ordering is decreasing in reward quality (best items
+  first is NOT optimal for engagement — the feed must maintain uncertainty).
 - Orphan figure references — every figure must have clear formal content:
     Figure 1: Optimal stopping under i.i.d. vs. algorithmic feed
     Figure 2: Welfare loss as a function of algorithmic feed strength

@@ -79,6 +79,46 @@
 
 ---
 
+## Proof-Strategy Drift (learned 2026-03-30)
+
+For papers where the intellectual contribution lives in the proof strategy
+(not just the structural scaffolding), the frozen spec and drift risks must
+constrain HOW the proof is constructed — not just WHAT is proven.
+
+**The problem:** The pipeline's structural rules (boundary conditions, sensitivity
+tables, competing models) guarantee good scaffolding. But for pure formal theory
+papers, the quality lives in formalization choices and proof strategies that the
+pipeline cannot infer. Without explicit guidance, the Author may choose a trivially
+simple formalization that produces a correct but uninteresting result.
+
+**Example:** Common Knowledge paper v2 used a dual proof strategy (partition-meet
++ induction, 17 steps) and a general Sacred File formalization (non-trivial
+partition). The v4 pipeline run produced a correct but near-trivial result
+(constant reading function, trivial partition). Both are technically correct.
+Only one is publishable.
+
+**The fix:** For proof-strategy-dependent papers, add PROOF STRATEGY and
+FORMALIZATION entries to KNOWN_DRIFT_RISKS in the init file:
+
+```
+- PROOF STRATEGY: The proof of X must use technique Y (martingale convergence,
+  induction on knowledge depth, coalition stability), not the simpler technique Z.
+- FORMALIZATION: The model must use the general version (non-trivial partition,
+  non-constant function), not the special case that trivializes the result.
+```
+
+**Which papers need this?** Papers where:
+- The core result is a proof technique, not a calculation
+- There are multiple valid formalizations of different generality
+- A simpler formalization would make the result trivially obvious
+- The proof structure IS the contribution (not just the theorem statement)
+
+Papers that are primarily analytical derivations (survival analysis, NE calculations,
+closed-form thresholds) do NOT need proof-strategy drift risks. The pipeline
+handles these well on its own.
+
+---
+
 ## Parallel Comparison (Statistical Validation for Papers)
 
 To validate that the pipeline produces consistent results — the paper-pipeline

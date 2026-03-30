@@ -153,6 +153,19 @@ KNOWN_DRIFT_RISKS:
   uses information; must distinguish the two mechanisms
 - Conflating sufficient statistic result with triviality — requires specific
   conditions on signal model and investment function g
+- PROOF STRATEGY: The signal model must use a formal Bayesian setup — prior
+  pi(theta), signal s = theta + epsilon (Gaussian noise), investment function
+  g(E[theta|s]). Prove that I = g(E[theta|s]) is a sufficient statistic for
+  E[theta|s] under specific conditions on g (monotonicity, invertibility).
+  This is the technical core — do NOT skip to the threshold without it.
+- PROOF STRATEGY: The irrationality threshold I* must be derived from the
+  value of continuing vs abandoning — set up the decision problem formally
+  as V_continue(I) vs V_abandon, derive I* where they cross, prove it is
+  unique under stated conditions on the cost/benefit structure.
+- FORMALIZATION: The three applications (VC, R&D, military) must each
+  specify the signal distribution, the investment function, and compute I*
+  with numbers — not just narratively claim "sunk costs carry information
+  in VC." Show the signal-to-noise ratio for each domain.
 - Orphan figure references — every figure must have clear formal content:
     Figure 1: Signal model — relationship between theta, s, and I
     Figure 2: Rational vs. irrational sunk cost regions with threshold I*

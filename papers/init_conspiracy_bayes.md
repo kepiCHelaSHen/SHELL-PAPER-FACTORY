@@ -148,6 +148,16 @@ KNOWN_DRIFT_RISKS:
   events) prevents convergence
 - Adding multi-hypothesis complexity before the binary case is fully solved —
   binary first, extensions in Discussion
+- PROOF STRATEGY: The convergence proof MUST use martingale theory (posterior
+  is a bounded martingale under the true measure) — not just examples or
+  simulation showing the posterior increases. The strong law of large numbers
+  on log-likelihood ratios drives convergence. State and prove this formally.
+- PROOF STRATEGY: The transparency theorem must show that shifting the
+  AVERAGE log-likelihood ratio below zero (not just adding counter-evidence)
+  is necessary and sufficient. Prove this as a biconditional theorem.
+- FORMALIZATION: The evidence types must be formally defined as a partition
+  of the evidence space with distinct likelihood ratios for each type —
+  not just "some evidence favors H_c." The model needs structure.
 - Failing to connect to formal epistemology literature — Bayesian epistemology
   (Howson & Urbach, Earman) must be cited and positioned against
 - Ignoring the network/social dimension — state as a limitation (individual
