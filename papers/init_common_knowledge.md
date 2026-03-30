@@ -259,18 +259,19 @@ Write outputs/state_vector_backup.md:
 
 ## HAND OFF — EXECUTE PAPER PIPELINE
 
-Load prompts/04_paper_orchestrator.md.
+DO NOT STOP HERE. The setup is complete. Now you must execute the paper pipeline.
 
-Pass:
-  PROBLEM: [the full PROBLEM text above]
+Read prompts/04_paper_orchestrator.md NOW and follow every instruction in it.
+You are the Orchestrator. Begin at the INITIALIZE section. This is not a file
+to summarize — it is your operating manual. Execute it.
+
+YOUR INPUTS:
+  PROBLEM: [the full PROBLEM text from the INPUTS section above]
   DATA: No empirical data. This is a formal theory paper.
         The proof itself is the result. Author derives analytically.
   SLUG: common_knowledge_2026
   DRIFT_RISKS: [paste KNOWN_DRIFT_RISKS above into every Author and Reviewer prompt]
   FROZEN_SPEC: [pass full frozen_spec.md to Peer Reviewer on every review pass]
 
-Run the full milestone pipeline: M1 → M2 → M3 → M4.
-Do not skip milestones. Do not open M2 until M1 is Peer Reviewer ACCEPT.
-Halt only on HALT CONDITIONS.
-When done, write papers/common_knowledge_2026/paper.md and halt.
-James P Rice Jr. reviews in the morning.
+BEGIN NOW. Run M1. Do not ask for confirmation. Do not summarize the orchestrator.
+Execute it. Write the paper.
