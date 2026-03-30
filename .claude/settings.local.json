@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:zenodo.org)",
+      "Read(//d/EXPERIMENTS/COMMON_KNOWLEDGE/papers/**)",
+      "Read(//d/EXPERIMENTS/COMMON_KNOWLEDGE/results/**)",
+      "Bash(cp \"D:/EXPERIMENTS/COMMON_KNOWLEDGE/papers/common_knowledge_2025/paper.md\" \"D:/EXPERIMENTS/SHELL/archive/common_knowledge_v2/paper_v2.md\")",
+      "Bash(cp \"D:/EXPERIMENTS/FERMI/papers/fermi_survival_2025/paper.md\" \"D:/EXPERIMENTS/SHELL/archive/fermi_v1/paper_v1.md\")"
+    ]
+  }
+}

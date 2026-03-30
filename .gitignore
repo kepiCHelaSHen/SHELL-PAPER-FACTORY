@@ -1,0 +1,35 @@
+# .gitignore for SHELL experiments
+
+# API keys — never commit
+api.env
+.env
+*.env
+
+# Experiment journals and result data — too large for git
+autosim/journal.jsonl
+*.jsonl
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+
+# Output artifacts — results go in outputs/, not git
+outputs/raw/
+results/raw/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
