@@ -15,7 +15,7 @@ formal reasoning applies.
 
 You give the CLI a problem statement. It scaffolds a new project, locks a frozen spec,
 and runs the paper through a four-milestone pipeline overnight. You wake up with a
-paper in `papers/[slug]/paper.md`. You read it. When approved, you upload to Zenodo.
+paper in `paper.md`. You read it. When approved, you upload to Zenodo.
 
 ---
 
@@ -178,17 +178,17 @@ FROZEN_SPEC_PARAMETERS, MILESTONES, ORACLE, KNOWN_DRIFT_RISKS.
 **Step 2** — Run the CLI:
 
 ```powershell
-cd D:\EXPERIMENTS\SHELL
+cd C:\PROJECTS\SHELL
 claude --dangerously-skip-permissions papers/init_[topic].md
 ```
 
 The CLI will:
-1. Create `D:\EXPERIMENTS\[SLUG]\` with full directory structure
+1. Create `C:\PROJECTS\SHELL\papers\[SLUG]\` with full directory structure
 2. Write all required files (README, CHAIN_PROMPT, SACRED_FILES, BEST_PRACTICES, devlog, etc.)
 3. Lock the frozen spec
 4. Initialize git
 5. Run the four-milestone paper pipeline
-6. Stop at `papers/[slug]/paper.md` — AWAITING REVIEW
+6. Stop at `paper.md` — AWAITING REVIEW
 
 **Step 3** — Read the paper in VS Code or Obsidian. When approved, upload to Zenodo manually.
 

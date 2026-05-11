@@ -21,7 +21,7 @@ Based on: Rice (2026) DOI: 10.5281/zenodo.19217024
 Usage:
     python src/triangulation_experiment.py
 
-Requires: requests, api.env with XAI_API_KEY and OPENAI_API_KEY
+Requires: requests, XAI_API_KEY and OPENAI_API_KEY as environment variables (or in api.env as fallback)
 """
 
 import json
@@ -53,15 +53,24 @@ DELAY_BETWEEN_CALLS = 2.0  # seconds, be polite to APIs
 
 
 def load_api_keys():
-    """Load API keys from api.env."""
+    """Load API keys from environment variables, falling back to api.env."""
     keys = {}
-    if not API_ENV.exists():
-        sys.exit(f"ERROR: {API_ENV} not found")
-    for line in API_ENV.read_text().splitlines():
-        line = line.strip()
-        if "=" in line and not line.startswith("#"):
-            key, val = line.split("=", 1)
-            keys[key.strip()] = val.strip().strip('"')
+    # Prefer environment variables
+    for env_key in ("XAI_API_KEY", "OPENAI_API_KEY", "ZENODO_TOKEN", "ZENODO_SANDBOX_TOKEN"):
+        val = os.environ.get(env_key)
+        if val:
+            keys[env_key] = val
+    # Fall back to api.env for any missing keys
+    if API_ENV.exists():
+        for line in API_ENV.read_text().splitlines():
+            line = line.strip()
+            if "=" in line and not line.startswith("#"):
+                key, val = line.split("=", 1)
+                key = key.strip()
+                if key not in keys:
+                    keys[key] = val.strip().strip('"')
+    if not keys:
+        sys.exit(f"ERROR: No API keys found in environment or {API_ENV}")
     return keys
 
 
@@ -341,7 +350,12 @@ def check_contains_098(response: str) -> bool:
 def check_lognormal_no(response: str) -> bool:
     r = response.lower()
     has_lognormal = "log-normal" in r or "lognormal" in r or "log normal" in r or "geometric brownian" in r
-    has_no = "no" in r.split(".")[1] if "." in r else "no" in r
+    sentences = r.split(".")
+    has_no = any(
+        word in ("no", "not", "don't", "doesn't", "cannot", "isn't")
+        for sent in sentences[1:]
+        for word in sent.split()
+    ) if len(sentences) > 1 else r.strip().upper().startswith("NO")
     return has_lognormal and has_no
 
 
@@ -440,12 +454,12 @@ def query_claude(question: str) -> str:
         f.write(prompt)
         tmp_path = f.name
     try:
-        result = subprocess.run(
-            f'type "{tmp_path}" | claude -p --output-format text',
-            capture_output=True, text=True, timeout=120,
-            encoding="utf-8", errors="replace",
-            shell=True,
-        )
+        with open(tmp_path, "r", encoding="utf-8") as prompt_file:
+            result = subprocess.run(
+                ["claude", "-p", "--output-format", "text"],
+                stdin=prompt_file, capture_output=True, text=True, timeout=120,
+                encoding="utf-8", errors="replace",
+            )
         if result.returncode == 0 and result.stdout.strip():
             return result.stdout.strip()
         elif result.stderr.strip():

@@ -168,6 +168,61 @@ that need bridging:
 Flag the boundary. Suggest where a transition sentence should go. Do not
 write it — the Author writes it.
 
+**E16 — Terminology inflation**
+Does any result use heavier language than its logical content warrants?
+The test: could a reader with a PhD in the relevant field describe the same
+result in simpler, equally precise terms? If yes, the paper is inflating.
+Examples: calling function inversion a "sufficient statistic"; calling a
+Bayesian update a "mechanism" or "architecture"; calling an algebraic
+substitution a "theorem" when it is a worked example; calling a monotonicity
+argument a "novel operator." Flag every instance where terminology weight
+exceeds logical weight. State what the paper says, what the result actually is,
+and what terminology would be honest.
+If the Steelman critique flagged terminology inflation, verify whether the
+Author addressed it rather than re-flagging independently.
+
+**E17 — Unsourced empirical claims**
+Does the paper use "calibrated," "realistic," "standard," or "typical" for
+parameter values without a citation or derivation? Illustrative examples used
+to demonstrate a model are legitimate — but they must be labeled "illustrative"
+or "for exposition." Calling them "calibrated" implies empirical grounding that
+requires a source. Flag every unsourced empirical claim.
+If the Steelman critique flagged unsourced claims, verify whether the
+Author addressed them rather than re-flagging independently.
+
+**E18 — Introduction framing: extends vs. attacks**
+Does the Introduction position this paper as extending prior literature
+(building on X, we show Y) or attacking it (X fails, X is wrong, X overlooks)?
+If the framing reads as dismissive toward major prior work without crediting
+what they got right: flag it. The literature gap formula should show what the
+prior work achieved AND where the gap is — not just the gap.
+Papers that extend the literature get cited. Papers that attack it get resisted.
+If the Steelman critique flagged framing issues, verify whether the
+Author addressed them rather than re-flagging independently.
+
+**E19 — Scope limitations disguised as open problems**
+A limitation: something the model cannot do by construction — it is inherent
+to the model's assumptions and will never be addressed within this framework.
+An open problem: something nobody has solved yet — it awaits future work
+from anyone, including work that extends this model.
+Flag any limitation framed as "future work" or "open problem" when it is
+actually a scope constraint. Common disguises: "X is left for future work"
+when X is impossible within the model by construction; "heterogeneous Y is
+an open problem" when the model fundamentally requires known Y.
+If the Steelman critique flagged scope disguise, verify whether the
+Author addressed it rather than re-flagging independently.
+
+**E20 — Citation characterization accuracy**
+For each major citation (any work discussed for more than one sentence),
+does the paper accurately describe what that work proved/showed/argued?
+Flag any citation where the characterization is:
+  - Stronger than what the cited work actually claims
+  - Weaker than what the cited work actually proves
+  - Misattributed (ascribing a result to the wrong paper or wrong mechanism)
+  - Potentially conflated with a different paper by the same author(s)
+If the Steelman critique (steelman_critique_M4.md) flagged citation concerns,
+verify whether the Author addressed them.
+
 ---
 
 ## OUTPUT FORMAT

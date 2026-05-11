@@ -7,7 +7,7 @@ Usage:
     python src/publish.py --slug SLUG [--sandbox]
 
 Requires:
-    ZENODO_TOKEN in api.env (sandbox token and production token are different)
+    ZENODO_TOKEN as environment variable or in api.env (sandbox and production tokens are different)
 
 Flow:
     1. Reads papers/[SLUG]/paper.md
@@ -37,14 +37,19 @@ API_ENV = Path("api.env")
 
 
 def load_token(sandbox: bool) -> str:
-    """Load Zenodo token from api.env."""
+    """Load Zenodo token from environment variable, falling back to api.env."""
     key = "ZENODO_SANDBOX_TOKEN" if sandbox else "ZENODO_TOKEN"
+    # Prefer environment variable
+    val = os.environ.get(key)
+    if val:
+        return val
+    # Fall back to api.env
     if not API_ENV.exists():
-        sys.exit(f"ERROR: api.env not found. Add {key}=your_token to api.env.")
+        sys.exit(f"ERROR: {key} not found in environment or api.env.")
     for line in API_ENV.read_text().splitlines():
         if line.startswith(key + "="):
-            return line.split("=", 1)[1].strip()
-    sys.exit(f"ERROR: {key} not found in api.env.")
+            return line.split("=", 1)[1].strip().strip('"').strip("'")
+    sys.exit(f"ERROR: {key} not found in environment or api.env.")
 
 
 # ---------------------------------------------------------------------------

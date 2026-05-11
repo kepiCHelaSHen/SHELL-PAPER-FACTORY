@@ -37,20 +37,46 @@ KNOWN_DRIFT_RISKS: [what LLM prior is likely to get wrong]
 
 ## SETUP SEQUENCE — DO NOT SKIP ANY STEP
 
+### Step 0 — Resolve project directory (auto-versioning)
+
+CRITICAL: ALWAYS create a new project directory. NEVER resume, review, or
+reuse an existing project. Even if a completed project exists for this slug,
+create the next sequential version. This is a fresh run.
+
+The project directory is auto-versioned to prevent overwriting prior runs.
+The base slug from INPUTS is [SLUG]. The resolved directory uses this pattern:
+
+  C:\PROJECTS\SHELL\papers\[SLUG]_[YYYY-MM-DD]_[SEQ]\
+
+Where:
+  [YYYY-MM-DD] is today's date
+  [SEQ] is a three-digit sequence number (001, 002, 003, ...)
+
+To resolve the directory:
+1. List all existing directories matching C:\PROJECTS\SHELL\papers\[SLUG]_*
+2. If none exist: use [SLUG]_[TODAY]_001
+3. If some exist: find the highest sequence number across ALL matching
+   directories (regardless of date), increment by 1, and use
+   [SLUG]_[TODAY]_[NEXT_SEQ]
+
+Example: if papers/SUNK_COST_2026-05-08_001/ and papers/SUNK_COST_2026-05-09_002/
+exist, the next run on 2026-05-10 creates papers/SUNK_COST_2026-05-10_003/.
+
+Store the resolved values:
+  RESOLVED_DIR = C:\PROJECTS\SHELL\papers\[SLUG]_[DATE]_[SEQ]
+  RESOLVED_SLUG = [SLUG]_[DATE]_[SEQ]
+
+Use RESOLVED_DIR for all paths and RESOLVED_SLUG in all state files, commits,
+and pipeline references for the remainder of this setup.
+
 ### Step 1 — Create ALL directories
 
-Create D:\EXPERIMENTS\[SLUG]\ with every subdirectory:
-  spec/
-  state/
-  outputs/
+Create RESOLVED_DIR with every subdirectory:
+  figures/
   results/raw/
-  results/validated/
   results/final/
+  outputs/
   devlog/
-  src/
-  papers/
-  papers/[SLUG]/
-  papers/[SLUG]/figures/
   prompts/
 
 ### Step 2 — Write README.md
@@ -65,10 +91,10 @@ Contents:
   [One paragraph from PROBLEM]
 
   ## Key Files
-  - spec/frozen_spec.md — locked parameters, never modify
-  - state/state_vector.md — current loop state
-  - state/innovation_log.md — full audit trail
-  - papers/[SLUG]/paper.md — final output (when complete)
+  - frozen_spec.md — locked parameters, never modify
+  - state_vector.md — current loop state
+  - innovation_log.md — full audit trail
+  - paper.md — final output (when complete)
 
   ## How to Run
   claude --dangerously-skip-permissions prompts/04_paper_orchestrator.md
@@ -86,10 +112,10 @@ Contents:
 
   ## Key Files
   - CHAIN_PROMPT.md — master doc, wins all conflicts
-  - spec/frozen_spec.md — frozen parameters, never modify
-  - state/state_vector.md — save game
-  - state/innovation_log.md — audit trail
-  - state/dead_ends.md — do not repeat these
+  - frozen_spec.md — frozen parameters, never modify
+  - state_vector.md — save game
+  - innovation_log.md — audit trail
+  - dead_ends.md — do not repeat these
   - prompts/04_paper_orchestrator.md — the pipeline
 
   ## Frozen Parameters (quick reference)
@@ -109,9 +135,9 @@ Contents:
 
   ## Experiment Identity
   Name: [PROJECT_NAME]
-  Slug: [SLUG]
+  Slug: RESOLVED_SLUG
   Author: James P Rice Jr.
-  Location: D:\EXPERIMENTS\[SLUG]\
+  Location: RESOLVED_DIR
   Target: [TARGET_VENUE]
   Status: INIT
 
@@ -119,7 +145,7 @@ Contents:
   [PROBLEM]
 
   ## Confirmed Design Decisions
-  Spec locked: spec/frozen_spec.md
+  Spec locked: frozen_spec.md
   Pipeline: [PIPELINE] — multi-model triangulation, milestone-by-milestone gating
   Author: Grok-3 (xAI, temp 0.7) — generation
   Peer Reviewer: GPT-4o (OpenAI, temp 0.2) — validation
@@ -148,7 +174,7 @@ Contents:
 
   | File | Reason | Locked |
   |------|--------|--------|
-  | spec/frozen_spec.md | The oracle. Modifying invalidates the experiment. | [today] |
+  | frozen_spec.md | The oracle. Modifying invalidates the experiment. | [today] |
 
 ### Step 6 — Write BEST_PRACTICES.md
 
@@ -164,7 +190,7 @@ Contents:
   - Milestone-by-milestone. No section unlocks until previous is Peer Reviewer ACCEPT.
 
   ## Context Resets
-  Read in order: CLAUDE.md → state/state_vector.md → state/dead_ends.md
+  Read in order: CLAUDE.md → state_vector.md → dead_ends.md
   Do not rely on chat history. Everything lives in files.
 
 ### Step 7 — Write STATUS.md
@@ -186,7 +212,7 @@ Contents:
   .DS_Store
   *.egg-info/
 
-### Step 9 — Write spec/frozen_spec.md
+### Step 9 — Write frozen_spec.md
 
 Fill every PARAMETER block from FROZEN_SPEC_PARAMETERS.
 Fill ORACLE section.
@@ -197,7 +223,7 @@ Write: Locked by: James P Rice Jr.
 
 ### Step 10 — Initialize state files
 
-Write state/state_vector.md:
+Write state_vector.md:
   TURN: 0
   MILESTONE: M1
   MODE: INIT
@@ -208,7 +234,7 @@ Write state/state_vector.md:
   EXPERIMENT: [PROJECT_NAME]
   TIMESTAMP: [today]
 
-Write state/innovation_log.md:
+Write innovation_log.md:
   # INNOVATION LOG — [PROJECT_NAME]
   # Append-only. Never edit previous entries. Add to bottom only.
   # Managed by Orchestrator. One entry per milestone attempt.
@@ -216,12 +242,12 @@ Write state/innovation_log.md:
 
   === EXPERIMENT: [PROJECT_NAME] ===
   === LOOP INITIALIZED: [today] ===
-  === FROZEN SPEC LOCKED: [spec/frozen_spec.md — confirmed] ===
+  === FROZEN SPEC LOCKED: [frozen_spec.md — confirmed] ===
   === MILESTONES: M1 | M2 | M3 | M4 ===
 
   [Loop entries begin below on Turn 1]
 
-Write state/dead_ends.md:
+Write dead_ends.md:
   # DEAD ENDS — [PROJECT_NAME]
   # Append-only. Author reads before every milestone.
 
@@ -261,11 +287,12 @@ Write outputs/state_vector_backup.md:
 
 ### Step 13 — Copy and update all prompts
 
-Copy from SHELL/prompts/ into [SLUG]/prompts/:
+Copy from SHELL/prompts/ into RESOLVED_DIR/prompts/:
   04_paper_orchestrator.md
   05_author.md
   06_peer_reviewer.md
   07_editor.md
+  08_steelman.md
   run_milestone.md
 
 Do NOT copy 00_init.md or init_*.md into the project prompts.
@@ -289,10 +316,10 @@ Those are SHELL-level files only.
 Write run_pipeline.ps1 in the project root with this exact content
 (no special characters, no emoji, plain ASCII only):
 
-  $Slug = "[SLUG]"
-  $ProjectRoot = "D:\EXPERIMENTS\[SLUG]"
-  $StateVectorPath = "$ProjectRoot\papers\$Slug\state_vector.md"
-  $PaperPath = "$ProjectRoot\papers\$Slug\paper.md"
+  $Slug = "RESOLVED_SLUG"
+  $ProjectRoot = "RESOLVED_DIR"
+  $StateVectorPath = "$ProjectRoot\state_vector.md"
+  $PaperPath = "$ProjectRoot\paper.md"
   $MaxMilestones = 4
 
   Write-Host ""
@@ -303,7 +330,7 @@ Write run_pipeline.ps1 in the project root with this exact content
   for ($i = 1; $i -le $MaxMilestones; $i++) {
 
       if (Test-Path $PaperPath) {
-          Write-Host "PAPER COMPLETE - open papers\$Slug\paper.md"
+          Write-Host "PAPER COMPLETE - open paper.md"
           break
       }
 
@@ -331,7 +358,7 @@ Write run_pipeline.ps1 in the project root with this exact content
 
       "[$CurrentMilestone] Starting... $(Get-Date -Format 'HH:mm:ss')" | Set-Content "$ProjectRoot\LIVE_STATUS.md"
 
-      $Prompt = "Load prompts/run_milestone.md. SLUG: $Slug. Read papers/$Slug/state_vector.md first. Run ONE milestone then exit cleanly. Write progress to LIVE_STATUS.md after every action."
+      $Prompt = "Load prompts/run_milestone.md. SLUG: $Slug. Read state_vector.md first. Run ONE milestone then exit cleanly. Write progress to LIVE_STATUS.md after every action."
 
       Set-Location $ProjectRoot
 
@@ -346,7 +373,7 @@ Write run_pipeline.ps1 in the project root with this exact content
       if (Test-Path $PaperPath) {
           Write-Host ""
           Write-Host "PAPER COMPLETE"
-          Write-Host "papers\$Slug\paper.md - ready for review"
+          Write-Host "paper.md - ready for review"
           break
       }
 
@@ -365,16 +392,16 @@ Write run_pipeline.ps1 in the project root with this exact content
 ### Step 16 — Initialize git
 
 Run:
-  cd D:\EXPERIMENTS\[SLUG]
+  cd RESOLVED_DIR
   git init
   git add -A
-  git commit -m "Turn 0 | Init | [PROJECT_NAME]"
+  git commit -m "Turn 0 | Init | [PROJECT_NAME] | RESOLVED_SLUG"
 
 ### Step 17 — Print confirmation
 
   ✅ PROJECT INITIALIZED: [PROJECT_NAME]
-  📁 D:\EXPERIMENTS\[SLUG]\
-  🔒 Spec locked: spec/frozen_spec.md
+  📁 RESOLVED_DIR
+  🔒 Spec locked: frozen_spec.md
   📝 All files created. Git initialized.
   ▶  Handing off to paper pipeline — M1 begins now.
 

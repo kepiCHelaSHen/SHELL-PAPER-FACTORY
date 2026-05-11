@@ -18,7 +18,7 @@ EXPERIMENT IDENTITY
 
 Name:           [EXPERIMENT NAME]
 Full name:      [Full experiment name]
-Location:       D:\EXPERIMENTS\[NAME]\
+Location:       C:\PROJECTS\SHELL\papers\[NAME]\
 Status:         [CURRENT STATUS]
 Target journal: [TARGET JOURNAL]
 News hook:      [One sentence: why does this matter if LLMs get it wrong?]
@@ -34,7 +34,7 @@ CONFIRMED DESIGN DECISIONS
 Never remove a decision — if it changes, mark it SUPERSEDED and add the new one.]
 
 --- FROZEN SPEC ---
-  Spec file:    spec/frozen_spec.md
+  Spec file:    frozen_spec.md
   Locked:       [DATE]
   Parameters:   [list]
   Oracle:       [how outputs are validated]
@@ -91,7 +91,7 @@ Example from SIMSIV:
 KNOWN DEAD ENDS
 ================================================================================
 
-[Summary of major dead ends. Full list in state/dead_ends.md]
+[Summary of major dead ends. Full list in dead_ends.md]
 
 ================================================================================
 CHANGE LOG

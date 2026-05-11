@@ -9,8 +9,8 @@ CONTEXT INJECTION — READ FIRST
 Before doing anything, read:
   1. CHAIN_PROMPT.md
   2. CLAUDE.md
-  3. state/innovation_log.md (last 3 entries)
-  4. state/dead_ends.md
+  3. innovation_log.md (last 3 entries)
+  4. dead_ends.md
 
 Do not refactor unless explicitly asked.
 Do not touch SACRED_FILES.md listed files.

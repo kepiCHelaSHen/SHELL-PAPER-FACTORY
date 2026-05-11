@@ -18,7 +18,7 @@
 | `prompts/00_init.md` | Modify | Fix duplicate step numbering, structured log template |
 | `prompts/run_milestone.md` | Modify | api.env absolute path, DRIFT_RISKS from frozen spec |
 | `src/verify_citations.py` | Modify | Output directory relative to cwd |
-| `state/innovation_log.md` | Modify | New structured format template |
+| `innovation_log.md` | Modify | New structured format template |
 | `BEST_PRACTICES.md` | Modify | Add parallel comparison process |
 | `README.md` | Modify | Version bump to 5.0 |
 
@@ -44,14 +44,14 @@ Load from api.env:
 
 With:
 ```
-Load API keys from D:\EXPERIMENTS\SHELL\api.env (absolute path — single
+Load API keys from C:\PROJECTS\SHELL\api.env (absolute path — single
 source of truth, never copied into project directories):
 - XAI_API_KEY → xAI API, model: grok-3 (Author role)
 - OPENAI_API_KEY → OpenAI API, model: gpt-4o (Peer Reviewer role)
 - Claude CLI handles your own calls natively (Editor + Orchestrator)
 
 Read the file, parse KEY="VALUE" lines. If the file is missing or a key
-is empty, HALT and report: "API key not found. Check D:\EXPERIMENTS\SHELL\api.env"
+is empty, HALT and report: "API key not found. Check C:\PROJECTS\SHELL\api.env"
 ```
 
 - [ ] **Step 2: Update run_milestone.md api.env reference**
@@ -65,7 +65,7 @@ Load API keys from api.env:
 
 With:
 ```
-Load API keys from D:\EXPERIMENTS\SHELL\api.env (absolute path):
+Load API keys from C:\PROJECTS\SHELL\api.env (absolute path):
   XAI_API_KEY → xAI API for Author (Grok-3)
   OPENAI_API_KEY → OpenAI API for Peer Reviewer (GPT-4o)
 ```
@@ -106,10 +106,10 @@ SLUG: [project slug]
 ## DRIFT_RISKS — EXTRACTED FROM FROZEN SPEC
 
 Do NOT rely on run_pipeline.ps1 to pass drift risks. Read them directly
-from spec/frozen_spec.md. The frozen spec contains a "KNOWN PRIOR DRIFT RISK"
+from frozen_spec.md. The frozen spec contains a "KNOWN PRIOR DRIFT RISK"
 section — extract all entries and pass them to the Author on every call.
 
-If spec/frozen_spec.md has no drift risk section, log:
+If frozen_spec.md has no drift risk section, log:
   "WARNING: No drift risks found in frozen spec. Author will generate without
    drift guidance."
 ```
@@ -152,7 +152,7 @@ Editor REJECT → send rejection list back to Author (Grok-3) for revision:
     EDITOR REJECTION LIST: [numbered list from Editor]
     CURRENT DRAFT: [full contents of M4_draft.md]
 
-  Write revised output to papers/[SLUG]/M4_draft.md. Re-run Editor.
+  Write revised output to M4_draft.md. Re-run Editor.
   Max 3 Editor loops. If Editor still rejects after 3: log issues in
   innovation log, write paper anyway with EDITORIAL_WARNING flag.
 ```
@@ -238,9 +238,9 @@ After step 5 in the INITIALIZE section (git init), add:
 
 ```
 6. Compute frozen spec fingerprint:
-     Run: python -c "import hashlib; print(hashlib.sha256(open('spec/frozen_spec.md','rb').read()).hexdigest())"
+     Run: python -c "import hashlib; print(hashlib.sha256(open('frozen_spec.md','rb').read()).hexdigest())"
      Store the output as SPEC_FINGERPRINT.
-     Write to papers/[SLUG]/state_vector.md:
+     Write to state_vector.md:
        SPEC_FINGERPRINT: [hash]
 ```
 
@@ -250,8 +250,8 @@ Before each milestone begins (before the Author call), add to the milestone loop
 
 ```
 Before each milestone, verify spec integrity:
-  Run: python -c "import hashlib; print(hashlib.sha256(open('spec/frozen_spec.md','rb').read()).hexdigest())"
-  Compare result to SPEC_FINGERPRINT in papers/[SLUG]/state_vector.md.
+  Run: python -c "import hashlib; print(hashlib.sha256(open('frozen_spec.md','rb').read()).hexdigest())"
+  Compare result to SPEC_FINGERPRINT in state_vector.md.
   If mismatch: HALT immediately.
     Write: "SPEC INTEGRITY FAILURE — frozen_spec.md was modified after lock.
             Expected: [stored hash]. Got: [current hash]."
@@ -265,7 +265,7 @@ After reading the state vector (step 1 in ON STARTUP), add:
 ```
 1b. Verify frozen spec integrity:
     If state vector contains SPEC_FINGERPRINT:
-      Compute: python -c "import hashlib; print(hashlib.sha256(open('spec/frozen_spec.md','rb').read()).hexdigest())"
+      Compute: python -c "import hashlib; print(hashlib.sha256(open('frozen_spec.md','rb').read()).hexdigest())"
       Compare to stored fingerprint. Mismatch → HALT.
 ```
 
@@ -283,7 +283,7 @@ git commit -m "feat: spec fingerprinting — SHA-256 integrity check at every mi
 Replace free-form innovation log with YAML blocks inside markdown. Machine-parseable, human-readable.
 
 **Files:**
-- Modify: `state/innovation_log.md` (new template format)
+- Modify: `innovation_log.md` (new template format)
 - Modify: `prompts/04_paper_orchestrator.md` (milestone ACCEPT logging + drift report parsing)
 - Modify: `prompts/00_init.md` (Step 10 innovation log template)
 
@@ -299,7 +299,7 @@ Replace current contents with:
 
 === EXPERIMENT: [EXPERIMENT NAME] ===
 === LOOP INITIALIZED: [TIMESTAMP] ===
-=== FROZEN SPEC LOCKED: [spec/frozen_spec.md — confirmed] ===
+=== FROZEN SPEC LOCKED: [frozen_spec.md — confirmed] ===
 === MILESTONES: M1 | M2 | M3 | M4 ===
 
 ---
@@ -328,7 +328,7 @@ Replace current contents with:
 
 - [ ] **Step 2: Update 04_paper_orchestrator.md milestone ACCEPT/REJECT logging**
 
-In THE MILESTONE LOOP section, after "Append to state/innovation_log.md", specify:
+In THE MILESTONE LOOP section, after "Append to innovation_log.md", specify:
 
 After each Author submission, append:
 ```yaml
@@ -378,7 +378,7 @@ details:
 In the DRIFT REPORT section, change the instruction from "parse the full innovation log" to:
 
 ```
-Parse the innovation log (state/innovation_log.md). Each entry is a YAML
+Parse the innovation log (innovation_log.md). Each entry is a YAML
 block fenced by triple backticks. Extract all entries where action: REJECT.
 
 For each REJECT entry:
@@ -397,7 +397,7 @@ Replace the innovation log template in Step 10 with the new YAML-based format fr
 - [ ] **Step 5: Commit**
 
 ```bash
-git add state/innovation_log.md prompts/04_paper_orchestrator.md prompts/00_init.md
+git add innovation_log.md prompts/04_paper_orchestrator.md prompts/00_init.md
 git commit -m "feat: structured innovation log — YAML entries for machine-parseable drift analysis"
 ```
 
@@ -468,18 +468,18 @@ equivalent of multi-seed runs — run the same init file twice and compare:
 
 1. Run the init file:
    ```powershell
-   cd D:\EXPERIMENTS\SHELL
+   cd C:\PROJECTS\SHELL
    claude --dangerously-skip-permissions papers/init_[topic].md
    ```
 
 2. Archive the result:
    ```powershell
-   cp D:\EXPERIMENTS\[SLUG]\papers\[slug]\paper.md D:\EXPERIMENTS\SHELL\archive\[slug]_run1\paper.md
+   cp C:\PROJECTS\SHELL\papers\[SLUG]\papers\[slug]\paper.md C:\PROJECTS\SHELL\archive\[slug]_run1\paper.md
    ```
 
 3. Delete the project directory and run again:
    ```powershell
-   rm -rf D:\EXPERIMENTS\[SLUG]
+   rm -rf C:\PROJECTS\SHELL\papers\[SLUG]
    claude --dangerously-skip-permissions papers/init_[topic].md
    ```
 

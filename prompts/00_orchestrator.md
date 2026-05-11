@@ -15,11 +15,11 @@ Before doing ANYTHING, read all of these in order:
   1. CHAIN_PROMPT.md
   2. CLAUDE.md
   3. STATUS.md
-  4. state/innovation_log.md (last 3 entries minimum)
-  5. state/state_vector.md (if it exists — this is your save game)
+  4. innovation_log.md (last 3 entries minimum)
+  5. state_vector.md (if it exists — this is your save game)
 
-state/innovation_log.md is your memory.
-state/state_vector.md is your compressed anchor after context resets.
+innovation_log.md is your memory.
+state_vector.md is your compressed anchor after context resets.
 Read both before deciding anything.
 
 ---
@@ -41,10 +41,10 @@ Load from api.env:
 - OPENAI_API_KEY → OpenAI API, model: gpt-4o
 - Claude CLI handles your own calls natively
 
-Frozen spec:       spec/frozen_spec.md  (NEVER modify)
-State vector:      state/state_vector.md
-Innovation log:    state/innovation_log.md
-Dead ends:         state/dead_ends.md
+Frozen spec:       frozen_spec.md  (NEVER modify)
+State vector:      state_vector.md
+Innovation log:    innovation_log.md
+Dead ends:         dead_ends.md
 Turn prompt log:   prompts/turn_prompts_log.md
 Results:           results/
 
@@ -115,7 +115,7 @@ STEP 3 — CHOOSE AND LOG MODE
   State mode and reason. This must be logged before anything else.
 
 STEP 4 — DEAD END CHECK
-  Read state/dead_ends.md in full.
+  Read dead_ends.md in full.
   List what failed and confirm you will not repeat it.
   Log: "Dead ends avoided: [list or NONE]"
 
@@ -143,7 +143,7 @@ System prompt: [paste contents of prompts/01_builder.md]
 User message:
   CURRENT MILESTONE: [milestone description]
   DOMAIN CONTEXT: [experiment-specific context]
-  DEAD ENDS TO AVOID: [paste state/dead_ends.md filtered to current milestone]
+  DEAD ENDS TO AVOID: [paste dead_ends.md filtered to current milestone]
   YOUR TASK: [exact task for this turn]
   Generate now. Do not validate your own output.
 
@@ -166,7 +166,7 @@ Call GPT-4o (Critic) via API:
 System prompt: [paste contents of prompts/02_critic.md]
 User message:
   FROZEN SPECIFICATION:
-  [paste full contents of spec/frozen_spec.md]
+  [paste full contents of frozen_spec.md]
 
   BUILDER OUTPUT TO VALIDATE:
   [paste full builder_output]
@@ -185,7 +185,7 @@ Process verdict:
   If CRITIC_BLOCK (Validation Mode):
     Log to innovation log: CRITIC VERDICT: BLOCK | [parameters blocked + correct values]
     If 3rd consecutive block on same parameter:
-      Append to state/dead_ends.md:
+      Append to dead_ends.md:
         "DEAD END [Turn N] | M[milestone]: Builder repeatedly proposes [value] for [parameter].
          CORRECT VALUE: [spec value] per [source].
          DO NOT accept [parameter] values outside [spec value]."
@@ -249,9 +249,9 @@ STEP 13 — COMMIT AND TAG
 
 STEP 14 — UPDATE ALL STATE FILES
 
-  state/innovation_log.md — append entry (see format below)
-  state/state_vector.md — overwrite with current state
-  state/dead_ends.md — append if new dead end discovered
+  innovation_log.md — append entry (see format below)
+  state_vector.md — overwrite with current state
+  dead_ends.md — append if new dead end discovered
   STATUS.md — update current state
 
 STEP 15 — LOG EXACT PROMPTS
@@ -278,11 +278,11 @@ STEP 17 — CHECK CONTEXT RESET SCHEDULE
   Also trigger immediately if output feels generic or detached from the experiment.
 
   Context reset sequence:
-    A. Write state/state_vector.md (10-15 lines, all required fields — see format below)
+    A. Write state_vector.md (10-15 lines, all required fields — see format below)
     B. Copy to outputs/state_vector_backup.md
     C. Run /compact
     D. Re-read CHAIN_PROMPT.md and CLAUDE.md fresh
-    E. Read state/state_vector.md
+    E. Read state_vector.md
     F. Re-run all three health checks
     G. Log: "CONTEXT RESET — Turn [N]. State vector loaded. Health checks passed."
 
@@ -300,7 +300,7 @@ Execute:
   3. Log to innovation log:
      "REVERSION: Turn [current] exploration broke anomaly check.
       Reverted to [experiment]-turn-[N]-pass."
-  4. Append to state/dead_ends.md:
+  4. Append to dead_ends.md:
      "DEAD END [Turn N] | Exploration: [what was tried].
       REASON: Failed anomaly check on seeds [list]. Bounds violated: [list].
       DO NOT REPEAT."

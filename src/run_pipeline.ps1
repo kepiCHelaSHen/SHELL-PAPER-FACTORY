@@ -1,10 +1,10 @@
-$Slug = ""
+param(
+    [Parameter(Mandatory=$true)]
+    [string]$Slug
+)
+
 $ProjectRoot = $PSScriptRoot
 $MaxMilestones = 4
-
-if (-not $Slug) {
-    $Slug = Split-Path $ProjectRoot -Leaf
-}
 
 $StateVectorPath = "$ProjectRoot\papers\$Slug\state_vector.md"
 $PaperPath = "$ProjectRoot\papers\$Slug\paper.md"

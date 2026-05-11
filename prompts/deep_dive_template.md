@@ -9,8 +9,8 @@ CONTEXT INJECTION — READ FIRST
 Before doing anything, read:
   1. CHAIN_PROMPT.md
   2. CLAUDE.md
-  3. spec/frozen_spec.md
-  4. state/innovation_log.md (last 3 entries)
+  3. frozen_spec.md
+  4. innovation_log.md (last 3 entries)
   5. [relevant source file or domain document]
 
 ================================================================================

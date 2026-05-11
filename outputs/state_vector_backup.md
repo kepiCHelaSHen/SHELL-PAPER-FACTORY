@@ -1,7 +1,7 @@
 # STATE VECTOR BACKUP
 # Written by Orchestrator before any high-risk operation (reversion, mode switch, milestone transition).
 # If state_vector.md is ever corrupted or lost, restore from here.
-# Format mirrors state/state_vector.md exactly.
+# Format mirrors state_vector.md exactly.
 
 === BACKUP TAKEN: [TIMESTAMP] ===
 === REASON: [e.g., "Pre-reversion to Turn 4 commit" / "Mode switch VALIDATION → EXPLORATION"] ===

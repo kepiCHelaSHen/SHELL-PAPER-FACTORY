@@ -1,6 +1,8 @@
 # INIT — TECHNOLOGICAL LOCK-IN AS A COORDINATION FAILURE
-# Pre-filled. Ready to run.
-# claude --dangerously-skip-permissions papers/init_tech_lockin.md
+# EXECUTE IMMEDIATELY. Do not summarize, analyze, or ask questions.
+# Read the INPUTS below, then execute the SETUP SEQUENCE step by step.
+# Load prompts/00_init.md for the setup procedure, then run it with these inputs.
+# This is not a document to review — it is a set of instructions to follow NOW.
 
 ---
 
@@ -161,7 +163,7 @@ KNOWN_DRIFT_RISKS:
 ## SETUP SEQUENCE — EXECUTE NOW
 
 ### Step 1 — Create project directory
-Create D:\EXPERIMENTS\TECH_LOCKIN\ with:
+Create C:\PROJECTS\SHELL\papers\TECH_LOCKIN\ with:
   spec/, state/, outputs/, results/raw/, results/validated/, results/final/,
   devlog/, src/, papers/, papers/tech_lockin_2026/,
   papers/tech_lockin_2026/figures/, prompts/
@@ -172,17 +174,17 @@ Lock-in stable when alpha > q_A - q_B. Escape velocity s*(N, alpha, delta_q)
 in closed form. Enforcements: NE not irrationality, closed-form escape
 velocity, scaling theorem, distinguish from Arthur 1989.
 
-### Step 3 — Write spec/frozen_spec.md
+### Step 3 — Write frozen_spec.md
 Fill from FROZEN_SPEC_PARAMETERS above. Lock date today.
 Locked by: James P Rice Jr.
 
 ### Step 4 — Initialize state files
-state/state_vector.md — TURN: 0, MILESTONE: M1, MODE: INIT
-state/innovation_log.md — header with project name and timestamp
-state/dead_ends.md — header with project name
+state_vector.md — TURN: 0, MILESTONE: M1, MODE: INIT
+innovation_log.md — header with project name and timestamp
+dead_ends.md — header with project name
 
 ### Step 5 — Copy all prompts from SHELL
-Copy from D:\EXPERIMENTS\SHELL\prompts\ into D:\EXPERIMENTS\TECH_LOCKIN\prompts\:
+Copy from C:\PROJECTS\SHELL\prompts\ into C:\PROJECTS\SHELL\papers\TECH_LOCKIN\prompts\:
   04_paper_orchestrator.md
   05_author.md
   06_peer_reviewer.md
@@ -197,9 +199,9 @@ Also write prompts/turn_prompts_log.md:
 
 ### Step 5b — Write run_pipeline.ps1
 
-Write run_pipeline.ps1 in the project root (D:\EXPERIMENTS\TECH_LOCKIN\) with
+Write run_pipeline.ps1 in the project root (C:\PROJECTS\SHELL\papers\TECH_LOCKIN\) with
 the slug set to "tech_lockin_2026". Use the template from
-D:\EXPERIMENTS\SHELL\prompts\00_init.md Step 15, replacing [SLUG] with
+C:\PROJECTS\SHELL\prompts\00_init.md Step 15, replacing [SLUG] with
 tech_lockin_2026 and [SLUG] paths with TECH_LOCKIN.
 
 ### Step 6 — Write STATUS.md
@@ -216,7 +218,7 @@ CHAIN_PROMPT.md must include:
   Author: Claude | Peer Reviewer: Claude | Editor: Claude
 
 ### Step 8 — Initialize git
-  cd D:\EXPERIMENTS\TECH_LOCKIN
+  cd C:\PROJECTS\SHELL\papers\TECH_LOCKIN
   git init
   git add -A
   git commit -m "Turn 0 | Init | tech_lockin_2026"

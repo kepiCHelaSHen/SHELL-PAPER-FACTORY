@@ -72,8 +72,8 @@
 
 - **Assume every new session is a cold start.** Read in this order:
   1. CLAUDE.md (north star, 2 minutes)
-  2. state/state_vector.md (where you are)
-  3. state/dead_ends.md (what not to do)
+  2. state_vector.md (where you are)
+  3. dead_ends.md (what not to do)
   4. prompts/00_orchestrator.md (how to run the loop)
 - **Do not rely on chat history.** It will be gone. Everything important lives in files.
 
@@ -126,18 +126,18 @@ equivalent of multi-seed runs — run the same init file twice and compare:
 
 1. Run the init file:
    ```powershell
-   cd D:\EXPERIMENTS\SHELL
+   cd C:\PROJECTS\SHELL
    claude --dangerously-skip-permissions papers/init_[topic].md
    ```
 
 2. Archive the result:
    ```powershell
-   cp D:\EXPERIMENTS\[SLUG]\papers\[slug]\paper.md D:\EXPERIMENTS\SHELL\archive\[slug]_run1\paper.md
+   cp C:\PROJECTS\SHELL\papers\[SLUG]\papers\[slug]\paper.md C:\PROJECTS\SHELL\archive\[slug]_run1\paper.md
    ```
 
 3. Delete the project directory and run again:
    ```powershell
-   rm -rf D:\EXPERIMENTS\[SLUG]
+   rm -rf C:\PROJECTS\SHELL\papers\[SLUG]
    claude --dangerously-skip-permissions papers/init_[topic].md
    ```
 

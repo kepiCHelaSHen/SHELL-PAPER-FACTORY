@@ -5,7 +5,7 @@
 
 === EXPERIMENT: [EXPERIMENT NAME] ===
 === LOOP INITIALIZED: [TIMESTAMP] ===
-=== FROZEN SPEC LOCKED: [spec/frozen_spec.md — confirmed] ===
+=== FROZEN SPEC LOCKED: [frozen_spec.md — confirmed] ===
 === MILESTONES: M1 | M2 | M3 | M4 ===
 
 ---

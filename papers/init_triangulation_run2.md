@@ -169,7 +169,7 @@ KNOWN_DRIFT_RISKS:
 ## SETUP SEQUENCE — EXECUTE NOW
 
 ### Step 1 — Create project directory
-Create C:\PROJECTS\SHELL\papers\TRIANGULATION\ with:
+Create C:\PROJECTS\SHELL\papers\TRIANGULATION_RUN2\ with:
   spec/, state/, outputs/, results/raw/, results/validated/, results/final/,
   devlog/, src/, papers/, papers/triangulation_2026/,
   papers/triangulation_2026/figures/, prompts/
@@ -213,7 +213,7 @@ innovation_log.md — YAML format header
 dead_ends.md — header
 
 ### Step 5 — Copy all prompts from SHELL
-Copy from C:\PROJECTS\SHELL\prompts\ into C:\PROJECTS\SHELL\papers\TRIANGULATION\prompts\:
+Copy from C:\PROJECTS\SHELL\prompts\ into C:\PROJECTS\SHELL\papers\TRIANGULATION_RUN2\prompts\:
   04_paper_orchestrator.md
   05_author.md
   06_peer_reviewer.md
@@ -228,7 +228,7 @@ Also write prompts/turn_prompts_log.md:
 
 ### Step 5b — Write run_pipeline.ps1
 
-Write run_pipeline.ps1 in the project root (C:\PROJECTS\SHELL\papers\TRIANGULATION\) with
+Write run_pipeline.ps1 in the project root (C:\PROJECTS\SHELL\papers\TRIANGULATION_RUN2\) with
 the slug set to "triangulation_2026". Use the template from
 C:\PROJECTS\SHELL\prompts\00_init.md Step 15, replacing [SLUG] with
 triangulation_2026 and [SLUG] paths with TRIANGULATION.
@@ -251,10 +251,10 @@ CHAIN_PROMPT.md must include:
 ### Step 7b — Copy experiment data
 Copy the experiment results into the project for the Author to reference:
   Copy C:\PROJECTS\SHELL\outputs\triangulation_experiment.md
-  to C:\PROJECTS\SHELL\papers\TRIANGULATION\data\triangulation_experiment.md
+  to C:\PROJECTS\SHELL\papers\TRIANGULATION_RUN2\data\triangulation_experiment.md
 
 ### Step 8 — Initialize git
-  cd C:\PROJECTS\SHELL\papers\TRIANGULATION
+  cd C:\PROJECTS\SHELL\papers\TRIANGULATION_RUN2
   git init
   git add -A
   git commit -m "Turn 0 | Init | triangulation_2026"

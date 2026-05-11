@@ -1,6 +1,8 @@
 # INIT — FERMI PARADOX AS A SURVIVAL FUNCTION
-# Pre-filled. Ready to run.
-# claude --dangerously-skip-permissions papers/init_fermi.md
+# EXECUTE IMMEDIATELY. Do not summarize, analyze, or ask questions.
+# Read the INPUTS below, then execute the SETUP SEQUENCE step by step.
+# Load prompts/00_init.md for the setup procedure, then run it with these inputs.
+# This is not a document to review — it is a set of instructions to follow NOW.
 
 ---
 
@@ -149,7 +151,7 @@ KNOWN_DRIFT_RISKS:
 ## SETUP SEQUENCE — EXECUTE NOW
 
 ### Step 1 — Create project directory
-Create D:\EXPERIMENTS\FERMI\ with:
+Create C:\PROJECTS\SHELL\papers\FERMI\ with:
   spec/, state/, outputs/, results/raw/, results/validated/, results/final/,
   devlog/, src/, papers/, papers/fermi_survival_2025/, papers/fermi_survival_2025/figures/,
   prompts/
@@ -180,17 +182,17 @@ Create D:\EXPERIMENTS\FERMI\ with:
   - Late-filter conclusion must be derived, not asserted
   - No speculation about specific filter candidates
 
-### Step 3 — Write spec/frozen_spec.md
+### Step 3 — Write frozen_spec.md
 Fill from FROZEN_SPEC_PARAMETERS above. Lock date today.
 Locked by: James P Rice Jr.
 
 ### Step 4 — Initialize state files
-state/state_vector.md — TURN: 0, MILESTONE: M1, MODE: INIT
-state/innovation_log.md — header with project name and timestamp
-state/dead_ends.md — header with project name
+state_vector.md — TURN: 0, MILESTONE: M1, MODE: INIT
+innovation_log.md — header with project name and timestamp
+dead_ends.md — header with project name
 
 ### Step 5 — Copy all prompts from SHELL
-Copy from D:\EXPERIMENTS\SHELL\prompts\ into D:\EXPERIMENTS\FERMI\prompts\:
+Copy from C:\PROJECTS\SHELL\prompts\ into C:\PROJECTS\SHELL\papers\FERMI\prompts\:
   04_paper_orchestrator.md
   05_author.md
   06_peer_reviewer.md
@@ -205,9 +207,9 @@ Also write prompts/turn_prompts_log.md:
 
 ### Step 5b — Write run_pipeline.ps1
 
-Write run_pipeline.ps1 in the project root (D:\EXPERIMENTS\FERMI\) with
+Write run_pipeline.ps1 in the project root (C:\PROJECTS\SHELL\papers\FERMI\) with
 the slug set to "fermi_survival_2025". Use the template from
-D:\EXPERIMENTS\SHELL\prompts\00_init.md Step 15, replacing [SLUG] with
+C:\PROJECTS\SHELL\prompts\00_init.md Step 15, replacing [SLUG] with
 fermi_survival_2025 and [SLUG] paths with FERMI.
 
 ### Step 6 — Write STATUS.md
@@ -243,7 +245,7 @@ Write SACRED_FILES.md:
   # SACRED FILES | Lock date: [today] | Locked by: James P Rice Jr.
   | File | Reason | Locked |
   |------|--------|--------|
-  | spec/frozen_spec.md | Oracle. Never modify after lock. | [today] |
+  | frozen_spec.md | Oracle. Never modify after lock. | [today] |
 
 Write BEST_PRACTICES.md:
   # BEST PRACTICES — Fermi Survival Paper | SHELL v3 standards
@@ -281,7 +283,7 @@ Write prompts/turn_prompts_log.md:
   [No entries yet.]
 
 ### Step 8 — Initialize git
-  cd D:\EXPERIMENTS\FERMI
+  cd C:\PROJECTS\SHELL\papers\FERMI
   git init
   git add -A
   git commit -m "Turn 0 | Init | fermi_survival_2025"

@@ -1,6 +1,8 @@
 # INIT — DOOMSCROLLING AS OPTIMAL STOPPING FAILURE
-# Pre-filled. Ready to run.
-# claude --dangerously-skip-permissions papers/init_doomscrolling.md
+# EXECUTE IMMEDIATELY. Do not summarize, analyze, or ask questions.
+# Read the INPUTS below, then execute the SETUP SEQUENCE step by step.
+# Load prompts/00_init.md for the setup procedure, then run it with these inputs.
+# This is not a document to review — it is a set of instructions to follow NOW.
 
 ---
 
@@ -177,7 +179,7 @@ KNOWN_DRIFT_RISKS:
 ## SETUP SEQUENCE — EXECUTE NOW
 
 ### Step 1 — Create project directory
-Create D:\EXPERIMENTS\DOOMSCROLLING\ with:
+Create C:\PROJECTS\SHELL\papers\DOOMSCROLLING\ with:
   spec/, state/, outputs/, results/raw/, results/validated/, results/final/,
   devlog/, src/, papers/, papers/doomscrolling_2026/,
   papers/doomscrolling_2026/figures/, prompts/
@@ -190,17 +192,17 @@ engagement-maximizing permutation, exponential delta < 1. Enforcements:
 trap as theorem, exponential discounting only, platform objective formalized,
 welfare loss quantified, no moralizing.
 
-### Step 3 — Write spec/frozen_spec.md
+### Step 3 — Write frozen_spec.md
 Fill from FROZEN_SPEC_PARAMETERS above. Lock date today.
 Locked by: James P Rice Jr.
 
 ### Step 4 — Initialize state files
-state/state_vector.md — TURN: 0, MILESTONE: M1, MODE: INIT
-state/innovation_log.md — header with project name and timestamp
-state/dead_ends.md — header with project name
+state_vector.md — TURN: 0, MILESTONE: M1, MODE: INIT
+innovation_log.md — header with project name and timestamp
+dead_ends.md — header with project name
 
 ### Step 5 — Copy all prompts from SHELL
-Copy from D:\EXPERIMENTS\SHELL\prompts\ into D:\EXPERIMENTS\DOOMSCROLLING\prompts\:
+Copy from C:\PROJECTS\SHELL\prompts\ into C:\PROJECTS\SHELL\papers\DOOMSCROLLING\prompts\:
   04_paper_orchestrator.md
   05_author.md
   06_peer_reviewer.md
@@ -215,9 +217,9 @@ Also write prompts/turn_prompts_log.md:
 
 ### Step 5b — Write run_pipeline.ps1
 
-Write run_pipeline.ps1 in the project root (D:\EXPERIMENTS\DOOMSCROLLING\) with
+Write run_pipeline.ps1 in the project root (C:\PROJECTS\SHELL\papers\DOOMSCROLLING\) with
 the slug set to "doomscrolling_2026". Use the template from
-D:\EXPERIMENTS\SHELL\prompts\00_init.md Step 15, replacing [SLUG] with
+C:\PROJECTS\SHELL\prompts\00_init.md Step 15, replacing [SLUG] with
 doomscrolling_2026 and [SLUG] paths with DOOMSCROLLING.
 
 ### Step 6 — Write STATUS.md
@@ -234,7 +236,7 @@ CHAIN_PROMPT.md must include:
   Author: Claude | Peer Reviewer: Claude | Editor: Claude
 
 ### Step 8 — Initialize git
-  cd D:\EXPERIMENTS\DOOMSCROLLING
+  cd C:\PROJECTS\SHELL\papers\DOOMSCROLLING
   git init
   git add -A
   git commit -m "Turn 0 | Init | doomscrolling_2026"

@@ -1,6 +1,8 @@
 # INIT — THE SUNK COST FALLACY IS NOT ALWAYS A FALLACY
-# Pre-filled. Ready to run.
-# claude --dangerously-skip-permissions papers/init_sunk_cost.md
+# EXECUTE IMMEDIATELY. Do not summarize, analyze, or ask questions.
+# Read the INPUTS below, then execute the SETUP SEQUENCE step by step.
+# Load prompts/00_init.md for the setup procedure, then run it with these inputs.
+# This is not a document to review — it is a set of instructions to follow NOW.
 
 ---
 
@@ -175,8 +177,21 @@ KNOWN_DRIFT_RISKS:
 
 ## SETUP SEQUENCE — EXECUTE NOW
 
+### Step 0 — Resolve project directory (auto-versioning)
+
+The base slug is SUNK_COST. Resolve the project directory using this pattern:
+  C:\PROJECTS\SHELL\papers\SUNK_COST_[YYYY-MM-DD]_[SEQ]\
+
+To resolve:
+1. List all existing directories matching C:\PROJECTS\SHELL\papers\SUNK_COST_*
+2. If none exist: use SUNK_COST_[TODAY]_001
+3. If some exist: find the highest sequence number across ALL matching
+   directories (regardless of date), increment by 1, use SUNK_COST_[TODAY]_[NEXT_SEQ]
+
+Store: RESOLVED_DIR and RESOLVED_SLUG. Use these for ALL paths below.
+
 ### Step 1 — Create project directory
-Create D:\EXPERIMENTS\SUNK_COST\ with:
+Create RESOLVED_DIR with:
   spec/, state/, outputs/, results/raw/, results/validated/, results/final/,
   devlog/, src/, papers/, papers/sunk_cost_2026/,
   papers/sunk_cost_2026/figures/, prompts/
@@ -188,21 +203,22 @@ params: Standard Bayes, noisy informative signal, sunk cost as sufficient
 statistic (g monotone), threshold I*. Enforcements: rigorous signal model,
 proven sufficient statistic, closed-form I*, information vs. commitment.
 
-### Step 3 — Write spec/frozen_spec.md
+### Step 3 — Write frozen_spec.md
 Fill from FROZEN_SPEC_PARAMETERS above. Lock date today.
 Locked by: James P Rice Jr.
 
 ### Step 4 — Initialize state files
-state/state_vector.md — TURN: 0, MILESTONE: M1, MODE: INIT
-state/innovation_log.md — header with project name and timestamp
-state/dead_ends.md — header with project name
+state_vector.md — TURN: 0, MILESTONE: M1, MODE: INIT
+innovation_log.md — header with project name and timestamp
+dead_ends.md — header with project name
 
 ### Step 5 — Copy all prompts from SHELL
-Copy from D:\EXPERIMENTS\SHELL\prompts\ into D:\EXPERIMENTS\SUNK_COST\prompts\:
+Copy from C:\PROJECTS\SHELL\prompts\ into RESOLVED_DIR\prompts\:
   04_paper_orchestrator.md
   05_author.md
   06_peer_reviewer.md
   07_editor.md
+  08_steelman.md
   run_milestone.md
 Do NOT copy 00_init.md — SHELL-level only.
 
@@ -213,10 +229,9 @@ Also write prompts/turn_prompts_log.md:
 
 ### Step 5b — Write run_pipeline.ps1
 
-Write run_pipeline.ps1 in the project root (D:\EXPERIMENTS\SUNK_COST\) with
-the slug set to "sunk_cost_2026". Use the template from
-D:\EXPERIMENTS\SHELL\prompts\00_init.md Step 15, replacing [SLUG] with
-sunk_cost_2026 and [SLUG] paths with SUNK_COST.
+Write run_pipeline.ps1 in RESOLVED_DIR with the slug set to RESOLVED_SLUG.
+Use the template from C:\PROJECTS\SHELL\prompts\00_init.md Step 15,
+replacing [SLUG] references with RESOLVED_SLUG and paths with RESOLVED_DIR.
 
 ### Step 6 — Write STATUS.md
 Phase: INIT -> PAPER PIPELINE
@@ -232,16 +247,16 @@ CHAIN_PROMPT.md must include:
   Author: Claude | Peer Reviewer: Claude | Editor: Claude
 
 ### Step 8 — Initialize git
-  cd D:\EXPERIMENTS\SUNK_COST
+  cd RESOLVED_DIR
   git init
   git add -A
-  git commit -m "Turn 0 | Init | sunk_cost_2026"
+  git commit -m "Turn 0 | Init | sunk_cost_2026 | RESOLVED_SLUG"
 
 ### Step 9 — Print confirmation and hand off:
-  PROJECT INITIALIZED: sunk_cost_2026
+  PROJECT INITIALIZED: sunk_cost_2026 (RESOLVED_SLUG)
   Spec locked. All files created. Git initialized.
   Beginning paper pipeline — M1 (Signal Model + Bayesian Framework) first.
-  Output: papers/sunk_cost_2026/paper.md
+  Output: RESOLVED_DIR\paper.md
   Running. James P Rice Jr. reviews when done.
 
 ---
@@ -257,7 +272,7 @@ to summarize — it is your operating manual. Execute it.
 YOUR INPUTS:
   PROBLEM: [the full PROBLEM text from the INPUTS section above]
   DATA: No empirical data. All results derived analytically from the Bayesian model.
-  SLUG: sunk_cost_2026
+  SLUG: RESOLVED_SLUG
   DRIFT_RISKS: [paste KNOWN_DRIFT_RISKS above into every Author and Reviewer prompt]
   FROZEN_SPEC: [pass full frozen_spec.md to Peer Reviewer on every review pass]
 

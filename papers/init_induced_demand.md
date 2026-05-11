@@ -1,6 +1,8 @@
 # INIT — INDUCED DEMAND AS A NASH EQUILIBRIUM
-# Pre-filled. Ready to run.
-# claude --dangerously-skip-permissions papers/init_induced_demand.md
+# EXECUTE IMMEDIATELY. Do not summarize, analyze, or ask questions.
+# Read the INPUTS below, then execute the SETUP SEQUENCE step by step.
+# Load prompts/00_init.md for the setup procedure, then run it with these inputs.
+# This is not a document to review — it is a set of instructions to follow NOW.
 
 ---
 
@@ -162,7 +164,7 @@ KNOWN_DRIFT_RISKS:
 ## SETUP SEQUENCE — EXECUTE NOW
 
 ### Step 1 — Create project directory
-Create D:\EXPERIMENTS\INDUCED_DEMAND\ with:
+Create C:\PROJECTS\SHELL\papers\INDUCED_DEMAND\ with:
   spec/, state/, outputs/, results/raw/, results/validated/, results/final/,
   devlog/, src/, papers/, papers/induced_demand_2026/,
   papers/induced_demand_2026/figures/, prompts/
@@ -173,17 +175,17 @@ Futility threshold delta_c* in closed form. Frozen params: BPR (alpha=0.15,
 beta=4), Wardrop UE, lognormal VOT. Enforcements: equilibrium not behavior,
 closed-form futility threshold, UE vs. SO distinguished, Braess unified.
 
-### Step 3 — Write spec/frozen_spec.md
+### Step 3 — Write frozen_spec.md
 Fill from FROZEN_SPEC_PARAMETERS above. Lock date today.
 Locked by: James P Rice Jr.
 
 ### Step 4 — Initialize state files
-state/state_vector.md — TURN: 0, MILESTONE: M1, MODE: INIT
-state/innovation_log.md — header with project name and timestamp
-state/dead_ends.md — header with project name
+state_vector.md — TURN: 0, MILESTONE: M1, MODE: INIT
+innovation_log.md — header with project name and timestamp
+dead_ends.md — header with project name
 
 ### Step 5 — Copy all prompts from SHELL
-Copy from D:\EXPERIMENTS\SHELL\prompts\ into D:\EXPERIMENTS\INDUCED_DEMAND\prompts\:
+Copy from C:\PROJECTS\SHELL\prompts\ into C:\PROJECTS\SHELL\papers\INDUCED_DEMAND\prompts\:
   04_paper_orchestrator.md
   05_author.md
   06_peer_reviewer.md
@@ -198,9 +200,9 @@ Also write prompts/turn_prompts_log.md:
 
 ### Step 5b — Write run_pipeline.ps1
 
-Write run_pipeline.ps1 in the project root (D:\EXPERIMENTS\INDUCED_DEMAND\) with
+Write run_pipeline.ps1 in the project root (C:\PROJECTS\SHELL\papers\INDUCED_DEMAND\) with
 the slug set to "induced_demand_2026". Use the template from
-D:\EXPERIMENTS\SHELL\prompts\00_init.md Step 15, replacing [SLUG] with
+C:\PROJECTS\SHELL\prompts\00_init.md Step 15, replacing [SLUG] with
 induced_demand_2026 and [SLUG] paths with INDUCED_DEMAND.
 
 ### Step 6 — Write STATUS.md
@@ -217,7 +219,7 @@ CHAIN_PROMPT.md must include:
   Author: Claude | Peer Reviewer: Claude | Editor: Claude
 
 ### Step 8 — Initialize git
-  cd D:\EXPERIMENTS\INDUCED_DEMAND
+  cd C:\PROJECTS\SHELL\papers\INDUCED_DEMAND
   git init
   git add -A
   git commit -m "Turn 0 | Init | induced_demand_2026"

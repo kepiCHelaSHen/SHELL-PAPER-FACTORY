@@ -26,18 +26,25 @@ experiment. HALT immediately and tell the user:
 
 ## ROLE SEPARATION
 
-This pipeline uses Claude for all three roles: Author, Peer Reviewer, and Editor.
-Each role has a distinct persona, distinct prompt, and distinct checklist.
-The adversarial tension comes from the prompts, not from different models.
+This pipeline uses Claude for all four roles: Author, Peer Reviewer, Steelman,
+and Editor. Each role has a distinct persona, distinct prompt, and distinct
+checklist. The adversarial tension comes from the prompts, not from different models.
 
   AUTHOR:        You (Claude) in Author mode — writes the paper
   PEER REVIEWER: You (Claude) in Peer Reviewer mode — hostile validation
+  STEELMAN:      You (Claude) in Steelman mode — hostile reader simulation
   EDITOR:        You (Claude) in Editor mode — editorial quality
 
 When switching roles, fully adopt the persona and checklist from the role's
 prompt file. The Author is confident and generates. The Peer Reviewer is hostile
-and looks for reasons to reject. The Editor has no patience for filler.
-Do not blend roles.
+and looks for reasons to reject. The Steelman simulates what a real external
+referee would attack even if the logic is sound. The Editor has no patience
+for filler. Do not blend roles.
+
+The Steelman is not the Peer Reviewer. The Peer Reviewer checks spec compliance
+and logical correctness. The Steelman checks: terminology inflation, citation
+mischaracterization, scope disguise, novelty vulnerability, and framing tone.
+The Steelman runs AFTER the Peer Reviewer ACCEPT on every milestone.
 
 NOTE: Multi-model triangulation (Grok-3 / GPT-4o / Claude) is used in the
 experiment pipeline (00_orchestrator.md) where specification drift detection
@@ -49,7 +56,7 @@ writing quality and proof rigor matter more than prior diversity for prose.
 ## ENVIRONMENT
 
 No external API keys needed. Claude CLI handles all roles natively.
-API keys in D:\EXPERIMENTS\SHELL\api.env are used only by the experiment
+API keys in C:\PROJECTS\SHELL\api.env are used only by the experiment
 pipeline (00_orchestrator.md) and the orchestrator accountability audit.
 
 ---
@@ -60,7 +67,7 @@ pipeline (00_orchestrator.md) and the orchestrator accountability audit.
 - DATA: [results, numbers, or supporting material — or "none" for theory papers]
 - SLUG: [short filesystem-safe name]
 - DRIFT_RISKS: [paste from frozen spec]
-- FROZEN_SPEC: [full contents of spec/frozen_spec.md]
+- FROZEN_SPEC: [full contents of frozen_spec.md]
 
 ---
 
@@ -68,8 +75,8 @@ pipeline (00_orchestrator.md) and the orchestrator accountability audit.
 
 Before the loop begins:
 
-1. Create papers/[SLUG]/ and papers/[SLUG]/figures/ if not already present
-2. Write papers/[SLUG]/state_vector.md:
+1. Create  and figures/ if not already present
+2. Write state_vector.md:
      TURN: 0
      STATUS: INIT
      MILESTONE: M1
@@ -82,9 +89,9 @@ Before the loop begins:
 4. Write devlog/DEV_LOG.md with session 1 entry
 5. Initialize git: git init, git add -A, git commit -m "Turn 0 | Init | [SLUG]"
 6. Compute frozen spec fingerprint:
-     Run: python -c "import hashlib; print(hashlib.sha256(open('spec/frozen_spec.md','rb').read()).hexdigest())"
+     Run: python -c "import hashlib; print(hashlib.sha256(open('frozen_spec.md','rb').read()).hexdigest())"
      Store the output as SPEC_FINGERPRINT.
-     Append to papers/[SLUG]/state_vector.md:
+     Append to state_vector.md:
        SPEC_FINGERPRINT: [hash]
 
 ---
@@ -95,8 +102,8 @@ Run M1 → M2 → M3 → M4 in strict sequence.
 Each milestone follows the same pattern:
 
   Before each milestone, verify spec integrity:
-    Run: python -c "import hashlib; print(hashlib.sha256(open('spec/frozen_spec.md','rb').read()).hexdigest())"
-    Compare result to SPEC_FINGERPRINT in papers/[SLUG]/state_vector.md.
+    Run: python -c "import hashlib; print(hashlib.sha256(open('frozen_spec.md','rb').read()).hexdigest())"
+    Compare result to SPEC_FINGERPRINT in state_vector.md.
     If mismatch: HALT immediately.
       Write: "SPEC INTEGRITY FAILURE — frozen_spec.md was modified after lock.
               Expected: [stored hash]. Got: [current hash]."
@@ -108,7 +115,7 @@ Each milestone follows the same pattern:
   Track the number of Author/Reviewer/Editor loops per milestone for the
   run manifest. The only external API cost is the GPT-4o accountability audit.
 
-After each Author submission, append to state/innovation_log.md:
+After each Author submission, append to innovation_log.md:
 
   ```yaml
   turn: [N]
@@ -121,7 +128,7 @@ After each Author submission, append to state/innovation_log.md:
     notes: "[one-line summary of what was written]"
   ```
 
-After each Peer Reviewer verdict, append to state/innovation_log.md:
+After each Peer Reviewer verdict, append to innovation_log.md:
 
   ```yaml
   turn: [N]
@@ -140,7 +147,7 @@ After each Peer Reviewer verdict, append to state/innovation_log.md:
     notes: "[one-line summary]"
   ```
 
-After each Editor verdict (M4 only), append to state/innovation_log.md:
+After each Editor verdict (M4 only), append to innovation_log.md:
 
   ```yaml
   turn: [N]
@@ -154,9 +161,25 @@ After each Editor verdict (M4 only), append to state/innovation_log.md:
     notes: "[one-line summary]"
   ```
 
+After each Steelman verdict, append to innovation_log.md:
+
+  ```yaml
+  turn: [N]
+  timestamp: [ISO 8601]
+  milestone: [current]
+  role: STEELMAN
+  model: claude
+  action: [STRUCTURAL_FLAG/ADVISORY_ONLY/NOVELTY_KILL]
+  details:
+    structural_flags_count: [N]
+    advisory_notes_count: [N]
+    categories: ["TERMINOLOGY_INFLATION", "SCOPE_DISGUISE", ...]
+    notes: "[one-line summary]"
+  ```
+
 After each milestone ACCEPT:
   - Write output to results/raw/[SLUG]_M[N].md
-  - Update papers/[SLUG]/state_vector.md
+  - Update state_vector.md
   - git add -A && git commit -m "Turn [N] | M[milestone] | LOCKED"
 
 ---
@@ -192,7 +215,7 @@ Section B: INTRODUCTION
     DRIFT RISKS: [DRIFT_RISKS]
     FROZEN SPEC: [FROZEN_SPEC]
 
-  Write output to papers/[SLUG]/M1_draft.md.
+  Write output to M1_draft.md.
 
 **Peer Reviewer — switch to Peer Reviewer mode (log exactly):**
 
@@ -203,8 +226,26 @@ Section B: INTRODUCTION
     FROZEN SPEC: [FROZEN_SPEC]
     DRAFT: [full contents of M1_draft.md]
 
-Peer Reviewer ACCEPT → write results/raw/[SLUG]_M1.md, commit, open M2.
+Peer Reviewer ACCEPT → Steelman review (GATING mode).
 Peer Reviewer REJECT → pass numbered list back to Author. Loop. Max 5.
+
+**Steelman — switch to Steelman mode (log exactly in turn_prompts_log.md):**
+
+  Read prompts/08_steelman.md. Fully adopt the Steelman persona.
+  Review:
+    MILESTONE: M1 — Foundations
+    MODE: GATING
+    FROZEN SPEC: [FROZEN_SPEC]
+    DRAFT: [full contents of M1_draft.md]
+
+  If verdict = ADVISORY_ONLY: proceed to lock.
+  If verdict = STRUCTURAL_FLAG:
+    Pass structural_flags to Author. Author revises. Peer Reviewer re-reviews.
+    Steelman re-reviews. Max 2 Steelman loops.
+    After loop 2 without resolution: lock with STEELMAN_WARNING flag.
+  If verdict = NOVELTY_KILL: HALT immediately. Write halt report.
+
+Steelman clear → write results/raw/[SLUG]_M1.md, commit, open M2.
 
 ---
 
@@ -237,7 +278,7 @@ Author writes: proof section only. No application yet.
     DRIFT RISKS: [DRIFT_RISKS]
     FROZEN SPEC: [FROZEN_SPEC]
 
-  Write output to papers/[SLUG]/M2_draft.md.
+  Write output to M2_draft.md.
 
 **Peer Reviewer — switch to Peer Reviewer mode:**
 
@@ -249,8 +290,27 @@ Author writes: proof section only. No application yet.
     LOCKED M1: [full contents of results/raw/[SLUG]_M1.md]
     DRAFT: [full contents of M2_draft.md]
 
-Peer Reviewer ACCEPT → write results/raw/[SLUG]_M2.md, commit, open M3.
+Peer Reviewer ACCEPT → Steelman review (GATING mode).
 Peer Reviewer REJECT → pass numbered list back to Author. Loop. Max 5.
+
+**Steelman — switch to Steelman mode (log exactly in turn_prompts_log.md):**
+
+  Read prompts/08_steelman.md. Fully adopt the Steelman persona.
+  Review:
+    MILESTONE: M2 — Core Proof
+    MODE: GATING
+    FROZEN SPEC: [FROZEN_SPEC]
+    LOCKED M1: [results/raw/[SLUG]_M1.md]
+    DRAFT: [full contents of M2_draft.md]
+
+  If verdict = ADVISORY_ONLY: proceed to lock.
+  If verdict = STRUCTURAL_FLAG:
+    Pass structural_flags to Author. Author revises. Peer Reviewer re-reviews.
+    Steelman re-reviews. Max 2 Steelman loops.
+    After loop 2 without resolution: lock with STEELMAN_WARNING flag.
+  If verdict = NOVELTY_KILL: HALT immediately. Write halt report.
+
+Steelman clear → write results/raw/[SLUG]_M2.md, commit, open M3.
 
 ---
 
@@ -295,7 +355,7 @@ Author receives: locked M1 + M2 for continuity.
     DRIFT RISKS: [DRIFT_RISKS]
     FROZEN SPEC: [FROZEN_SPEC]
 
-  Write output to papers/[SLUG]/M3_draft.md.
+  Write output to M3_draft.md.
 
 **Peer Reviewer — switch to Peer Reviewer mode:**
 
@@ -308,8 +368,24 @@ Author receives: locked M1 + M2 for continuity.
     LOCKED M2: [results/raw/[SLUG]_M2.md]
     DRAFT: [M3_draft.md]
 
-Peer Reviewer ACCEPT → write results/raw/[SLUG]_M3.md, commit, open M4.
+Peer Reviewer ACCEPT → Steelman review (ADVISORY mode).
 Peer Reviewer REJECT → pass numbered list back to Author. Loop. Max 5.
+
+**Steelman — switch to Steelman mode (log exactly in turn_prompts_log.md):**
+
+  Read prompts/08_steelman.md. Fully adopt the Steelman persona.
+  Review:
+    MILESTONE: M3 — Application + Boundary Conditions
+    MODE: ADVISORY
+    FROZEN SPEC: [FROZEN_SPEC]
+    LOCKED M1: [results/raw/[SLUG]_M1.md]
+    LOCKED M2: [results/raw/[SLUG]_M2.md]
+    DRAFT: [M3_draft.md]
+
+  Write steelman_critique_M3.md. Milestone locks regardless of verdict.
+  Author reads steelman_critique_M3.md before writing M4.
+
+Steelman complete → write results/raw/[SLUG]_M3.md, commit, open M4.
 
 ---
 
@@ -346,7 +422,7 @@ alone: problem, method, result, implication in 4 sentences or fewer per topic.
     DRIFT RISKS: [DRIFT_RISKS]
     FROZEN SPEC: [FROZEN_SPEC]
 
-  Write output to papers/[SLUG]/M4_draft.md.
+  Write output to M4_draft.md.
 
 **Peer Reviewer — switch to Peer Reviewer mode:**
 
@@ -358,12 +434,29 @@ alone: problem, method, result, implication in 4 sentences or fewer per topic.
     DRAFT: [M4_draft.md]
     [include all locked milestone files for cross-check]
 
-Peer Reviewer ACCEPT → pass to Editor.
+Peer Reviewer ACCEPT → Steelman review (ADVISORY mode).
 Peer Reviewer REJECT → pass numbered list back to Author. Loop. Max 5.
+
+**Steelman — switch to Steelman mode (log exactly in turn_prompts_log.md):**
+
+  Read prompts/08_steelman.md. Fully adopt the Steelman persona.
+  Review:
+    MILESTONE: M4 — Full Paper
+    MODE: ADVISORY
+    FROZEN SPEC: [FROZEN_SPEC]
+    DRAFT: [M4_draft.md]
+    [include all locked milestone files for cross-check]
+
+  Write steelman_critique_M4.md. Milestone continues regardless of verdict.
+  Editor reads steelman_critique_M4.md alongside the draft.
+
+Steelman complete → pass to Editor.
 
 **Editor — switch to Editor mode:**
 
   Read prompts/07_editor.md. Fully adopt the Editor persona.
+  Read steelman_critique_M4.md for context (do not re-open science questions,
+  but steelman advisory notes about framing and terminology inform your review).
   Apply the editorial checklist to the Peer Reviewer-accepted M4 draft.
 
 Editor ACCEPT → write final paper → run figure generation.
@@ -377,7 +470,7 @@ Editor REJECT → switch back to Author mode for revision:
     EDITOR REJECTION LIST: [numbered list from Editor]
     CURRENT DRAFT: [full contents of M4_draft.md]
 
-  Write revised output to papers/[SLUG]/M4_draft.md. Switch back to Editor.
+  Write revised output to M4_draft.md. Switch back to Editor.
   Max 3 Editor loops. If Editor still rejects after 3: log issues in
   innovation log, write paper anyway with EDITORIAL_WARNING flag.
 
@@ -397,12 +490,12 @@ skip this section entirely.**
 Scan the Editor-accepted M4 draft for every Python code block that begins with
 `# Figure N:`. For each one:
 
-  Write to: papers/[SLUG]/figures/figure_N.py
+  Write to: figures/figure_N.py
 
   Before writing, prepend this header to each script:
 
     #!/usr/bin/env python3
-    # Auto-extracted from papers/[SLUG]/paper.md
+    # Auto-extracted from paper.md
     # Generated by SHELL paper pipeline
     import os
     os.makedirs('figures', exist_ok=True)
@@ -415,7 +508,7 @@ Scan the Editor-accepted M4 draft for every Python code block that begins with
 
 For each extracted script, run:
 
-  cd papers/[SLUG]
+  cd .
   python figures/figure_N.py
 
 Capture stdout and stderr.
@@ -440,16 +533,16 @@ If a figure script fails (non-zero exit code or missing output file):
 
   Instead:
   1. Log the error: "FIGURE FAIL: figure_N.py — [error message]"
-  2. Write the error to papers/[SLUG]/figures/figure_N_error.txt
+  2. Write the error to figures/figure_N_error.txt
   3. Add a flag to the final output: "FIGURE WARNING: N figure(s) failed to render.
-     Check papers/[SLUG]/figures/ for error logs."
+     Check figures/ for error logs."
 
   The scripts remain in figures/ for manual debugging. The code is in the paper.
   James P Rice Jr. can fix and re-run individual scripts.
 
 ### Step 5 — Log results
 
-Append to state/innovation_log.md:
+Append to innovation_log.md:
   FIGURES: [N extracted] | [N rendered] | [N failed]
   [If failures: list each with one-line error summary]
 
@@ -463,7 +556,7 @@ that the Peer Reviewer cannot detect by reading alone.
 
 Run:
 
-  python D:\EXPERIMENTS\SHELL\src\verify_citations.py --paper papers/[SLUG]/paper.md
+  python C:\PROJECTS\SHELL\src\verify_citations.py --paper paper.md
 
 The script:
   1. Parses every citation in the ## References section
@@ -493,7 +586,7 @@ If the script fails (Python not found, network error, etc.):
 ## DRIFT REPORT
 
 After citation verification completes and before final output, parse the
-innovation log (state/innovation_log.md) and produce outputs/drift_report.md.
+innovation log (innovation_log.md) and produce outputs/drift_report.md.
 
 The innovation log uses structured YAML entries. Extract all entries where
 action: REJECT. For each, read details.checklist_items_failed and
@@ -549,12 +642,52 @@ Write: outputs/drift_report.md
 
 ---
 
+## FULL-PAPER STEELMAN (v2 drift risk generation)
+
+After the drift report completes, run a full-paper Steelman pass. This
+produces both a critique of the final paper and auto-generated drift risks
+for a potential v2 run.
+
+Read prompts/08_steelman.md. Adopt Steelman persona.
+Review:
+  MILESTONE: FULL_PAPER
+  MODE: V2_DRIFT
+  DRAFT: [full paper.md]
+  FROZEN SPEC: [FROZEN_SPEC]
+
+The Steelman produces:
+  - ST1-ST5 findings across the complete assembled paper
+  - Free-form hostile simulation (strongest single objection)
+  - drift_risks_for_v2 list (formatted as init-file KNOWN_DRIFT_RISKS entries)
+
+Write: outputs/steelman_full_paper.md (the full critique in YAML format)
+Write: outputs/v2_drift_risks.md with format:
+
+  # V2 DRIFT RISKS — Auto-generated by Steelman
+  # Feed these into a v2 init file's KNOWN_DRIFT_RISKS section.
+  # Each risk should be encoded verbatim as a DRIFT_RISK entry.
+
+  | Risk ID | Category | Location | Description | Mitigation |
+  |---------|----------|----------|-------------|------------|
+  | SDR-1   | [category] | [section] | [description] | [mitigation] |
+
+  [Full prose entries below, one per risk, formatted as init-file drift risks]
+
+Append to innovation_log.md:
+  STEELMAN (FULL_PAPER): [N] findings | [N] drift risks generated
+
+Print to terminal:
+  "STEELMAN COMPLETE — see outputs/steelman_full_paper.md"
+  "V2 DRIFT RISKS: outputs/v2_drift_risks.md ([N] risks identified)"
+
+---
+
 ## ORCHESTRATOR ACCOUNTABILITY
 
 After writing the drift report, call GPT-4o for a meta-review of the
 orchestration process. This is the ONE external API call in the paper pipeline —
 GPT-4o audits whether Claude (the orchestrator) followed its own rules.
-Load OPENAI_API_KEY from D:\EXPERIMENTS\SHELL\api.env.
+Load OPENAI_API_KEY from C:\PROJECTS\SHELL\api.env.
 
   API: OpenAI | model: gpt-4o | temperature: 0.2 | max_tokens: 3000
   System prompt:
@@ -564,8 +697,8 @@ Load OPENAI_API_KEY from D:\EXPERIMENTS\SHELL\api.env.
      science — the Peer Reviewer already did that. You are reviewing the process."
 
   User prompt:
-    INNOVATION LOG: [full contents of state/innovation_log.md]
-    FINAL PAPER: [full contents of papers/[SLUG]/paper.md]
+    INNOVATION LOG: [full contents of innovation_log.md]
+    FINAL PAPER: [full contents of paper.md]
 
     Check:
     1. Did the orchestrator skip any pipeline steps?
@@ -587,10 +720,10 @@ If PROCESS_CLEAN: no action needed beyond logging.
 
 ## FINAL OUTPUT
 
-Write: papers/[SLUG]/paper.md (complete, clean, final)
+Write: paper.md (complete, clean, final)
 Write: results/final/[SLUG]_final.md (copy)
-Update: papers/[SLUG]/state_vector.md → STATUS: AWAITING_REVIEW
-Update: state/innovation_log.md → full run summary
+Update: state_vector.md → STATUS: AWAITING_REVIEW
+Update: innovation_log.md → full run summary
 git add -A && git commit -m "FINAL | [SLUG] | AWAITING_REVIEW"
 
 Write: outputs/run_manifest.md with:
@@ -603,17 +736,18 @@ Write: outputs/run_manifest.md with:
   ## Models
   Author: Claude (via CLI)
   Peer Reviewer: Claude (via CLI)
+  Steelman: Claude (via CLI)
   Editor: Claude (via CLI)
   Orchestrator: Claude (via CLI)
   Accountability Auditor: GPT-4o (OpenAI) | temperature: 0.2 — sole external call
 
   ## Pipeline
-  | Milestone | Author Loops | Peer Reviewer Verdict | Editor Loops | Status |
-  |-----------|-------------|----------------------|-------------|--------|
-  | M1 | [N] | ACCEPT (loop [N]) | — | LOCKED |
-  | M2 | [N] | ACCEPT (loop [N]) | — | LOCKED |
-  | M3 | [N] | ACCEPT (loop [N]) | — | LOCKED |
-  | M4 | [N] | ACCEPT (loop [N]) | [N] | LOCKED |
+  | Milestone | Author Loops | Peer Reviewer | Steelman | Editor Loops | Status |
+  |-----------|-------------|--------------|----------|-------------|--------|
+  | M1 | [N] | ACCEPT (loop [N]) | [verdict] (GATING) | — | LOCKED |
+  | M2 | [N] | ACCEPT (loop [N]) | [verdict] (GATING) | — | LOCKED |
+  | M3 | [N] | ACCEPT (loop [N]) | [verdict] (ADVISORY) | — | LOCKED |
+  | M4 | [N] | ACCEPT (loop [N]) | [verdict] (ADVISORY) | [N] | LOCKED |
 
   ## Figures
   Extracted: [N] | Rendered: [N] | Failed: [N]
@@ -649,13 +783,13 @@ Write: outputs/run_manifest.md with:
 
   ## Reproducibility
   All prompts logged: prompts/turn_prompts_log.md
-  Innovation log: state/innovation_log.md (structured YAML format)
-  Frozen spec: spec/frozen_spec.md (LOCKED — never modified — fingerprint verified)
+  Innovation log: innovation_log.md (structured YAML format)
+  Frozen spec: frozen_spec.md (LOCKED — never modified — fingerprint verified)
 
 Print to terminal:
   ✅ PAPER COMPLETE — AWAITING REVIEW
-  📄 papers/[SLUG]/paper.md
-  📊 Figures: [N rendered, M failed] — papers/[SLUG]/figures/
+  📄 paper.md
+  📊 Figures: [N rendered, M failed] — figures/
   📚 Citations: [X/Y verified] — outputs/citation_verification.md
   📉 Drift: [N rejections] — outputs/drift_report.md
   🔍 Audit: [PROCESS_CLEAN/PROCESS_FLAG] — outputs/orchestrator_audit.md
@@ -670,10 +804,12 @@ Print to terminal:
 - Any milestone Author loop exceeds 5 turns without ACCEPT
 - Peer Reviewer identifies a claim that is structurally unfixable
   (e.g., central theorem false, core assumption violated)
+- Steelman identifies a novelty-killing prior work (ST5 NOVELTY_KILL —
+  a specific citable paper already proves the central claim)
 - James P Rice Jr. places a STOP file in the project root
 
 On halt:
-  Write STATUS: HALTED + milestone + reason to papers/[SLUG]/state_vector.md
+  Write STATUS: HALTED + milestone + reason to state_vector.md
   Write full halt report to outputs/halt_report.md
   git add -A && git commit -m "HALTED | [SLUG] | M[N] | [reason]"
   Report to James P Rice Jr.

@@ -9,7 +9,7 @@ Lock date: [DATE]
 
 | File | Reason | Locked |
 |------|--------|--------|
-| spec/frozen_spec.md | The oracle. Modifying it changes what we are validating. | [DATE] |
+| frozen_spec.md | The oracle. Modifying it changes what we are validating. | [DATE] |
 | [file] | [reason] | [DATE] |
 
 ## Rule

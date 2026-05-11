@@ -1,8 +1,8 @@
 # INIT — COMMON KNOWLEDGE PAPER
-# Pre-filled. Ready to run tonight.
-# Load this file and execute. No questions needed.
-#
-# claude --dangerously-skip-permissions papers/init_common_knowledge.md
+# EXECUTE IMMEDIATELY. Do not summarize, analyze, or ask questions.
+# Read the INPUTS below, then execute the SETUP SEQUENCE step by step.
+# Load prompts/00_init.md for the setup procedure, then run it with these inputs.
+# This is not a document to review — it is a set of instructions to follow NOW.
 
 ---
 
@@ -112,7 +112,7 @@ KNOWN_DRIFT_RISKS:
 
 ### Step 1 — Create project directory
 
-Create D:\EXPERIMENTS\COMMON_KNOWLEDGE\ with full subdirectory structure:
+Create C:\PROJECTS\SHELL\papers\COMMON_KNOWLEDGE\ with full subdirectory structure:
   spec/, state/, outputs/, results/raw/, results/validated/, results/final/,
   devlog/, src/, papers/, papers/common_knowledge_2026/, papers/common_knowledge_2026/figures/
   prompts/
@@ -129,10 +129,10 @@ Contents:
   knowledge in one step, eliminating coordination failure in the Stag Hunt.
 
   ## Key Files
-  - spec/frozen_spec.md — frozen parameters and proof obligations. Never modify.
-  - state/innovation_log.md — full audit trail
-  - state/state_vector.md — save game
-  - state/dead_ends.md — do not repeat these
+  - frozen_spec.md — frozen parameters and proof obligations. Never modify.
+  - innovation_log.md — full audit trail
+  - state_vector.md — save game
+  - dead_ends.md — do not repeat these
   - prompts/04_paper_orchestrator.md — the paper pipeline
 
   ## The Core Claim
@@ -155,15 +155,15 @@ Contents:
   ## Do Not Touch
   See SACRED_FILES.md.
 
-### Step 3 — Write spec/frozen_spec.md
+### Step 3 — Write frozen_spec.md
 Use the FROZEN_SPEC_PARAMETERS above. Fill every block. Write lock date as today.
 
 ### Step 4 — Initialize state files
-Write state/state_vector.md, state/innovation_log.md, state/dead_ends.md
+Write state_vector.md, innovation_log.md, dead_ends.md
 with project name and today's timestamp. TURN: 0.
 
 ### Step 5 — Copy all prompts from SHELL
-Copy from D:\EXPERIMENTS\SHELL\prompts\ into D:\EXPERIMENTS\COMMON_KNOWLEDGE\prompts\:
+Copy from C:\PROJECTS\SHELL\prompts\ into C:\PROJECTS\SHELL\papers\COMMON_KNOWLEDGE\prompts\:
   04_paper_orchestrator.md
   05_author.md
   06_peer_reviewer.md
@@ -178,9 +178,9 @@ Also write prompts/turn_prompts_log.md:
 
 ### Step 5b — Write run_pipeline.ps1
 
-Write run_pipeline.ps1 in the project root (D:\EXPERIMENTS\COMMON_KNOWLEDGE\) with
+Write run_pipeline.ps1 in the project root (C:\PROJECTS\SHELL\papers\COMMON_KNOWLEDGE\) with
 the slug set to "common_knowledge_2026". Use the template from
-D:\EXPERIMENTS\SHELL\prompts\00_init.md Step 15, replacing [SLUG] with
+C:\PROJECTS\SHELL\prompts\00_init.md Step 15, replacing [SLUG] with
 common_knowledge_2026 and [SLUG] paths with COMMON_KNOWLEDGE.
 
 ### Step 6 — Write STATUS.md
@@ -215,7 +215,7 @@ Write SACRED_FILES.md:
   # SACRED FILES | Lock date: [today] | Locked by: James P Rice Jr.
   | File | Reason | Locked |
   |------|--------|--------|
-  | spec/frozen_spec.md | Oracle. Never modify after lock. | [today] |
+  | frozen_spec.md | Oracle. Never modify after lock. | [today] |
 
 Write BEST_PRACTICES.md:
   # BEST PRACTICES — Common Knowledge Paper
@@ -243,7 +243,7 @@ Write outputs/state_vector_backup.md:
   [No backups yet.]
 
 ### Step 8 — Initialize git
-  cd D:\EXPERIMENTS\COMMON_KNOWLEDGE
+  cd C:\PROJECTS\SHELL\papers\COMMON_KNOWLEDGE
   git init
   git add -A
   git commit -m "Turn 0 | Init | common_knowledge_2026"

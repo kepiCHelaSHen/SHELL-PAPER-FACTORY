@@ -127,7 +127,7 @@
 
 **Why the gap exists:** The Drake equation has been criticized for decades but never formally replaced with a proper statistical framework. Survival analysis is the natural tool but requires cross-disciplinary expertise (astrobiology + biostatistics) that SETI researchers rarely possess simultaneously.
 
-**STATUS: INITIALIZED.** See `D:\EXPERIMENTS\FERMI\papers\init_fermi.md`
+**STATUS: INITIALIZED.** See `C:\PROJECTS\SHELL\papers\FERMI\papers\init_fermi.md`
 
 ---
 
@@ -141,7 +141,7 @@
 
 **Why the gap exists:** Aumann (1976), Rubinstein (1989), and Halpern-Moses (1990) established the theoretical difficulty of common knowledge but never proposed a constructive mechanism that achieves it deterministically. The mechanism design literature has not connected to the epistemic logic literature on this point.
 
-**STATUS: INITIALIZED.** See `D:\EXPERIMENTS\COMMON_KNOWLEDGE\papers\init_common_knowledge.md`
+**STATUS: INITIALIZED.** See `C:\PROJECTS\SHELL\papers\COMMON_KNOWLEDGE\papers\init_common_knowledge.md`
 
 ---
 

@@ -4,7 +4,7 @@ paper_to_thread.py — Extract the compelling parts of a SHELL paper and
 format them as an X (Twitter) thread.
 
 Usage:
-    python src/paper_to_thread.py --paper papers/[SLUG]/paper.md
+    python src/paper_to_thread.py --paper papers/[SLUG]/paper.md (or paper.md from project root)
 
 Outputs:
     outputs/x_thread.md — the thread in markdown, ready to copy-paste
@@ -129,7 +129,7 @@ def truncate_tweet(text: str, max_len: int = 275) -> str:
 # Thread generation
 # ---------------------------------------------------------------------------
 
-def generate_thread(paper_path: str, text: str) -> list:
+def generate_thread(text: str) -> list:
     """Generate the X thread as a list of tweet strings."""
     title = extract_title(text)
     abstract = extract_abstract(text)
@@ -255,7 +255,7 @@ def main():
         sys.exit(1)
 
     text = read_paper(args.paper)
-    tweets = generate_thread(args.paper, text)
+    tweets = generate_thread(text)
     thread_md = format_thread(tweets)
 
     # Output

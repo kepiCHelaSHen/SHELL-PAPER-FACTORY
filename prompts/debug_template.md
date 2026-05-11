@@ -9,7 +9,7 @@ CONTEXT INJECTION — READ FIRST
 Before diagnosing anything, read:
   1. CHAIN_PROMPT.md
   2. CLAUDE.md
-  3. state/innovation_log.md (last 3 entries)
+  3. innovation_log.md (last 3 entries)
 
 ================================================================================
 BUG REPORT
@@ -43,4 +43,4 @@ DEBUGGING INSTRUCTIONS
 5. Do not change unrelated code
 6. Verify: run 3-seed sigma check after fix
 7. Update devlog/DEV_LOG.md with DEBUG entry: root cause + fix
-8. If the bug reveals a systemic issue, document in state/dead_ends.md
+8. If the bug reveals a systemic issue, document in dead_ends.md

@@ -7,10 +7,10 @@
 
 ## Key Files
 - `CHAIN_PROMPT.md` — Master doc. All decisions. Authoritative.
-- `spec/frozen_spec.md` — The oracle. Never modify after lock.
-- `state/innovation_log.md` — Full audit trail.
-- `state/state_vector.md` — Save game. Read after every context reset.
-- `state/dead_ends.md` — Failed approaches. Do not repeat.
+- `frozen_spec.md` — The oracle. Never modify after lock.
+- `innovation_log.md` — Full audit trail.
+- `state_vector.md` — Save game. Read after every context reset.
+- `dead_ends.md` — Failed approaches. Do not repeat.
 - `prompts/00_orchestrator.md` — The loop. Run with Claude CLI.
 
 ## Frozen Coefficients
