@@ -65,6 +65,46 @@ These should eventually be checked by the quality loop before starting the next 
 
 ---
 
+## Init File Requirements (Hard Rules)
+
+Every init file MUST have ALL of the following or Claude will stop after scaffolding:
+
+1. **Execution directive at the top** (lines 2-5):
+   ```
+   # EXECUTE IMMEDIATELY. Do not summarize, analyze, or ask questions.
+   # Read the INPUTS below, then execute the SETUP SEQUENCE step by step.
+   # Load prompts/00_init.md for the setup procedure, then run it with these inputs.
+   # This is not a document to review — it is a set of instructions to follow NOW.
+   ```
+
+2. **HAND OFF section at the bottom** (after KNOWN_DRIFT_RISKS, before end):
+   ```
+   ## HAND OFF — EXECUTE PAPER PIPELINE
+
+   DO NOT STOP AFTER SCAFFOLDING. DO NOT ASK FOR PERMISSION. DO NOT ASK IF THE
+   USER WANTS TO PROCEED. DO NOT SUMMARIZE WHAT YOU DID.
+
+   After scaffolding is complete, IMMEDIATELY:
+   1. Read prompts/04_paper_orchestrator.md in the new project directory
+   2. Begin M1 — Author mode, write the Definitions Block and Introduction
+   3. Continue through M2, M3, M4 until paper.md is written
+   4. This is a single continuous execution — scaffold then write the paper
+
+   YOUR INPUTS FOR THE PIPELINE:
+     PROBLEM: [the full PROBLEM text from the INPUTS section above]
+     DATA: [data description]
+     SLUG: [slug]
+     DRIFT_RISKS: [paste from KNOWN_DRIFT_RISKS above]
+     FROZEN_SPEC: [full contents of frozen_spec.md in the project directory]
+
+   YOU ARE THE ORCHESTRATOR. EXECUTE THE PIPELINE NOW.
+   ```
+
+3. **Without BOTH of these**, Claude will either:
+   - Summarize the init file and ask what to do (no execution directive)
+   - Scaffold the project then stop at the prompt (no hand off section)
+   - Both happened repeatedly on 2026-05-11 and 2026-05-12
+
 ## Recommended Workflow (Updated)
 
 1. Write init file with frozen spec
