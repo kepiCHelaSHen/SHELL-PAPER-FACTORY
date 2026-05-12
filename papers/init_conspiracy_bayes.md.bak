@@ -1,4 +1,4 @@
-﻿# INIT — CONSPIRACY BELIEFS AS BAYESIAN UPDATING
+# INIT — CONSPIRACY BELIEFS AS BAYESIAN UPDATING
 # EXECUTE IMMEDIATELY. Do not summarize, analyze, or ask questions.
 # Read the INPUTS below, then execute the SETUP SEQUENCE step by step.
 # Load prompts/00_init.md for the setup procedure, then run it with these inputs.
@@ -159,14 +159,6 @@ If the authors wish to resubmit, the following changes are necessary:
 6. **Correct the characterization of Sunstein and Vermeule's cognitive infiltration** as a sustained environmental intervention rather than a finite debunking event, and reassess whether Lemma 3 or Definition 10 is the appropriate formal analog.
 
 7. **Fix the minor technical issues** listed above: Wald's equation conditions, μ = 0 posterior behavior, the multi-hypothesis conservativity claim, and the Doob reference.
-
-
-# === STEELMAN REVISION BRIEF (from run 1) ===
-# The next run MUST address every item.
-
-
-# === STEELMAN REVISION BRIEF (from run 2) ===
-# The next run MUST address every item.
 
 KNOWN_DRIFT_RISKS:
 - Making the model too simple — single Bayesian update instead of sequential
@@ -370,5 +362,3 @@ YOUR INPUTS:
 
 BEGIN NOW. Run M1. Do not ask for confirmation. Do not summarize the orchestrator.
 Execute it. Write the paper.
-
-

@@ -148,12 +148,27 @@ def run_paper(init_file: Path, run_num: int, meta_log: Path) -> Path | None:
     # to the meta log.
     log(f"--- Claude CLI running (output appears below) ---", meta_log)
 
-    returncode = subprocess.call(
+    # Run Claude in interactive mode via Popen. When the user presses Ctrl+C,
+    # it kills Claude but Python survives because we use Popen + wait instead
+    # of call (which propagates KeyboardInterrupt and kills Python too).
+    log(f"Claude will run interactively. When COMPLETE, press Ctrl+C to continue.", meta_log)
+    print(f"\n  >>> When Claude shows the completion summary and the prompt, press Ctrl+C <<<\n")
+
+    import signal
+    # Ignore SIGINT in the parent so Ctrl+C only kills the child (Claude)
+    old_handler = signal.signal(signal.SIGINT, signal.SIG_IGN)
+
+    process = subprocess.Popen(
         [CLAUDE_CMD, "--dangerously-skip-permissions", str(init_file)],
         cwd=str(SHELL_ROOT),
-        timeout=7200,
     )
+    process.wait()
+    returncode = process.returncode
 
+    # Restore original signal handler
+    signal.signal(signal.SIGINT, old_handler)
+
+    print(f"\n  >>> Claude exited — continuing quality loop <<<\n")
     log(f"--- Claude CLI finished (exit code {returncode}) ---", meta_log)
 
     # After Claude finishes, copy the project's innovation log to our run log
