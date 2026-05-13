@@ -1,4 +1,4 @@
-# INIT — ECHO CHAMBERS V3: VALIDATED AMPLIFICATION MODEL
+﻿# INIT — ECHO CHAMBERS V3: VALIDATED AMPLIFICATION MODEL
 # EXECUTE IMMEDIATELY. Do not summarize, analyze, or ask questions.
 # Read the INPUTS below, then execute the SETUP SEQUENCE step by step.
 # Load prompts/00_init.md for the setup procedure, then run it with these inputs.
@@ -216,6 +216,45 @@ Peer Reviewer: If validation table has ANY placeholder text, REJECT.
 If proofs end with tombstone and no body, REJECT.
 If A_V is defined differently in two places, REJECT.
 
+
+# === STEELMAN REVISION BRIEF (from run 1) ===
+# The next run MUST address every item.
+# STRUCTURAL ISSUES:
+1. **The linearized theory is presented as the main contribution, but the Monte Carlo results show it fails catastrophically in the most interesting regime.** Table 1 reports relative errors of 165%ΓÇô14,947% for barbell graphs with delta_mu >= 0.1. The paper frames this as "the linearized formula serves as a lower bound," but this is not proved ΓÇö it is observed empirically over a limited parameter sweep. A claimed lower-bound relationship requires a proof or at minimum a rigorous argument for why the nonlinear logistic always amplifies beyond the linear prediction. Without this, the core quantitative deliverable (the amplification factor A_V) is unreliable precisely where echo chambers are most pronounced, undermining the paper's central value proposition.
+2. **The d-regular assumption is load-bearing but rarely holds in social networks.** Section 5.2 acknowledges that non-regular graphs require the normalized Laplacian and "the specific formulas for V_ss require modification," but does not develop this. The entire formal apparatus ΓÇö Definitions 1ΓÇô10, Lemmas 1ΓÇô2, Theorems 1ΓÇô3 ΓÇö is stated for d-regular graphs only. The Journal of Mathematical Sociology audience will immediately ask whether the results extend to power-law or heavy-tailed degree distributions. A brief theorem or proposition establishing the qualitative result for general connected graphs (even without closed-form A_V) would address this. As written, the scope is too narrow for the generality claimed in the abstract and introduction.
+3. **Sections 1 and 2 appear twice in the manuscript.** The paper contains a duplicate header block ΓÇö the full title, author line, and Sections 1ΓÇô2 appear to restart after the initial abstract. This appears to be an assembly error. A reviewer encountering this in submission would question manuscript preparation quality.
+---
+# REVISION INSTRUCTIONS:
+1. **Prove or rigorously argue the lower-bound claim.** Either prove that the nonlinear DeGroot-Bayesian model always produces at least as much steady-state variance as the linearized model (e.g., by showing the logistic gain theta(1-theta) exceeds the linearized gain gamma/4 when beliefs are pushed away from 0.5 by persistent forcing), or downgrade the claim to an empirical observation with explicit caveats about parameter ranges where it has been tested.
+2. **Extend at least one result to non-regular graphs.** State a proposition showing that the qualitative amplification mechanism (A_V increasing with decreasing spectral gap) holds for general connected graphs using the normalized Laplacian. Closed-form A_V is not required ΓÇö a qualitative monotonicity statement suffices.
+3. **Fix the duplicate Sections 1ΓÇô2 assembly error.** The paper should have one continuous flow from abstract through conclusion.
+4. **Sharpen the novelty claim relative to Ghaderi and Srikant (2014).** Acknowledge that the lambda_2^{-2} scaling is extractable from their resolvent. Reframe the contribution as the named quantity A_V, the Bayesian micro-foundation, and the connection to echo chamber literature ΓÇö not the scaling result itself.
+5. **Address the circularity concern in the Bayesian micro-foundation.** Add a paragraph in the Discussion explaining under what conditions the informational interpretation of stubbornness is empirically distinguishable from the psychological one, and what data would discriminate between the two.
+6. **Elevate the DeGroot heuristic to a stated condition.** Theorem 2(vi) should state three necessary ingredients: spectral bottleneck, information heterogeneity, and bounded rationality (DeGroot averaging rather than full Bayesian inference).
+7. **Include at least one Monte Carlo run at n >= 100** to demonstrate that finite-size effects at n=20 are not driving the quantitative results.
+8. **Disentangle degree heterogeneity from linearization error** in the planted-partition validation by either (a) constructing an exactly d-regular planted-partition graph or (b) reporting the degree distribution and estimating its contribution to the error.
+9. **Revise the abstract** to note the domain of validity of the analytical formulas and the existence of large quantitative discrepancies outside that domain.
+10. **Resolve the mu notation overload** by renaming the AR(1) parameters to avoid collision with signal parameters mu_true, mu_false.
+
+
+# === STEELMAN REVISION BRIEF (from run 2) ===
+# The next run MUST address every item.
+# STRUCTURAL ISSUES:
+1. **Section ordering is non-standard and potentially confusing.** Definitions (Section 2) appear before the Introduction (Section 1). While the author may intend this as a "definitions-first" structure, the abstract and introduction reference concepts (amplification factor, spectral bottleneck) that only make sense after reading the definitions. The introduction then re-motivates what has already been formally defined. Standard mathematical social science convention places definitions after the introduction, or integrates them into the model section. This should be restructured to Introduction ΓåÆ Model/Definitions ΓåÆ Results.
+2. **The Monte Carlo validation undermines rather than supports the analytical results.** Table 1 (barbell graph) shows relative errors exceeding 2000%. Table 3 (n=100 planted partition) shows ~300% error even at delta_mu = 0, where the linearization should be most valid. The author frames these as characterizing "where the theory breaks down," but a reviewer reading Tables 1 and 3 will conclude that the main analytical result (Theorem 2) is quantitatively unreliable across most of the parameter space tested. Only Table 2 (n=20 planted partition, small delta_mu) shows acceptable agreement. A paper whose central formula works on one out of three test graphs, and only for small parameter values on that graph, has a validation problem. The author needs either (a) a nonlinear correction term that improves accuracy, or (b) a much clearer delineation of the "valid regime" as the primary claim, with the formula presented as a special-case result rather than the headline contribution.
+3. **Table 3 baseline error is unexplained.** At delta_mu = 0, the analytical prediction for the n=100 planted partition underestimates the MC variance by a factor of ~4 (error +293%). The author attributes this to "degree heterogeneity" (degrees range 7-10), but this is a hand-wave. If degree heterogeneity alone causes 4x error in the homogeneous case, the entire d-regular assumption underlying all three theorems is called into question for any realistic (non-exactly-regular) graph. This needs formal treatment ΓÇö at minimum, a proposition bounding the error introduced by degree heterogeneity, or a re-derivation using the normalized Laplacian that accounts for it.
+# REVISION INSTRUCTIONS:
+1. **Restructure the paper** to follow standard ordering: Introduction ΓåÆ Model (Definitions) ΓåÆ Results ΓåÆ Validation ΓåÆ Boundary Conditions ΓåÆ Related Work ΓåÆ Discussion ΓåÆ Conclusion.
+2. **Honestly reframe the contribution** as a modeling/interpretive paper connecting known spectral mechanisms (Ghaderi-Srikant 2014, Olfati-Saber et al. 2007) to the echo chamber literature via a Bayesian micro-foundation, rather than as a paper proving novel mathematical results. Adjust the abstract, introduction, and contributions list accordingly.
+3. **Address the Table 3 baseline error.** Either (a) provide a formal bound on the error introduced by degree heterogeneity in non-regular graphs, (b) include a validation on an exactly d-regular planted partition graph to isolate the regularity effect, or (c) restrict the theorem statements to acknowledge that quantitative accuracy requires near-exact regularity.
+4. **Remove condition (iii) from Theorem 2's formal statement** or prove it rigorously within the model. The current appeal to Aumann's theorem is insufficient because the Aumann conditions do not hold in this network setting. The bounded rationality assumption can be stated as a modeling premise in the theorem's hypotheses rather than as a "necessary condition" alongside the other two (which are formally proved).
+5. **Increase simulation runs** to at least 50 per configuration to reduce standard errors, and provide convergence diagnostics.
+6. **Explain the sign reversal in prediction errors** between barbell (analytical underestimates) and planted partition (analytical overestimates at high delta_mu). These opposite-direction errors suggest different failure modes that deserve separate treatment.
+7. **Add a worked empirical mapping** ΓÇö even a stylized one ΓÇö showing how the model's parameters might correspond to a real-world network partition. This could be illustrative (estimated lambda_2 for a known social network, plausible delta_mu range from media content analysis) without requiring full calibration.
+8. **Fix the code in Appendix A** to handle log-odds computation consistently, and note the scipy/numpy version requirements.
+9. **Shorten the abstract** to under 150 words, moving specific formulas and error percentages to the body.
+10. **Demote Theorem 3** to a corollary or remark, and remove Remark 1 (Paper 1 connection).
+
 KNOWN_DRIFT_RISKS:
 - CRITICAL: Empty validation tables. V2 Runs 1, 2, and 3 ALL had
   placeholder values. The Author generates code but doesn't run it.
@@ -284,3 +323,5 @@ YOUR INPUTS FOR THE PIPELINE:
   FROZEN_SPEC: [full contents of frozen_spec.md in the project directory]
 
 YOU ARE THE ORCHESTRATOR. EXECUTE THE PIPELINE NOW.
+
+

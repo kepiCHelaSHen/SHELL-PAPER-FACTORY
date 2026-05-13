@@ -1,0 +1,269 @@
+﻿[2026-05-12 12:27:51] Log file: C:\PROJECTS\SHELL\logs\quality_loop_20260512_122751.log
+[2026-05-12 12:27:51] Backed up papers/init_echo_chambers_v2_heterogeneous.md
+[2026-05-12 12:27:51] Base slug: ECHO_CHAMBERS_V2_2026
+[2026-05-12 12:27:51] 
+[2026-05-12 12:27:51] ============================================================
+[2026-05-12 12:27:51]   RUN 1 / 3
+[2026-05-12 12:27:51] ============================================================
+[2026-05-12 12:27:51] 
+[2026-05-12 12:27:51] --- Generating paper ---
+[2026-05-12 14:20:23] 
+[2026-05-12 14:20:23] --- Claude exited ---
+[2026-05-12 14:20:23] Paper: echo_chambers_v2_2026_2026-05-12_002 (490 lines)
+[2026-05-12 14:20:23] 
+[2026-05-12 14:20:23] --- Running Steelman review ---
+[2026-05-12 14:22:03] Saved critique to echo_chambers_v2_2026_2026-05-12_002\steelman_full_paper_critique.md
+============ STEELMAN CRITIQUE - Run 1 ============
+## Referee Report
+
+**Paper:** "Echo Chambers as Topology-Amplified Information Heterogeneity: A Bayesian Network Model"
+**Target Venue:** Journal of Mathematical Sociology
+
+---
+
+## STRUCTURAL ISSUES (would cause rejection)
+
+1. **Inconsistent definition of the amplification factor.** Definition 15 defines A_V(G) as V_ss divided by the baseline per-agent signal innovation variance (alpha^2 * gamma^2 * sigma^2). Theorem 2(iii) then redefines it as V_ss^{excess} / V_ss^{noise,2}, which is the ratio of excess variance to the *Fiedler component* of the homogeneous noise variance ΓÇö a different denominator entirely. These are not the same quantity. The central result of the paper is stated in terms of a symbol whose definition shifts between sections. This must be resolved before the paper can be evaluated on its merits.
+
+2. **The Monte Carlo "validation" does not validate the claimed model.** The simulation code (Section 4.2) replaces actual graph-neighbor averaging with a mean-field community-average approximation (`neighbor_avg[:half] = (1 - mix) * avg_C1 + mix * avg_C2`). This means the "Monte Carlo validation" compares the linearized analytical formula against a *different* mean-field approximation of the nonlinear dynamics ΓÇö not against the actual nonlinear DeGroot-Bayesian dynamics on a realized barbell graph with explicit adjacency structure. The validation table's claimed error bounds (e.g., "within 5% for moderate heterogeneity") are therefore not credible as stated. A proper validation must construct an explicit graph, run the exact update rule from Definition 9 using actual neighbor sets, and compare.
+
+3. **The novelty claim is overstated given the acknowledged control-theory precedent.** Section 2 (paragraph 5) and Section 5.1 (final paragraph) both acknowledge that the forcing-divided-by-spectral-gap structure is "well known in multi-agent control theory" and "standard in control theory." The paper then claims three additions: the hybrid update rule, the information-heterogeneity interpretation, and the bridge to the echo chamber literature. But the hybrid update rule is a convex combination of known components (Bayesian update + DeGroot averaging), the heterogeneous forcing term is a standard community-mean offset, and the echo chamber interpretation is essentially a relabeling. For the Journal of Mathematical Sociology, the interpretive contribution may suffice ΓÇö but the paper currently presents itself as proving a new mathematical result when the mathematical structure is inherited. The framing must be honest about what is new (the modeling choices and interpretation) versus what is known (the spectral mechanism).
+
+## FRAMING & POSITIONING ISSUES (would cause major revision)
+
+1. **Overclaimed scope of the "two ingredients" result.** The abstract and introduction state: "We prove that stable polarization *requires* two ingredients." This is only proven within the specific model class (DeGroot-Bayesian hybrid on fixed graphs with exogenous Gaussian signals). Bounded confidence models, stubborn agent models, and endogenous network models all produce stable polarization through different mechanisms. The claim should be scoped: "Within our model framework, stable polarization requires..."
+
+2. **The d-regular assumption undermines the empirical motivation.** The paper motivates itself with real-world social networks (political polarization, Facebook, filter bubbles) but restricts all theorems to d-regular graphs ΓÇö a class that excludes essentially every real social network. Section 4.3.4 (A4) acknowledges this and notes the barbell graph used in validation is itself *not* d-regular, claiming the formula "matches within 10%." But this claim rests on the flawed Monte Carlo (Structural Issue 2). Either prove the results for general graphs using the normalized Laplacian, or substantially temper the empirical framing.
+
+3. **Theorem 2's Fiedler-alignment assumption (z/||z|| = phi_2) is unrealistically strong.** Perfect alignment between community structure and the Fiedler vector is a knife-edge case. The paper relegates the general case (cos^2(psi) factor) to Section 4.3.5 (A5), but this factor can dramatically reduce the amplification. The main theorem should state the general result with the alignment factor, with perfect alignment as a corollary.
+
+4. **The connection to Paper 1 (Lemma 1) adds little.** Setting n=1 and alpha=1 in a network model to recover an isolated agent is a trivial observation, not a lemma. The paper devotes a full lemma statement, proof, and interpretive note to it, plus repeated references throughout (Section 2, Section 5.4). The conceptual analogy (partition = collective opacity) is itself acknowledged as "imperfect" and "not exact." Reduce this to a remark or footnote.
+
+5. **Section 6.2 correctly disclaims policy implications but is undermined by the final sentence of Section 7.** The conclusion states: "Reducing polarization... requires either reducing information heterogeneity... or increasing network connectivity... or both." This is precisely the kind of platform design recommendation that Section 6.2 says is "unjustified" given the model's assumptions. The conclusion should not make recommendations the discussion section has already disclaimed.
+
+## MINOR ISSUES (would appear in a revise-and-resubmit letter)
+
+1. The Definitions Block (Section 1) runs to approximately 4 pages and front-loads 15 definitions before the reader encounters any motivation or result. Consider moving standard definitions (1ΓÇô5) to an appendix or condensing them into a notation table, and placing the Definitions Block after the Introduction.
+
+2. Definition 6 labels the observation channel model as "Novel," but adding a community-specific mean offset to agent signals is standard in the heterogeneous agents literature (e.g., Acemoglu et al. 2010 use agent-specific biases; Ghaderi and Srikant 2014 use stubborn agent offsets). The formalization is clean but the novelty claim on the definition itself is unwarranted.
+
+3. The validation table in Section 4.2 reports results for a specific parameter configuration (alpha=0.3, sigma=1.0, Delta_omega=2.0) but does not explore sensitivity of the *validation error* to these choices. Is the 5% agreement at delta_mu=0.5 robust to different alpha or sigma values?
+
+4. The worked example (Section 4.1) uses the approximation lambda_2 Γëê 2b/n for the barbell graph. This approximation is valid for small b but its accuracy should be stated quantitatively (e.g., compared against the actual eigenvalue for the stated graph).
+
+5. The Python code embeds `omega_true = 0` as a hard-coded simplification (`omega_true_eff = 0 + delta_i`) without noting this normalization in the surrounding text. The code also clips log-odds to [-50, 50] ΓÇö this is a reasonable numerical safeguard but should be noted as it affects the extreme-delta_mu validation.
+
+6. In the summary table (Section 3.5), the "Heterogeneous, well-connected" row states lambda_2 >> delta_mu^2, which mixes quantities with different units/dimensions. The condition should be stated in terms of the amplification factor (A_V << 1) or the dimensionless ratio delta_mu^2 / (sigma^2 * lambda_2 / (n^2 * d)).
+
+7. The reference to "Hegselmann and Kramer (2002)" should be "Hegselmann and *Krause*" ΓÇö this is a well-known author name in the opinion dynamics literature.
+
+8. Rice (2026a) is cited repeatedly as the foundation for Lemma 1 and the trilogy framing, but as a working paper it is not verifiable by the referee. If it is under review, note where; if it is available as a preprint, provide a stable link.
+
+9. The abstract mentions "Monte Carlo validation confirms the analytical formula within 5% for moderate heterogeneity" ΓÇö given Structural Issue 2, this claim should be removed or restated pending a proper validation.
+
+10. Theorem 1(iii) claims the expected max-disagreement is O(alpha * gamma * sigma / sqrt(n)) and "vanishes as n -> infinity." This asymptotic statement requires that gamma and alpha do not depend on n, which should be noted as an assumption (in some network scaling regimes, these could vary with n).
+
+## VERDICT
+
+**MAJOR_REVISION**
+
+## REVISION INSTRUCTIONS
+
+1. **Fix the amplification factor definition.** Choose one definition of A_V(G) and use it consistently throughout. If A_V(G) is the ratio of excess variance to the Fiedler noise component, define it that way in Definition 15. If it is the ratio to the total per-agent innovation variance, adjust Theorem 2(iii) accordingly. Propagate the fix to all appearances (Abstract, Theorems, Summary Table, Discussion).
+
+2. **Redo the Monte Carlo validation on an explicit graph.** Construct actual barbell graphs with explicit adjacency matrices. Run the exact two-stage update from Definition 9 using each agent's actual neighbor set ΓÇö not a mean-field community-average proxy. Report the corrected validation errors. If the analytical formula's accuracy changes materially, update all claims about validity bounds.
+
+3. **Reframe the contribution honestly.** The mathematical structure (forcing/spectral-gap) is known. State this upfront ΓÇö not buried in paragraph 5 of the introduction. Frame the contribution as: (a) a specific modeling framework (DeGroot-Bayesian hybrid with heterogeneous observation channels) that connects the known spectral mechanism to the social learning and echo chamber literatures, and (b) the three-theorem characterization of the consensus-polarization continuum within this framework. Do not present inherited spectral results as novel proofs.
+
+4. **State Theorem 2 for general Fiedler alignment.** Replace the assumption z/||z|| = phi_2 with the general inner product cos(psi) = |<z/||z||, phi_2>|, include the cos^2(psi) factor in the excess variance formula, and state perfect alignment as a corollary.
+
+5. **Scope the "two ingredients necessary" claim.** Replace "stable polarization requires two ingredients" with "within our model, stable polarization requires two ingredients" ΓÇö or prove the claim holds across a broader model class.
+
+6. **Remove the policy recommendation from the conclusion** (final sentence of Section 7), or qualify it as a conjecture conditional on model assumptions ΓÇö consistent with Section 6.2's disclaimers.
+
+7. **Correct the Hegselmann-Krause citation** and verify all other reference details.
+
+8. **Restructure the Definitions Block.** Move standard definitions (1ΓÇô5) to a notation appendix. Place novel definitions (6ΓÇô15) in the body, introduced as needed. The current front-loading hinders readability.
+
+============ END CRITIQUE ============
+[2026-05-12 14:22:03] 
+[2026-05-12 14:22:03]   STEELMAN VERDICT: MAJOR_REVISION
+[2026-05-12 14:22:03] 
+[2026-05-12 14:22:03] Patched papers/init_echo_chambers_v2_heterogeneous.md with 3 structural issues, 8 revision instructions
+[2026-05-12 14:22:03] Waiting 10s before next run...
+[2026-05-12 14:22:14] 
+[2026-05-12 14:22:14] ============================================================
+[2026-05-12 14:22:14]   RUN 2 / 3
+[2026-05-12 14:22:14] ============================================================
+[2026-05-12 14:22:14] 
+[2026-05-12 14:22:14] --- Generating paper ---
+[2026-05-12 16:00:08] 
+[2026-05-12 16:00:08] --- Claude exited ---
+[2026-05-12 16:00:08] Paper: echo_chambers_v2_2026_2026-05-12_003 (434 lines)
+[2026-05-12 16:00:08] 
+[2026-05-12 16:00:08] --- Running Steelman review ---
+[2026-05-12 16:01:20] Saved critique to echo_chambers_v2_2026_2026-05-12_003\steelman_full_paper_critique.md
+============ STEELMAN CRITIQUE - Run 2 ============
+## STRUCTURAL ISSUES (would cause rejection)
+
+1. **Validation table is empty.** Section 4.3's table contains placeholder entries ("[from code execution]") instead of actual numerical results. A paper submitted for peer review must contain completed results. The simulation code is provided but never executed ΓÇö the reader cannot verify the central empirical claim that analytical formulas match Monte Carlo output. This is not a minor formatting issue; it is missing evidence for the paper's main quantitative claims.
+
+2. **Linearization validity bounds are informal.** The paper states the linearization holds when "alpha * gamma * delta_mu / (1 - nu_2) << 1" (Section 5.2) but never quantifies "<<". The simulation sweeps delta_mu up to 2.0 with gamma = 1.0 and alpha = 0.3, which for b=1 (nu_2 near 1) would violate any reasonable bound. Without a formal validity region, the reader cannot judge which analytical predictions are trustworthy and which are extrapolations beyond the model's regime.
+
+3. **Theorem 2 proof has a gap in Step 9.** The steady-state belief gap formula (vi) is stated as Delta_ss = alpha * gamma * delta_mu / (1 - nu_2), but the proof says only "computed by tracking the Fiedler component's contribution to community means." This is exactly the kind of proof-by-assertion the frozen spec warns against. The derivation connecting the Fiedler mode's steady-state mean to community-level averages requires showing how phi_2 maps onto the community partition, which is nontrivial for general graphs.
+
+## FRAMING & POSITIONING ISSUES (would cause major revision)
+
+1. **The paper undersells then oversells its novelty in alternating paragraphs.** The abstract claims to "prove three results," the introduction says the spectral mechanism is "well established" and the contribution is the "modeling framework," and Section 6.4 calls the reinterpretation "not cosmetic." The reader is left uncertain what exactly is new. A cleaner framing: state once (introduction, paragraph 2) what is borrowed and what is new, then stop relitigating it. The current hedging reads as defensive rather than precise.
+
+2. **The "trilogy" framing is premature and distracting.** Paper 3 is described as "planned." Positioning this paper as "Paper 2 of a trilogy" presupposes acceptance of Paper 1 (a working paper) and existence of Paper 3. For JMS, this paper should stand alone. The connection to Paper 1 via Lemma 1 is fine as a remark; the trilogy narrative belongs in an author's research statement, not a journal submission.
+
+3. **The observation channel model (Definition 8) conflates two distinct phenomena without acknowledging the difference.** The paper says delta_i could reflect "legitimate geographic differences" or "deliberate misinformation targeting" and "treats these symmetrically" (Section 7.2, point 3). But these have very different implications for the normative interpretation of the results. A reviewer for JMS will want to know whether the model says anything about which kind of heterogeneity matters for real echo chambers ΓÇö or whether it is deliberately agnostic. The current treatment is too brief on a point that determines the paper's sociological relevance.
+
+4. **Barbell graph is acknowledged as not d-regular, but the implications are not quantified.** Section 4.2 notes the mismatch but does not estimate how much error the degree irregularity introduces versus the linearization error. A d-regular planted-partition graph (e.g., stochastic block model with fixed degree) would be a cleaner validation target and is easy to construct.
+
+## MINOR ISSUES (would appear in a revise-and-resubmit letter)
+
+1. The abstract is 250+ words and reads like a compressed introduction. Shorten to ~150 words focusing on the three theorems and the amplification formula. Move the "what is not claimed" material to the introduction.
+
+2. Definition 10 introduces gamma as the "base log-likelihood ratio gain" but then states "All linearized results use the common gamma" while acknowledging delta_i/sigma^2 corrections are "second-order." This approximation should be stated as a formal assumption with conditions, not embedded in a definition.
+
+3. The paper uses both "excess variance" V_ss^{excess} and "belief gap" Delta_ss as polarization measures. While their relationship is stated (V_ss^{excess} = Delta_ss^2 / 4 for the aligned case), the amplification factor A_V is defined in terms of variance. It would help the reader to pick a primary measure and frame results around it, with the other as a corollary.
+
+4. Theorem 1(ii) gives V_ss^{hom} with denominator (1 - nu_k^2). The proof correctly derives this from the AR(1) variance formula. But the notation switch from sigma^2 (signal noise) to Var(a_k) (spectral component variance) happens without a bridging sentence ΓÇö a reader skimming will lose the thread.
+
+5. Section 5.1 ("Natural Enemy") is a useful section but the title is idiosyncratic for JMS. Consider "Relationship to Golub-Jackson Consensus" or similar.
+
+6. The code in Section 4.2 uses `np.random.seed(run * 1000 + b * 100 + int(dm * 10))`, which means different parameter combinations share seed components and could produce correlated graph realizations. Use a proper seeding strategy (e.g., `np.random.SeedSequence`).
+
+7. References to "Paper 1" by internal project name (conspiracy_bayes_2026) should use a proper citation format. If the paper is unpublished, cite it as "Rice (2026, working paper)" throughout.
+
+8. Corollary 1 is labeled a "practical heuristic" immediately after being stated as a corollary ΓÇö corollaries are logical consequences of theorems, not heuristics. Either derive it formally or relabel it as a remark.
+
+9. The sensitivity analysis table (Section 5.4) uses "PARTIAL" without defining what breaks. For sigma^2 at 10x lower, does the linearization fail catastrophically or degrade gradually? Quantify.
+
+10. Figure 1 is described in a code block but never rendered in the manuscript. The reader sees Python code, not a figure. The submission must include the actual figure output.
+
+## VERDICT
+
+MAJOR_REVISION
+
+## REVISION INSTRUCTIONS
+
+1. **Execute the simulation code and populate the validation table (Section 4.3) with actual numbers.** Report Monte Carlo mean, standard error, analytical prediction, and relative error for each (b, delta_mu) combination. Include the rendered Figure 1 as an actual figure, not source code.
+
+2. **Complete the proof of Theorem 2(vi).** Show explicitly how the Fiedler vector's structure maps to community averages for the symmetric partition case. The current "computed by tracking..." is insufficient.
+
+3. **Establish a formal linearization validity bound.** State as a proposition: "The linearized approximation holds to relative error epsilon when [explicit condition on alpha, gamma, delta_mu, nu_2]." Verify this bound against Monte Carlo.
+
+4. **Add a d-regular validation.** Run the Monte Carlo on a d-regular planted-partition graph (e.g., random d-regular with known partition) to isolate linearization error from degree-irregularity error. This can be a supplementary figure.
+
+5. **Consolidate the novelty statement.** State the contribution clearly once in the introduction and remove the defensive hedging elsewhere. Suggested framing: "The spectral mechanism is known; this paper contributes (a) the specific DeGroot-Bayesian hybrid model connecting it to echo chambers, (b) three theorems characterizing the consensus-polarization continuum, and (c) the amplification factor as a quantitative bridge between the informal echo chamber literature and spectral graph theory."
+
+6. **Remove or deemphasize the trilogy framing.** Lemma 1 and the connection to Rice (2026) can remain as a remark. Remove references to "Paper 3 (planned)" and the "Bayesian Epistemology Trilogy" label.
+
+7. **Discuss the normative implications of the observation channel model.** At minimum, add a paragraph in Section 7 distinguishing the case where delta_mu reflects legitimate informational differences from the case where it reflects manipulated information environments, and state which (if either) the model's welfare implications apply to.
+
+8. **Relabel Corollary 1** as a Remark or Observation, consistent with its stated status as a heuristic.
+
+9. **Fix minor notation and presentation issues** (items 4, 6, 7, 9 from Minor Issues above).
+
+============ END CRITIQUE ============
+[2026-05-12 16:01:20] 
+[2026-05-12 16:01:20]   STEELMAN VERDICT: MAJOR_REVISION
+[2026-05-12 16:01:20] 
+[2026-05-12 16:01:20] Patched papers/init_echo_chambers_v2_heterogeneous.md with 3 structural issues, 9 revision instructions
+[2026-05-12 16:01:20] Waiting 10s before next run...
+[2026-05-12 16:01:30] 
+[2026-05-12 16:01:30] ============================================================
+[2026-05-12 16:01:30]   RUN 3 / 3
+[2026-05-12 16:01:30] ============================================================
+[2026-05-12 16:01:30] 
+[2026-05-12 16:01:30] --- Generating paper ---
+[2026-05-12 16:57:17] 
+[2026-05-12 16:57:17] --- Claude exited ---
+[2026-05-12 16:57:17] Paper: echo_chambers_v2_2026_2026-05-12_003 (434 lines)
+[2026-05-12 16:57:17] 
+[2026-05-12 16:57:17] --- Running Steelman review ---
+[2026-05-12 16:58:24] Saved critique to echo_chambers_v2_2026_2026-05-12_003\steelman_full_paper_critique.md
+============ STEELMAN CRITIQUE - Run 3 ============
+## STRUCTURAL ISSUES (would cause rejection)
+
+1. **Validation table is empty.** Section 4.3 presents a table with placeholder entries ("[from code execution]") instead of actual numerical results. A paper submitted for review must contain completed validation data. The reader cannot assess whether the analytical formulas agree with simulation without this table. The code is provided but the results are not ΓÇö this is a manuscript preparation failure, not a minor formatting issue.
+
+2. **Linearization validity bounds are informal.** The paper states the linearization holds when "alpha * gamma * delta_mu / (1 - nu_2) << 1" (Section 5.2) but never quantifies what "<<" means. The simulation sweeps delta_mu up to 2.0, which with gamma = 1.0 and alpha = 0.3 almost certainly violates this bound for low-bridge graphs. Without an explicit validity criterion and a demonstration of where the approximation breaks down quantitatively, the analytical results are of uncertain scope.
+
+3. **The barbell graph violates the d-regularity assumption, and this is acknowledged but not resolved.** Section 4.2 notes that bridge nodes have higher degree, meaning the Monte Carlo validates a different model than the one analyzed. The paper suggests a random d-regular graph with planted partition would isolate the linearization error but does not perform this cleaner validation. This leaves the reader unable to distinguish linearization error from regularity-violation error in whatever results would populate the empty table.
+
+## FRAMING & POSITIONING ISSUES (would cause major revision)
+
+1. **The "trilogy" framing is premature and self-promotional.** Paper 3 is described as "planned" (Section 7.3). Referencing an unwritten paper as part of a trilogy in a submission to JMS is unusual and risks appearing as a marketing device rather than a scholarly connection. The reduction to Paper 1 (Lemma 1) is legitimate and should stay, but the trilogy narrative should be removed or drastically toned down.
+
+2. **The novelty claim is narrower than the paper's length suggests.** The paper is admirably honest that the spectral mechanism is known from control theory. The claimed contribution ΓÇö a specific modeling framework connecting known spectral results to the echo chamber literature ΓÇö is real but modest. The paper is quite long for what amounts to applying a known steady-state forced-consensus analysis to a social learning interpretation. The definitions block alone is 15 definitions. Consider whether JMS reviewers will find the ratio of machinery to new insight proportionate.
+
+3. **The relationship to Friedkin-Johnsen (1990) is underdeveloped.** The Friedkin-Johnsen model with stubbornness parameters produces exactly the same mathematical structure: agents anchor to an exogenous "prejudice" while averaging with neighbors, and steady-state disagreement scales with the spectral gap. The paper lists F-J in Section 5.5 with a one-sentence dismissal ("Different mechanism"), but the mathematical isomorphism is close enough that a reviewer familiar with F-J will see the DeGroot-Bayesian hybrid as a micro-founded version of the same operator. This connection should be made explicit ΓÇö it strengthens the paper (the Bayesian micro-foundation is the contribution) rather than weakening it.
+
+4. **The "not a phase transition" point is overemphasized.** The frozen spec warns about this drift risk, and the author has clearly internalized it ΓÇö but the paper now mentions the absence of a phase transition at least six times (abstract, introduction, Theorem 2 discussion, Corollary 1, Section 7.1, conclusion). Once or twice is sufficient. Repeating it this often reads as responding to an internal reviewer rather than writing for the journal audience.
+
+5. **Section 7.2 ("What the Model Does Not Say") is defensive and unusual for JMS.** While intellectual honesty about limitations is welcome, a numbered list of things the model does *not* claim reads as preemptive defense against anticipated criticism. Fold the key caveats (fixed network, rational agents, exogenous delta_mu) into the discussion naturally rather than presenting them as a separate disclaimer section.
+
+## MINOR ISSUES (would appear in a revise-and-resubmit letter)
+
+1. **Definition 10 absorbs the heterogeneity correction into linearization error without justification.** The claim that delta_i/sigma^2 is "second-order" relative to gamma requires delta_mu << |mu_true - mu_false|. This condition is not stated as a formal assumption, yet the entire linearized analysis depends on it. State it as an explicit assumption.
+
+2. **The simulation code is embedded in the paper body.** For JMS, simulation details belong in an appendix or supplementary material. The 80+ lines of Python in Section 4.2 interrupt the paper's flow. Describe the simulation protocol in prose and relegate code to a replication package.
+
+3. **Theorem 2(vi) introduces the belief gap formula but it is not immediately clear how it relates to Theorem 2(ii)-(iii).** The relationship V_ss^{excess} = Delta_ss^2/4 is stated at the end of (vi) but deserves more prominent treatment ΓÇö it is the bridge between the variance and gap perspectives and resolves a drift risk flagged in the spec.
+
+4. **The proof of Theorem 3 Step 2 has a subtle issue.** The mean mode within a connected component has eigenvalue mu_1 = 1 for W restricted to that component, giving nu_1 = (1-alpha). The steady-state mean is then alpha * gamma * (delta_mu/2) / (1 - (1-alpha)) = gamma * delta_mu/2. This is correct but the intermediate step "Steady state: E[x_bar_{C_1}^{ss}] = alpha * gamma * (delta_mu/2) / alpha" should show the denominator derivation more explicitly, since readers may not immediately see that (1 - nu_1) = alpha for the mean mode.
+
+5. **Definition 8 states each agent's likelihood is "correctly specified for their own channel."** This is a strong modeling choice that deserves more discussion. In practice, agents in an echo chamber may not know their observation channel differs from others'. The "correct specification" assumption means polarization arises entirely from information access, not from any form of misunderstanding ΓÇö which is the paper's conceptual point, but it should be flagged as an assumption rather than stated as a modeling fact.
+
+6. **The abstract is 250+ words and contains notation (delta_mu, nu_2, lambda_2, A_V(G)).** JMS abstracts should be accessible to sociologists who may not parse spectral notation on first read. Consider a two-paragraph abstract: one in plain language, one with the formal results.
+
+7. **Reference to "Paper 1" by working-paper title (conspiracy_bayes_2026) should use a proper citation format.** If it is a working paper, cite it as such with a URL or institutional working paper series number.
+
+8. **Corollary 1 provides a "practical heuristic" threshold but no guidance on choosing epsilon.** Without this, the corollary is not actionable. Either provide guidance or remove it.
+
+9. **Figure 1 is described but presumably not generated (since the validation table is empty).** Ensure the figure is actually produced and included before submission.
+
+10. **Typos/formatting:** The symbol "?" appears to be a rendering artifact in several places (e.g., Definition 9: "? reduces to Paper 1"; Section 7.3: "? not through cognitive failure"). Replace with em-dashes or appropriate punctuation.
+
+## VERDICT
+
+**MAJOR_REVISION**
+
+## REVISION INSTRUCTIONS
+
+1. **Run the simulation code and populate the validation table (Section 4.3) with actual numerical results.** Report Monte Carlo means, standard errors, analytical predictions, and relative errors. This is non-negotiable for resubmission.
+
+2. **Add a strictly d-regular validation.** Construct a random d-regular graph with planted partition (or a circulant graph with community structure) and repeat the Monte Carlo validation. This isolates linearization error from regularity-violation error and strengthens the empirical contribution.
+
+3. **State the linearization validity condition as a formal assumption** (e.g., Assumption 1: delta_mu << |mu_true - mu_false|) and demonstrate empirically where the approximation breaks down by plotting analytical vs. Monte Carlo across the validity boundary.
+
+4. **Develop the Friedkin-Johnsen connection.** Show the mathematical correspondence between your steady-state operator and the F-J model's, and articulate how the Bayesian micro-foundation adds value beyond F-J's reduced-form stubbornness parameter.
+
+5. **Remove or substantially reduce the trilogy framing.** Keep Lemma 1 and the Paper 1 connection. Remove references to the unwritten Paper 3 and the "Bayesian Epistemology Trilogy" branding.
+
+6. **Consolidate the "not a phase transition" language** to two instances maximum (introduction and Theorem 2 discussion). Trust the reader to absorb the point once.
+
+7. **Move simulation code to supplementary material.** Replace with a prose description of the simulation protocol in the main text.
+
+8. **Rewrite the abstract** to lead with an accessible plain-language summary before introducing notation.
+
+9. **Fold Section 7.2 into the main discussion** rather than presenting it as a standalone disclaimer.
+
+10. **Fix all rendering artifacts** (the "?" symbols appearing throughout) and ensure Figure 1 is included in the submission.
+
+============ END CRITIQUE ============
+[2026-05-12 16:58:24] 
+[2026-05-12 16:58:24]   STEELMAN VERDICT: MAJOR_REVISION
+[2026-05-12 16:58:24] 
+[2026-05-12 16:58:24] Max runs (3) reached.
+[2026-05-12 16:58:24] Restored original papers/init_echo_chambers_v2_heterogeneous.md from backup
+[2026-05-12 16:58:24] 
+[2026-05-12 16:58:24] ============================================================
+[2026-05-12 16:58:24]   QUALITY LOOP COMPLETE
+[2026-05-12 16:58:24]   Runs: 3
+[2026-05-12 16:58:24]   Log: C:\PROJECTS\SHELL\logs\quality_loop_20260512_122751.log
+[2026-05-12 16:58:24] ============================================================

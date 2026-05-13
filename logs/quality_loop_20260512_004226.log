@@ -35,3 +35,25 @@
 [2026-05-12 02:15:46] ============================================================
 [2026-05-12 02:15:46] 
 [2026-05-12 02:15:46] --- Generating paper ---
+[2026-05-12 02:44:25] 
+[2026-05-12 02:44:25] --- Claude exited ---
+[2026-05-12 02:44:25] Paper: CONSPIRACY_BAYES_2026-05-12_003 (423 lines)
+[2026-05-12 02:44:25] 
+[2026-05-12 02:44:25] --- Running Steelman review ---
+[2026-05-12 02:45:42] Saved critique to CONSPIRACY_BAYES_2026-05-12_003\steelman_full_paper_critique.md
+[2026-05-12 02:45:42] Patched papers/init_conspiracy_bayes.md with revision instructions
+[2026-05-12 02:45:42] Waiting 10s before next run...
+[2026-05-12 02:45:52] 
+[2026-05-12 02:45:52] ============================================================
+[2026-05-12 02:45:52]   RUN 4 / 10
+[2026-05-12 02:45:52] ============================================================
+[2026-05-12 02:45:52] 
+[2026-05-12 02:45:52] --- Generating paper ---
+[2026-05-12 09:22:10] 
+[2026-05-12 09:22:10] --- Claude exited ---
+[2026-05-12 09:22:10] Paper: CONSPIRACY_BAYES_2026-05-12_004 (512 lines)
+[2026-05-12 09:22:10] 
+[2026-05-12 09:22:10] --- Running Steelman review ---
+[2026-05-12 09:22:13] Saved critique to CONSPIRACY_BAYES_2026-05-12_004\steelman_full_paper_critique.md
+[2026-05-12 09:22:13] Patched papers/init_conspiracy_bayes.md with revision instructions
+[2026-05-12 09:22:13] Waiting 10s before next run...
