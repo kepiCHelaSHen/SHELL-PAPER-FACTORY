@@ -1,37 +1,33 @@
-# SHELL v6.1 — Current Status
-# Updated: 2026-05-12
+# SHELL v6.3 — Current Status
+# Updated: 2026-05-15
 
-Phase:   PRODUCTION — Quality loop operational, trilogy in progress
-Mode:    PAPER GENERATION
+Phase:   PRODUCTION — Agent dispatch architecture, 4 papers completed
+Mode:    PAPER GENERATION + EXTERNAL REVIEW
 
 ## What Is Done
-- SHELL v6.0/v6.1 framework (flattened structure, auto-versioning, Steelman, quality loop)
-- Conspiracy Bayes (Paper 1): 3 runs, Steelman ACCEPT, zero structural issues
-- Echo Chambers V1: 4 runs, 3 Steelman MAJOR_REVISION — identified fundamental spec problem
-- Echo Chambers V2 init written with corrected spec (amplification, not phase transition)
-- Quality loop (PowerShell) working with logging
-- Regression tests module built
-- Epistemic metrics module built
-- Lessons learned documented
-
-## What Is In Progress
-- Echo Chambers V2 (heterogeneous information): first quality loop run
-
-## What Is Next
-- [ ] Complete Echo Chambers V2 quality loop
-- [ ] Feed Paper 1 + Paper 2 theorems into Misinformation init
-- [ ] Run Paper 3 (Misinformation Persistence as Equilibrium)
-- [ ] Run epistemic metrics across all completed papers
-- [ ] Multi-model Steelman (GPT-4o instead of Claude) — Phase 3 of roadmap
-
-## Open Issues
-- Claude CLI kills parent processes on exit — workaround: cmd /c (documented)
-- Quality loop requires manual Ctrl+C twice per run — not fully automated
-- PowerShell verdict regex was broken (fixed 2026-05-12)
-- Init files must have HAND OFF section or Claude stops after scaffolding
+- SHELL v6.3 (agent dispatch, internal quality loop, consolidated findings)
+- 4 autonomous papers generated (zero human intervention)
+- 12 independent reviews (GPT-4o, Grok-3, Gemini 2.5 Flash)
+- Average review score: 7.92/10
+- 100% Steelman pass rate (4/4 papers: 2 ACCEPT, 2 MINOR_REVISION)
+- Consolidated findings: 154 findings, 104 dead ends
+- Demo website built (C:\PROJECTS\DEMO)
+- ASSAY analytics engine scaffolded (C:\PROJECTS\ASSAY)
 
 ## Completed Papers
-| Paper | Best Run | Lines | Steelman | Location |
-|-------|----------|-------|----------|----------|
-| Conspiracy Bayes | Run 3 | 423 | ACCEPT | papers/CONSPIRACY_BAYES_2026-05-12_003/ |
-| Doomscrolling V5 | V5 | 856 | ACCEPT | papers/DOOMSCROLLING_V5_2026-05-11_001/ |
+
+| Paper | Venue | Avg Score | Time | Verdict |
+|-------|-------|-----------|------|---------|
+| Replication Crisis | PNAS | 8.17 | 45 min | ACCEPT |
+| Vaccine Game | J. Math Biology | 7.77 | 57 min | ACCEPT |
+| Tech Lock-In | Research Policy | 7.72 | 92 min | MINOR_REV |
+| Academic Publishing | Research Policy | 8.03 | 100 min | MINOR_REV |
+
+## What Is Next
+- [ ] Toughen external review prompt (get AI input on making it harder)
+- [ ] Iterate on SHELL if tougher reviews surface new issues
+- [ ] Build ASSAY to production quality (first test: phi estimation)
+- [ ] Re-run papers with ASSAY evidence attached
+- [ ] Build more init files for batch generation
+- [ ] SQLite observability layer for pipeline monitoring
+- [ ] Prepare for Zenodo publication of completed papers

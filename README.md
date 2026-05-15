@@ -1,234 +1,247 @@
 # SHELL — Autonomous Academic Paper Generation Framework
 
 **Author:** James P Rice Jr.
-**Version:** 6.1
-**Last Updated:** 2026-05-12
+**Version:** 6.3 (Agent Dispatch Architecture)
+**Last Updated:** 2026-05-15
 
 ---
 
 ## What This Is
 
-SHELL is a reusable scaffold for generating rigorous, publication-ready academic
-papers using a milestone-gated, adversarial multi-agent pipeline. It is domain-agnostic
-— formal theory, physics, economics, computational science, any STEM field where
-formal reasoning applies.
+SHELL is an autonomous pipeline for generating rigorous, publication-ready
+academic papers. It is domain-agnostic — formal theory, economics, game theory,
+epidemiology, any field where formal reasoning applies.
 
-You give the CLI a problem statement. It scaffolds a new project, locks a frozen spec,
-and runs the paper through a four-milestone pipeline. The quality loop then steelmans
-the finished paper, injects revision instructions, and regenerates until the Steelman
-accepts or max runs are reached.
+You give it an init file with a research question and frozen spec. It scaffolds
+a project, runs the paper through a four-milestone adversarial pipeline with
+agent-dispatched roles, steelmans the finished paper, and iterates until the
+Steelman accepts. No human intervention required.
 
-Based on Rice (2026), "A Deterministic Validation Loop for LLM-Generated Scientific
-Code" (DOI: 10.5281/zenodo.19217024).
+**Results (2026-05-14):** 4 papers generated autonomously, all passed Steelman
+review, independently validated by GPT-4o, Grok-3, and Gemini 2.5 at an
+average score of 7.92/10 across 12 reviews. Every reviewer confirmed:
+"Would I believe a competent researcher wrote this? Yes."
+
+Based on Rice (2026), "A Deterministic Validation Loop for LLM-Generated
+Scientific Code" (DOI: 10.5281/zenodo.19217024).
+
+---
+
+## The Five-Component Framework
+
+| Component | Implementation | How Preserved |
+|-----------|---------------|---------------|
+| 1. Immutable Spec | frozen_spec.md + SHA256 | Fingerprint verified before every milestone |
+| 2. Prior-Drift Detection | Peer Reviewer checks | Every draft checked against spec parameters |
+| 3. Adversarial Role Separation | Agent dispatch | Each role is a separate agent with fresh context |
+| 4. Statistical Validation | Figure execution | Code blocks extracted, executed, verified |
+| 5. Persistent State | state_vector + logs | Files are the memory, not context |
 
 ---
 
 ## The Pipeline
 
-Every paper runs through four milestones in strict sequence. No milestone opens
-until the previous one is approved by the Peer Reviewer.
+Four milestones in strict sequence. No milestone opens until the previous one
+is approved by the Peer Reviewer.
 
 | Milestone | What the Author Writes | Gate |
 |-----------|----------------------|------|
-| M1 | Definitions Block + Introduction | Peer Reviewer ACCEPT → Steelman (GATING) |
-| M2 | Core Proof (lemmas, theorems, corollaries) | Peer Reviewer ACCEPT → Steelman (GATING) |
-| M3 | Application + Boundary Conditions | Peer Reviewer ACCEPT → Steelman (ADVISORY) |
-| M4 | Abstract + Related Work + Discussion + Conclusion + References | Peer Reviewer ACCEPT → Steelman (ADVISORY) → Editor ACCEPT |
+| M1 | Definitions Block + Introduction | Peer Reviewer ACCEPT -> Steelman (GATING) |
+| M2 | Core Proof (lemmas, theorems, corollaries) | Peer Reviewer ACCEPT -> Steelman (GATING) |
+| M3 | Application + Boundary Conditions | Peer Reviewer ACCEPT -> Steelman (ADVISORY) |
+| M4 | Abstract + Related Work + Discussion + Conclusion | Peer Reviewer ACCEPT -> Steelman (ADVISORY) -> Editor ACCEPT |
 
-### Roles (all Claude, distinct personas)
+### Roles (Agent Dispatch Model)
+
+Each role runs as a **separate agent with a fresh context window**. The
+Orchestrator passes only what that role needs. This prevents context saturation.
 
 | Role | Prompt | What it does |
 |------|--------|-------------|
 | Author | 05_author.md | Writes the paper — confident, precise, no hedging |
-| Peer Reviewer | 06_peer_reviewer.md | Science gate — 80% rejection rate, hostile to weak reasoning |
+| Peer Reviewer | 06_peer_reviewer.md | Science gate — hostile to weak reasoning |
 | Steelman | 08_steelman.md | Hostile external referee — catches what peer review misses |
 | Editor | 07_editor.md | Editorial gate — clarity, consistency, format (M4 only) |
 
-### Steelman Modes
-
-| Mode | When | Effect |
-|------|------|--------|
-| GATING | M1, M2 | Can block milestone with STRUCTURAL_FLAG or NOVELTY_KILL |
-| ADVISORY | M3, M4 | Writes critique, milestone locks regardless |
-| V2_DRIFT | Post-pipeline | Generates drift risks for next version's init file |
-
 ---
 
-## Quality Loop
+## Quality Loop (Internal)
 
-The quality loop (`run_quality_loop.ps1`) automates the generate-review-revise cycle:
+The quality loop runs **inside a single Claude session**. No Ctrl+C needed.
+No re-scaffolding between runs. One invocation, fully autonomous.
 
 ```
-Run 1: Generate paper (M1→M2→M3→M4)
-         ↓ Ctrl+C when done
-Full-paper Steelman: reads paper.md end-to-end as hostile referee
-         ↓ verdict: ACCEPT / MAJOR_REVISION / REJECT
-If not ACCEPT: extract revision instructions → patch init file
-         ↓
-Run 2: Generate with revision constraints baked in
-         ↓ Ctrl+C when done
-Steelman again → repeat until ACCEPT or max runs
+Run 1: Scaffold -> M1 -> M2 -> M3 -> M4 -> Steelman
+         |
+         verdict: ACCEPT or MINOR_REVISION -> done
+         verdict: MAJOR_REVISION -> feed steelman feedback to Run 2
+         |
+Run 2: M1 -> M2 -> M3 -> M4 -> Steelman (max 3 runs)
 ```
+
+Outputs go in `run1/`, `run2/`, `run3/` subdirectories within one project.
+Best paper copied to `best_paper.md`.
 
 ### Usage
 
 ```powershell
 cd C:\PROJECTS\SHELL
-.\run_quality_loop.ps1 -InitFile papers/init_[topic].md -MaxRuns 3
+.\run_quality_loop.ps1 -InitFile papers/init_[topic].md
 ```
 
-When Claude shows the `❯` prompt after paper completion, press **Ctrl+C twice** to
-continue the loop. The Steelman runs automatically, then the next paper generates.
+---
 
-### Logs
+## Consolidated Findings System
 
-All output logged to `logs/quality_loop_[timestamp].log`. Steelman critiques saved
-to each project's `steelman_full_paper_critique.md`.
+Every Steelman critique and dead end is automatically consolidated into
+central cross-paper logs:
+
+| File | Count | Purpose |
+|------|-------|---------|
+| STEELMAN_FINDINGS.md | 154 findings | Typed, categorized issues across all papers |
+| DEAD_ENDS.md | 104 entries | Failed approaches — never repeat |
+
+These findings are pre-loaded into init files as KNOWN_DRIFT_RISKS, enabling
+papers to avoid known mistakes on Run 1. The database grows with every paper
+generated — each run makes the next one better.
+
+### Categories
+
+**Findings:** MATH_ERROR, SPEC_MATH_MISMATCH, AUTHOR_TENDENCY, CITATION_ERROR,
+ASSEMBLY_ERROR, PROOF_STRATEGY_DRIFT, FRAMING_OVERCLAIM
+
+**Dead Ends:** proof_technique_failed, spec_impossible, author_hallucination,
+citation_error, scope_disguise, terminology_error, math_error,
+assumed_not_derived, framing_overclaim, assembly_error
+
+---
+
+## System Signature (from 12 independent reviews)
+
+| Dimension | Average | Grade |
+|-----------|---------|-------|
+| Intellectual Honesty | 9.5 | A+ |
+| Clarity of Writing | 9.1 | A |
+| Conceptual Compression | 8.9 | A |
+| Overall Coherence | 8.7 | A |
+| Mathematical Rigor | 8.4 | A- |
+| Literature Awareness | 8.1 | B+ |
+| Policy Relevance | 7.9 | B+ |
+| Publishability | 7.3 | B |
+| Originality | 6.5 | B- |
+| Empirical Grounding | 5.3 | C+ |
+
+---
+
+## Completed Papers
+
+| Paper | Venue | Score | Time | Runs | Verdict |
+|-------|-------|-------|------|------|---------|
+| Replication Crisis | PNAS | 8.17 | 45 min | 1 | ACCEPT |
+| Vaccine Game | J. Math Biology | 7.77 | 57 min | 1 | ACCEPT |
+| Tech Lock-In | Research Policy | 7.72 | 92 min | 2 | MINOR_REV |
+| Academic Publishing | Research Policy | 8.03 | 100 min | 1 | MINOR_REV |
+
+All papers reviewed by GPT-4o, Grok-3, and Gemini 2.5 Flash.
+100% "competent researcher" credibility pass rate.
 
 ---
 
 ## Directory Structure
 
-### SHELL root (the framework)
-
 ```
 C:\PROJECTS\SHELL\
-├── README.md                    ← This file
-├── CLAUDE.md                    ← Template north star for new projects
-├── CHAIN_PROMPT.md              ← Template master doc
-├── BEST_PRACTICES.md            ← Hard-won lessons
-├── SACRED_FILES.md              ← Template for locked files list
-├── STATUS.md                    ← Template for current status
-├── api.env                      ← API keys (never committed)
-├── run_quality_loop.ps1         ← The quality loop (PowerShell)
-├── run_dvl_papers.ps1           ← Batch runner for all papers
+├── README.md                    <- This file
+├── CLAUDE.md                    <- Template north star
+├── STEELMAN_FINDINGS.md         <- Cross-paper findings (154 entries)
+├── DEAD_ENDS.md                 <- Cross-paper dead ends (104 entries)
+├── BEST_PRACTICES.md            <- Hard-won operational rules
+├── STATUS.md                    <- Current project status
+├── run_quality_loop.ps1         <- Quality loop launcher
 │
 ├── prompts/
-│   ├── 00_init.md               ← Project scaffolding wizard
-│   ├── 00_orchestrator.md       ← Multi-model experiment loop
-│   ├── 04_paper_orchestrator.md ← Paper pipeline (Claude-only)
-│   ├── 05_author.md             ← Author persona
-│   ├── 06_peer_reviewer.md      ← Peer reviewer persona
-│   ├── 07_editor.md             ← Editor persona
-│   ├── 08_steelman.md           ← Steelman persona (hostile referee)
-│   └── run_milestone.md         ← Single milestone executor
+│   ├── 00_init.md               <- Project scaffolding wizard
+│   ├── 04_paper_orchestrator.md <- v5 agent dispatch orchestrator
+│   ├── 05_author.md             <- Author persona
+│   ├── 06_peer_reviewer.md      <- Peer reviewer persona
+│   ├── 07_editor.md             <- Editor persona
+│   ├── 08_steelman.md           <- Steelman persona
+│   └── 09_external_review.md   <- Standardized AI review prompt
 │
 ├── papers/
-│   ├── init_[topic].md          ← Pre-filled paper init files
-│   └── [SLUG]_[DATE]_[SEQ]/    ← Auto-versioned generated papers
+│   ├── PAPER_IDEAS.md           <- 115 formal theory paper ideas
+│   ├── init_[topic].md          <- Init files for paper generation
+│   └── [SLUG]_[DATE]_[SEQ]/    <- Generated papers (auto-versioned)
+│       ├── best_paper.md        <- Best paper from quality loop
+│       ├── frozen_spec.md       <- Locked parameters
+│       ├── state_vector.md      <- Pipeline state
+│       ├── innovation_log.md    <- Audit trail
+│       ├── dead_ends.md         <- Failed approaches
+│       ├── run1/                <- Run 1 outputs
+│       │   ├── paper.md
+│       │   ├── M1-M4_draft.md
+│       │   ├── steelman_critique.md
+│       │   └── figures/
+│       ├── run2/ (if needed)
+│       └── outputs/
+│           ├── citation_verification.md
+│           ├── drift_report.md
+│           └── run_manifest.md
 │
 ├── src/
-│   ├── quality_loop.py          ← Python quality loop (deprecated — use .ps1)
-│   ├── regression_tests.py      ← Claim extraction + cross-run regression detection
-│   ├── epistemic_metrics.py     ← Read-only measurement tool
-│   ├── publish.py               ← Zenodo uploader
-│   ├── verify_citations.py      ← CrossRef citation checker
-│   ├── paper_to_thread.py       ← Convert paper to X thread
-│   └── triangulation_experiment.py ← Multi-model consensus test
+│   ├── consolidate.py           <- Findings extraction + consolidation
+│   ├── verify_citations.py      <- CrossRef citation checker
+│   ├── regression_tests.py      <- Cross-run regression detection
+│   ├── epistemic_metrics.py     <- Quality measurement
+│   ├── publish.py               <- Zenodo uploader
+│   └── paper_to_thread.py       <- Convert paper to X thread
 │
-├── logs/                        ← Quality loop logs
-├── archive/                     ← Old paper versions
+├── logs/                        <- Quality loop logs
 └── docs/
-    ├── SHELL_V6_ROADMAP.md      ← 10 design principles + implementation plan
-    ├── LESSONS_LEARNED.md       ← What worked, what didn't, hard rules
-    └── FEEDBACK_2026-05-11_JAMES_RICE.md ← Raw design feedback
-```
-
-### Generated paper project (flattened structure)
-
-```
-papers/[SLUG]_[DATE]_[SEQ]/
-├── paper.md                     ← Final paper
-├── frozen_spec.md               ← Locked parameters (at root, not in spec/)
-├── state_vector.md              ← Pipeline state (at root, not in state/)
-├── innovation_log.md            ← Append-only audit trail
-├── dead_ends.md                 ← Failed approaches
-├── M1_draft.md ... M4_draft.md  ← Milestone drafts
-├── steelman_full_paper_critique.md ← Quality loop steelman output
-├── regression_fixtures.json     ← Extracted claims for cross-run comparison
-├── figures/                     ← Python scripts + rendered PDFs
-├── results/raw/                 ← Locked milestone outputs
-├── results/final/               ← Final paper copy
-├── outputs/                     ← Citation verification, drift report, manifest
-├── prompts/                     ← Copied from SHELL
-└── .git/                        ← Per-project git history
+    ├── LESSONS_LEARNED.md       <- Operational lessons
+    └── SHELL_V6_ROADMAP.md      <- Design principles
 ```
 
 ---
 
 ## How to Create a New Paper
 
-### Writing the init file
+### 1. Write the init file
 
-Every init file MUST have:
+Use `papers/init_replication_crisis.md` as the template. Every init file needs:
+- Execution directive (lines 2-5)
+- FROZEN_SPEC_PARAMETERS with drift risks
+- MILESTONES (M1-M4)
+- ORACLE (validation criteria)
+- KNOWN_DRIFT_RISKS (paper-specific)
+- CROSS-PAPER FINDINGS (from STEELMAN_FINDINGS.md)
+- SETUP SEQUENCE with auto-versioning
+- HAND OFF section (triggers the pipeline)
 
-1. **Execution directive** (lines 2-5):
-   ```
-   # EXECUTE IMMEDIATELY. Do not summarize, analyze, or ask questions.
-   # Read the INPUTS below, then execute the SETUP SEQUENCE step by step.
-   # Load prompts/00_init.md for the setup procedure, then run it with these inputs.
-   # This is not a document to review — it is a set of instructions to follow NOW.
-   ```
-
-2. **HAND OFF section** (at the bottom, after KNOWN_DRIFT_RISKS):
-   ```
-   ## HAND OFF — EXECUTE PAPER PIPELINE
-   DO NOT STOP AFTER SCAFFOLDING. DO NOT ASK FOR PERMISSION.
-   [explicit pipeline trigger — see docs/LESSONS_LEARNED.md for template]
-   ```
-
-Without BOTH, Claude will either summarize the file or scaffold then stop.
-
-### Running a single paper
+### 2. Run it
 
 ```powershell
 cd C:\PROJECTS\SHELL
-claude --dangerously-skip-permissions papers/init_[topic].md
+.\run_quality_loop.ps1 -InitFile papers/init_[topic].md
 ```
 
-### Running the quality loop
+### 3. Review
 
-```powershell
-.\run_quality_loop.ps1 -InitFile papers/init_[topic].md -MaxRuns 3
-```
-
-### Measuring quality across runs
-
-```powershell
-python src/epistemic_metrics.py --compare papers/[SLUG]_*
-```
+Send `best_paper.md` to GPT, Grok, and Gemini using the standardized
+review prompt at `prompts/09_external_review.md`.
 
 ---
 
-## Technical Notes
+## Sister Project: ASSAY
 
-### Claude CLI on Windows
-
-Claude CLI (npm/Ink-based) kills its parent process on exit. All scripts must use
-`cmd /c claude.cmd` to isolate the exit. See `docs/LESSONS_LEARNED.md` for details.
-
-### Auto-versioning
-
-Projects scaffold to `papers/[SLUG]_[YYYY-MM-DD]_[SEQ]/` where SEQ auto-increments.
-Multiple runs of the same paper create separate directories — nothing is overwritten.
-
-### API Keys
-
-Stored as Windows environment variables (`XAI_API_KEY`, `OPENAI_API_KEY`).
-Python scripts check `os.environ` first, fall back to `api.env`.
+ASSAY (at C:\PROJECTS\ASSAY) is the companion analytics engine. Where SHELL
+generates theory, ASSAY generates verified empirical evidence from data.
+ASSAY outputs feed into SHELL papers as citable results, addressing the
+empirical grounding gap (currently 5.3/10 average).
 
 ---
 
-## Current Papers
+## Future: THESIS + ASSAY
 
-### Bayesian Epistemology Trilogy
-
-| # | Paper | Init File | Status |
-|---|-------|-----------|--------|
-| 1 | Conspiracy Beliefs as Bayesian Updating | `init_conspiracy_bayes.md` | 3 runs, Steelman ACCEPT |
-| 2 | Echo Chambers (Heterogeneous Information) | `init_echo_chambers_v2_heterogeneous.md` | In progress |
-| 3 | Misinformation Persistence as Equilibrium | `init_misinformation.md` | Not started (depends on 1+2) |
-
-### Other Papers
-
-See `papers/PAPER_IDEAS.md` for the full catalog of 115 formal theory paper ideas.
+SHELL will be renamed to **THESIS** when ready for product launch.
+"THESIS generates the theory, ASSAY tests the evidence."

@@ -114,6 +114,10 @@ The model is valid if and only if:
 Peer Reviewer must verify: is the critical bias threshold a proven theorem,
 or is it merely observed from a plot? If observed without proof, REJECT.
 
+
+# === STEELMAN REVISION BRIEF (from run 1) ===
+# The next run MUST address every item.
+
 KNOWN_DRIFT_RISKS:
 - Reproducing Ioannidis (2005) without extending it — the phi parameter and
   critical threshold theorem are the entire contribution
@@ -388,5 +392,6 @@ YOUR INPUTS:
 
 BEGIN NOW. Run M1. Do not ask for confirmation. Do not summarize the orchestrator.
 Execute it. Write the paper.
+
 
 

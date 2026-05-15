@@ -1,4 +1,4 @@
-# INIT — TECHNOLOGICAL LOCK-IN AS A COORDINATION FAILURE
+# INIT — FORMAL MODEL OF TECHNOLOGICAL LOCK-IN
 # EXECUTE IMMEDIATELY. Do not summarize, analyze, or ask questions.
 # Read the INPUTS below, then execute the SETUP SEQUENCE step by step.
 # Load prompts/00_init.md for the setup procedure, then run it with these inputs.
@@ -8,171 +8,201 @@
 
 ## INPUTS — ALL PRE-FILLED
 
-PROJECT_NAME: Technological Lock-In as a Coordination Failure: A Formal Model of Path Dependency with Network Externalities
-SLUG: tech_lockin_2026
+PROJECT_NAME: A Formal Model of Technological Lock-In: Switching Costs, Network Effects, and the Inefficiency Threshold
+SLUG: TECH_LOCKIN_2026
 AUTHOR: James P Rice Jr.
 TARGET_VENUE: Research Policy
 PIPELINE: PAPER
 
 PROBLEM:
-Models technology adoption as a coordination game with network externalities.
-Derives Nash equilibria and proves inferior technology can be stable (lock-in)
-when network externality exceeds quality difference. Derives the exact "escape
-velocity" — minimum coordinated switching coalition to move from inferior to
-superior equilibrium. Shows escape velocity increases with network size,
-explaining why lock-in is harder to break in larger markets.
-
-The paper is formal game theory applied to technology adoption. Every claim
-must be a theorem or proposition. Lock-in must be proven as an equilibrium
-property, not just described as a historical pattern. The escape velocity
-must be derived in closed form — not estimated numerically or illustrated
-with examples.
+Formalizes technological lock-in as a game between adopters facing switching
+costs and network externalities. An installed base of users on technology A
+faces a superior technology B. Each user's payoff from switching depends on
+how many others switch (network effect) and a private switching cost. Derives
+the critical mass threshold: the minimum fraction of users who must switch
+simultaneously for B to dominate A. Proves that this threshold increases with
+switching costs and installed-base network effects, creating a region of
+"inefficient lock-in" where the superior technology fails to be adopted even
+though every user would prefer it if all switched. Derives the subsidy needed
+to overcome lock-in and characterizes when lock-in is permanent vs. temporary.
+The central contribution is the inefficiency threshold theorem: there exists a
+closed-form critical mass as a function of switching costs and network effects,
+below which the inferior technology persists indefinitely.
 
 FROZEN_SPEC_PARAMETERS:
 
-PARAMETER: Network externality function
-VALUE: v_i(n_i) = alpha * n_i / N + q_i, where n_i is adopters of technology i,
-       N is total population, alpha is externality strength, q_i is standalone
-       quality of technology i
-UNIT: utility
-TOLERANCE: exact functional form — results derived from this specification
-SOURCE: Katz & Shapiro 1985 | Network Externalities, Competition, and
-        Compatibility | AER 75(3):424-440
-NOTES: The additive separability of network effect and quality is what makes
-       the model tractable. The ratio n_i/N normalizes the externality so
-       results scale with population size.
-DRIFT_RISK: LOW — standard framework
+PARAMETER: Switching cost (s)
+VALUE: s > 0, explored parametrically
+UNIT: utility units
+TOLERANCE: parametric
+SOURCE: Novel formalization building on Farrell & Saloner 1985; Klemperer 1987
+NOTES: Private switching cost, heterogeneous across users. Distribution F(s)
+       over the population. Key cases: uniform, exponential.
+DRIFT_RISK: MEDIUM — Author may confuse switching costs with sunk costs.
+             Switching costs are forward-looking (cost of migrating).
+             Sunk costs are backward-looking (prior investment). Keep distinct.
 
-PARAMETER: Quality parameters
-VALUE: q_A > q_B (technology A is objectively superior to technology B)
-UNIT: utility
-TOLERANCE: strict inequality required for lock-in to be meaningful
-SOURCE: Model assumption — without quality difference, lock-in is trivial
-NOTES: The entire interest of the model is that the inferior technology B
-       can be adopted in equilibrium despite q_A > q_B. If q_A = q_B there
-       is no lock-in, just indifference.
-DRIFT_RISK: LOW — definitional
+PARAMETER: Network effect parameter (n)
+VALUE: n >= 0, explored parametrically
+UNIT: utility per adopter
+TOLERANCE: parametric
+SOURCE: Katz & Shapiro 1985; Farrell & Saloner 1985
+NOTES: User's utility from technology X = intrinsic value v_X + n * (fraction
+       using X). Network effects make the installed base self-reinforcing.
+DRIFT_RISK: MEDIUM — Author may make network effects too complex (indirect,
+             two-sided). Keep it direct: utility proportional to adoption share.
 
-PARAMETER: Nash equilibrium concept
-VALUE: Pure strategy Nash equilibrium in population game where each agent
-       chooses technology A or B to maximize individual utility
-UNIT: equilibrium concept
-TOLERANCE: must be pure strategy NE — mixed strategies less interesting here
-SOURCE: Standard game theory — population games
-NOTES: There are generically two pure NE: all-A and all-B. The paper must
-       show that all-B is stable despite q_A > q_B when alpha > q_A - q_B.
-DRIFT_RISK: MEDIUM — Author may use wrong equilibrium concept or be imprecise
-             about stability
+PARAMETER: Technology quality gap (delta)
+VALUE: delta = v_B - v_A > 0 (B is intrinsically superior)
+UNIT: utility units
+TOLERANCE: parametric
+SOURCE: Novel formalization
+NOTES: B is objectively better than A. The lock-in question is: why doesn't
+       B win? The answer is switching costs + network effects.
+DRIFT_RISK: HIGH — Author may try to make delta endogenous or allow A to be
+             superior in some dimensions. Keep it simple: B is strictly better,
+             lock-in is the puzzle.
 
-PARAMETER: Escape velocity definition
-VALUE: Minimum coalition size s* such that if s* agents simultaneously switch
-       from B to A, then switching is individually rational for all remaining
-       B-adopters — i.e., s* triggers a cascade to the all-A equilibrium
-UNIT: number of agents (or fraction of N)
-TOLERANCE: exact — this is the novel contribution
-SOURCE: Novel definition — Rice [this paper]
-NOTES: This is the core result. It must be derived as a closed-form function
-       of N, alpha, q_A - q_B. The scaling with N is the key insight: larger
-       networks are harder to unlock.
-DRIFT_RISK: HIGH — Author may define escape velocity loosely or fail to derive
-             closed form. Must be a theorem with explicit formula.
+PARAMETER: Critical mass threshold (k*)
+VALUE: To be derived in closed form as a function of s, n, delta
+UNIT: fraction of population (0 to 1)
+TOLERANCE: must be derived, not assumed
+SOURCE: Novel derivation — this paper's contribution
+NOTES: k* is the fraction of users who must switch simultaneously for
+       switching to be individually rational for each of them. Below k*,
+       no one switches. Above k*, everyone switches (tipping point).
+DRIFT_RISK: HIGH — Author may assume the threshold rather than deriving
+             it from the game structure. Must define the game, write payoffs,
+             and solve for the equilibrium explicitly.
 
-PARAMETER: Lock-in stability condition
-VALUE: All-B equilibrium is stable when alpha > q_A - q_B (network externality
-       exceeds quality gap)
-SOURCE: Rice [this paper] — derived result
-NOTES: This is the formal lock-in theorem. It must be stated precisely:
-       when alpha > q_A - q_B, no individual agent has incentive to switch
-       from B to A, even though A is objectively better.
-DRIFT_RISK: MEDIUM — Author may state this informally rather than as a theorem
+PARAMETER: Optimal subsidy (sigma*)
+VALUE: To be derived as a function of s, n, delta
+UNIT: utility units per user
+TOLERANCE: must be derived
+SOURCE: Novel derivation
+NOTES: The subsidy that reduces the effective switching cost enough to
+       bring k* to zero (making individual switching rational without
+       coordination). Policy payoff of the model.
+DRIFT_RISK: MEDIUM — must come from the game structure, not a welfare argument.
 
 MILESTONES:
 
-M1: Coordination game model and definitions — define the population game,
-    strategy spaces, payoff functions, network externality. Establish notation.
-    Define lock-in formally as a stable inferior equilibrium. Define escape
-    velocity precisely.
+M1: Game-theoretic framework + definitions — define the technology adoption
+    game (players, strategies, payoffs), switching costs, network effects,
+    quality gap. Establish payoff functions for staying on A vs. switching to B.
+    Introduction with literature gap: Arthur (1989) showed lock-in is possible
+    but did not derive a closed-form critical mass threshold.
 
-M2: Lock-in theorem and escape velocity derivation — prove that all-B is a
-    stable NE when alpha > q_A - q_B. Derive escape velocity s* in closed
-    form as a function of N, alpha, and quality gap. Prove s* is unique.
+M2: Critical mass derivation + inefficiency threshold theorem — derive k* in
+    closed form. Prove Theorem 1: for s > 0 and n > 0, k* > 0 (lock-in is
+    possible). Characterize k* as a function of s, n, delta. Derive the
+    optimal subsidy sigma*. Prove properties: k* increases in s and n,
+    decreases in delta.
 
-M3: Network size scaling and boundary conditions — prove that s*/N is
-    increasing in N (escape velocity grows faster than linearly with network
-    size). Derive boundary conditions: what happens as alpha approaches
-    q_A - q_B from above? What happens as N approaches infinity? Sensitivity
-    analysis on all parameters.
+M3: Technology mapping + boundary conditions — map at least 3 historical
+    technology transitions onto the model (e.g., QWERTY/Dvorak, VHS/Betamax,
+    internal combustion/electric vehicles). Boundary conditions: s -> 0,
+    n -> 0, delta -> infinity. Sensitivity analysis.
 
-M4: Full paper — Introduction (lock-in as coordination failure, not irrationality),
-    Related work (Arthur 1989, David 1985, Katz & Shapiro 1985, Farrell &
-    Saloner 1985, Liebowitz & Margolis 1995), Discussion (policy implications
-    for antitrust, standardization, platform regulation), Conclusion.
-    Self-contained Abstract.
+M4: Full paper — Introduction (lock-in as market failure), Related work
+    (Arthur 1989, David 1985, Farrell & Saloner 1985, Katz & Shapiro 1985),
+    Discussion (policy implications — subsidies, standards, interoperability),
+    Conclusion. Self-contained Abstract.
 
 ORACLE:
 The model is valid if and only if:
-1. Lock-in is proven as a Nash equilibrium property with explicit conditions
-2. Escape velocity is derived as a closed-form function of N, alpha, q_A - q_B
-3. The scaling result (larger networks = harder to unlock) is a theorem
-4. The lock-in condition alpha > q_A - q_B is derived, not assumed
-5. Competing explanations (switching costs, irrationality) are formally distinguished
+1. The adoption game is formally defined with explicit payoff functions
+2. The critical mass k* is derived from the game's equilibrium conditions
+3. k* > 0 is proven as a theorem for positive switching costs and network effects
+4. The technology mapping uses real historical examples with cited parameters
+5. The optimal subsidy is derived from the equilibrium condition
 
-Peer Reviewer must verify: is escape velocity a closed-form formula derived
-from the model, or is it described qualitatively? If qualitative, REJECT.
+Peer Reviewer must verify: is k* derived from the payoff functions,
+or is it assumed? If assumed, REJECT.
 
 KNOWN_DRIFT_RISKS:
-- Conflating lock-in with switching costs — they are different mechanisms;
-  lock-in in this model arises purely from network externalities, not from
-  costs of switching; must state this distinction explicitly
-- Not deriving escape velocity in closed form — the whole contribution is
-  the formula; a qualitative description is not enough
-- Citing Arthur 1989 without extending — Arthur showed path dependence via
-  increasing returns; this paper derives the escape velocity, which Arthur
-  did not; must clearly state the extension
-- Citing David 1985 (QWERTY) as evidence — David's historical claims are
-  contested (Liebowitz & Margolis 1990); use the formal model, not QWERTY
-  anecdotes
-- Confusing lock-in with market failure — lock-in is a coordination failure,
-  which is a specific type of market failure; be precise
-- Making the model too complex by adding dynamics — start with the static
-  game; dynamics can be discussed as extensions
-- Failing to address the Liebowitz & Margolis critique — they argue lock-in
-  is empirically rare; the paper must engage this formally (the model shows
-  lock-in is stable, not that it is inevitable)
-- Missing the policy discussion — escape velocity has direct antitrust
-  implications; include this in Discussion but keep it brief
-- PROOF STRATEGY: Escape velocity must be derived via coalition stability
-  analysis — define a coalition of size s that switches simultaneously, show
-  each member's payoff is higher iff s >= s*(alpha, q_A - q_B, N), derive
-  s* in closed form. Do NOT just state "there exists a threshold."
-- PROOF STRATEGY: The scaling result (s*/N increases with N) must be a
-  proven theorem with the exact functional form, not an asymptotic claim.
-  Show whether s*/N converges to a constant, grows logarithmically, or
-  grows linearly.
-- FORMALIZATION: The network externality function must be formally defined
-  with explicit properties (increasing, concave, etc.) and the Nash
-  equilibria must be characterized for the general case before specializing
-  to linear externalities. Two equilibria must be proven to exist, not assumed.
-- Orphan figure references — every figure must have clear formal content:
-    Figure 1: Payoff functions showing two equilibria and lock-in region
-    Figure 2: Escape velocity s* as a function of N for various alpha
-    Figure 3: Phase diagram in (alpha, q_A - q_B) space
+- Assuming the critical mass threshold rather than deriving it — the
+  derivation from the game's payoff structure IS the contribution
+- Confusing lock-in with switching costs alone — lock-in requires BOTH
+  switching costs AND network effects. Without network effects, individual
+  switching is rational whenever delta > s.
+- Making the model too complex (dynamic, multi-technology, heterogeneous
+  network effects) — keep it a clean static coordination game first
+- Not citing Arthur (1989) as the natural enemy — must show what is new
+  beyond the existing lock-in literature
+- Treating QWERTY/Dvorak as established fact — David (1985) claimed
+  QWERTY is inefficient, Liebowitz & Margolis (1990) contested this.
+  Present both sides.
+- Overstating policy implications — subsidy is derived from the model.
+  Real-world technology transitions depend on many factors the model
+  does not capture.
+- Using made-up switching cost estimates — cite published estimates or
+  present as illustrative with conditional language
+- Orphan figure references — every figure must have code.
+  Minimum figures:
+    Figure 1: Critical mass k* as a function of switching cost s for different n
+    Figure 2: Phase diagram — regions of lock-in vs. adoption in (s, n) space
+    Figure 3: Technology map — historical cases plotted on the model
+
+# === CROSS-PAPER FINDINGS ===
+
+- [F-005] POLICY LANGUAGE OVERSHOOTS MODEL SCOPE — scope policy claims precisely.
+- [F-002] "ILLUSTRATIVE" COMPONENT THAT IS LOAD-BEARING — k* and the theorem ARE the contribution.
+- [F-036/F-024] FIGURES CODE-ONLY — render figures, don't leave code blocks.
+- [F-015] MISSING DATA/CODE AVAILABILITY STATEMENT — include one.
+- [F-006] NOTATION OVERLOAD — s is switching cost, n is network effect, delta is quality gap. Single meanings.
+- [F-037] RELATED WORK TOO LONG — keep under 600 words.
+- [F-014] EM DASH IN TITLE — use colon format.
+- [DE-015/058/065/080] SCOPE DISGUISE — limitations are limitations.
+- [DE-038] PLACEHOLDER VALUES IN TABLES — real cited values or conditional language.
+- [F-034] DO NOT CLAIM LEAN-READINESS.
+
+# === LESSONS FROM PRIOR RUNS ===
+
+- THEOREM FRAMING — if k* follows from solving a coordination game, frame as
+  "closed-form characterization." Value is in the mapping, not proof difficulty.
+- CONDITION THE MAPPING — historical examples are illustrative. Say so.
+- NATURAL ENEMY — Arthur (1989) is the competitor. Show the advance clearly.
 
 ---
 
 ## SETUP SEQUENCE — EXECUTE NOW
 
-### Step 1 — Create project directory
-Create C:\PROJECTS\SHELL\papers\TECH_LOCKIN\ with:
-  spec/, state/, outputs/, results/raw/, results/validated/, results/final/,
-  devlog/, src/, papers/, papers/tech_lockin_2026/,
-  papers/tech_lockin_2026/figures/, prompts/
+### Step 1 — Create project directory (auto-versioned)
+Resolve using auto-versioning:
+1. List all existing directories matching C:\PROJECTS\SHELL\papers\TECH_LOCKIN_2026_*
+2. If none: TECH_LOCKIN_2026_[TODAY]_001
+3. If some: increment highest sequence number
+Store as RESOLVED_DIR.
+
+Create RESOLVED_DIR with subdirectories:
+  figures/, outputs/, results/raw/, results/final/, devlog/, prompts/
 
 ### Step 2 — Write CLAUDE.md
-North star: formal model of technology lock-in as coordination failure.
-Lock-in stable when alpha > q_A - q_B. Escape velocity s*(N, alpha, delta_q)
-in closed form. Enforcements: NE not irrationality, closed-form escape
-velocity, scaling theorem, distinguish from Arthur 1989.
+  # Technological Lock-In — NORTH STAR
+
+  ## What We Are Building
+  A game-theoretic model deriving the critical mass threshold for technology
+  switching under network effects and switching costs.
+
+  ## The Core Claim
+  A closed-form critical mass k* exists. Below k*, the inferior technology
+  persists. Above k*, the superior technology wins. k* is derived from the
+  game's payoff structure.
+
+  ## Frozen Parameters (quick reference)
+  | Parameter | Value | Source |
+  |-----------|-------|--------|
+  | Switching cost s | parametric | Farrell & Saloner 1985 |
+  | Network effect n | parametric | Katz & Shapiro 1985 |
+  | Quality gap delta | v_B - v_A > 0 | Novel |
+  | Critical mass k* | derived | Novel |
+
+  ## Critical Enforcements
+  - k* must be DERIVED from payoff functions, not assumed
+  - Lock-in requires both switching costs AND network effects
+  - Historical examples are illustrative, not empirical validation
+  - Individual rationality vs coordination failure must be kept distinct
 
 ### Step 3 — Write frozen_spec.md
 Fill from FROZEN_SPEC_PARAMETERS above. Lock date today.
@@ -184,68 +214,28 @@ innovation_log.md — header with project name and timestamp
 dead_ends.md — header with project name
 
 ### Step 5 — Copy all prompts from SHELL
-Copy from C:\PROJECTS\SHELL\prompts\ into C:\PROJECTS\SHELL\papers\TECH_LOCKIN\prompts\:
-  04_paper_orchestrator.md
-  05_author.md
-  06_peer_reviewer.md
-  07_editor.md
-  run_milestone.md
-Do NOT copy 00_init.md — SHELL-level only.
+Copy from C:\PROJECTS\SHELL\prompts\ into RESOLVED_DIR\prompts\:
+  04_paper_orchestrator.md, 05_author.md, 06_peer_reviewer.md,
+  07_editor.md, 08_steelman.md
 
-Also write prompts/turn_prompts_log.md:
-  # TURN PROMPTS LOG — tech_lockin_2026
-  # Every exact prompt logged here. Required for reproducibility.
-  [No entries yet. First entry written at Turn 1 M1.]
+### Step 6 — Write STATUS.md, README.md, CHAIN_PROMPT.md, SACRED_FILES.md, BEST_PRACTICES.md, devlog/DEV_LOG.md
+Follow the same pattern as other SHELL init files. All content derivable from INPUTS above.
 
-### Step 5b — Write run_pipeline.ps1
-
-Write run_pipeline.ps1 in the project root (C:\PROJECTS\SHELL\papers\TECH_LOCKIN\) with
-the slug set to "tech_lockin_2026". Use the template from
-C:\PROJECTS\SHELL\prompts\00_init.md Step 15, replacing [SLUG] with
-tech_lockin_2026 and [SLUG] paths with TECH_LOCKIN.
-
-### Step 6 — Write STATUS.md
-Phase: INIT -> PAPER PIPELINE
-Turn: 0
-What Is Done: Scaffolded. Spec locked.
-What Is Next: Author writes M1 (Coordination game model + definitions).
-
-### Step 7 — Write remaining required files
-Write README.md, CHAIN_PROMPT.md, SACRED_FILES.md, BEST_PRACTICES.md,
-devlog/DEV_LOG.md, outputs/options.md, outputs/state_vector_backup.md.
-CHAIN_PROMPT.md must include:
-  Pipeline: PAPER — Claude-only, milestone-by-milestone gating
-  Author: Claude | Peer Reviewer: Claude | Editor: Claude
-
-### Step 8 — Initialize git
-  cd C:\PROJECTS\SHELL\papers\TECH_LOCKIN
-  git init
-  git add -A
-  git commit -m "Turn 0 | Init | tech_lockin_2026"
-
-### Step 9 — Print confirmation and hand off:
-  PROJECT INITIALIZED: tech_lockin_2026
-  Spec locked. All files created. Git initialized.
-  Beginning paper pipeline — M1 (Coordination Game Model + Definitions) first.
-  Output: papers/tech_lockin_2026/paper.md
-  Running. James P Rice Jr. reviews when done.
+### Step 7 — Initialize git
+  git init && git add -A && git commit -m "Turn 0 | Init | TECH_LOCKIN_2026"
 
 ---
 
 ## HAND OFF — EXECUTE PAPER PIPELINE
 
-DO NOT STOP HERE. The setup is complete. Now you must execute the paper pipeline.
-
-Read prompts/04_paper_orchestrator.md NOW and follow every instruction in it.
-You are the Orchestrator. Begin at the INITIALIZE section. This is not a file
-to summarize — it is your operating manual. Execute it.
+DO NOT STOP HERE. Read prompts/04_paper_orchestrator.md NOW and execute it.
+You are the Orchestrator. Begin at INITIALIZE.
 
 YOUR INPUTS:
-  PROBLEM: [the full PROBLEM text from the INPUTS section above]
-  DATA: No empirical data. All results derived analytically from the game model.
-  SLUG: tech_lockin_2026
-  DRIFT_RISKS: [paste KNOWN_DRIFT_RISKS above into every Author and Reviewer prompt]
+  PROBLEM: [the full PROBLEM text above]
+  DATA: No empirical data. All results derived analytically.
+  SLUG: TECH_LOCKIN_2026
+  DRIFT_RISKS: [paste KNOWN_DRIFT_RISKS above]
   FROZEN_SPEC: [pass full frozen_spec.md to Peer Reviewer on every review pass]
 
-BEGIN NOW. Run M1. Do not ask for confirmation. Do not summarize the orchestrator.
-Execute it. Write the paper.
+BEGIN NOW. Run M1. Do not ask for confirmation. Execute the pipeline.

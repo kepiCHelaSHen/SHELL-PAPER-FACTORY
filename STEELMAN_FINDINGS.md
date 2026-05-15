@@ -251,6 +251,52 @@
 - The claim that phi* is "independent of sample size" (Theorem 1, property (a)) is true only in the sense that sample size does not appear as a separate variable. Sample size affects power, which aff...
 - **Recurrence:** 1
 
+### [F-146] Theorem 2(c) sign error: proof steps 3-4 claim dk*/dn > 0 when delta < s, but th
+- **Paper:** run1 | **Run:** ? | **Severity:** STRUCTURAL
+- Theorem 2(c) sign error: proof steps 3-4 claim dk*/dn > 0 when delta < s, but the formula dk*/dn = (delta - s)/(2n^2) gives dk*/dn < 0 when delta < s. Interpretations in steps 3 and 4 are swapped. ...
+- **Recurrence:** 3
+
+### [F-147] HIGH: QWERTY and ICE/BEV share identical illustrative parameters (s=0.15, n=0.20
+- **Paper:** run1 | **Run:** ? | **Severity:** STRUCTURAL
+- HIGH: QWERTY and ICE/BEV share identical illustrative parameters (s=0.15, n=0.20, delta=0.05), producing identical k*=0.75 and sigma*=0.30.
+- **Recurrence:** 3
+
+### [F-148] MEDIUM: Three unsourced empirical claims in Section 3 (BEV market share, BEV sub
+- **Paper:** run1 | **Run:** ? | **Severity:** STRUCTURAL
+- MEDIUM: Three unsourced empirical claims in Section 3 (BEV market share, BEV subsidy dependence, Dvorak adoption rate).
+- **Recurrence:** 3
+
+### [F-149] LOW: Abstract "advancing beyond prior work" mildly dismissive.
+- **Paper:** run1 | **Run:** ? | **Severity:** STRUCTURAL
+- LOW: Abstract "advancing beyond prior work" mildly dismissive.
+- **Recurrence:** 3
+
+### [F-150] LOW: Related Work "corresponds to" (Young/KMR) should be "is analogous to."
+- **Paper:** run1 | **Run:** ? | **Severity:** STRUCTURAL
+- LOW: Related Work "corresponds to" (Young/KMR) should be "is analogous to."
+- **Recurrence:** 3
+
+### [F-152] LOW: Related Work "binary cost structures" for FS85 slightly reductive.
+
+### [F-153] LOW: Related Work "binary cost structures" for FS85 slightly reductive.
+
+### [F-154] LOW: Related Work "binary cost structures" for FS85 slightly reductive.
+
+## RESO
+- **Paper:** run1 | **Run:** ? | **Severity:** STRUCTURAL
+- LOW: Related Work "binary cost structures" for FS85 slightly reductive.
+- **Recurrence:** 1
+
+## RESO
+- **Paper:** run1 | **Run:** ? | **Severity:** STRUCTURAL
+- LOW: Related Work "binary cost structures" for FS85 slightly reductive.
+- **Recurrence:** 1
+
+## RESO
+- **Paper:** run1 | **Run:** ? | **Severity:** STRUCTURAL
+- LOW: Related Work "binary cost structures" for FS85 slightly reductive.
+- **Recurrence:** 1
+
 ## SPEC_MATH_MISMATCH
 
 ### [F-003] The paper underplays the circularity problem it identifies
@@ -584,6 +630,11 @@
 - **Paper:** REPLICATION_CRISIS_2026 | **Run:** 001 | **Severity:** MINOR
 - Table 1 cites "Cohen 1962; Button et al. 2013" for cognitive psychology power but provides a wide range (0.50ΓÇô0.80). The lower bound (Cohen 1962) is over 60 years old. A note on the temporal gap ...
 - **Recurrence:** 1
+
+### [F-151] LOW: Conclusion "align with" overstates from illustrative parameters.
+- **Paper:** run1 | **Run:** ? | **Severity:** STRUCTURAL
+- LOW: Conclusion "align with" overstates from illustrative parameters.
+- **Recurrence:** 3
 
 ## CITATION_ERROR
 

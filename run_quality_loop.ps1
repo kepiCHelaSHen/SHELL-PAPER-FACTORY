@@ -1,8 +1,12 @@
 param(
     [Parameter(Mandatory=$true)]
-    [string]$InitFile,
-    [int]$MaxRuns = 10
+    [string]$InitFile
 )
+
+# SHELL Quality Loop Launcher v2
+# The quality loop now runs INSIDE the orchestrator (04_paper_orchestrator.md v5).
+# This script: invokes Claude once, then consolidates findings from the output.
+# No external loop. No init-file patching. No Ctrl+C between runs.
 
 $ShellRoot = "C:\PROJECTS\SHELL"
 Set-Location $ShellRoot
@@ -17,13 +21,14 @@ function Log($msg) {
     Add-Content -Path $LogFile -Value $line -Encoding UTF8
 }
 
+Log "SHELL Quality Loop Launcher v2"
 Log "Log file: $LogFile"
+Log "Init file: $InitFile"
 
-# Backup init file
-$BackupFile = "$InitFile.bak"
-if (-not (Test-Path $BackupFile)) {
-    Copy-Item $InitFile $BackupFile
-    Log "Backed up $InitFile"
+# Validate init file exists
+if (-not (Test-Path $InitFile)) {
+    Log "ERROR: Init file not found: $InitFile"
+    exit 1
 }
 
 # Extract base slug from init file
@@ -31,223 +36,103 @@ $SlugLine = Select-String -Path $InitFile -Pattern "^SLUG:" | Select-Object -Fir
 $BaseSlug = ($SlugLine -replace ".*SLUG:\s*", "").Trim().ToUpper()
 Log "Base slug: $BaseSlug"
 
-for ($run = 1; $run -le $MaxRuns; $run++) {
-    Log ""
-    Log "============================================================"
-    Log "  RUN $run / $MaxRuns"
-    Log "============================================================"
-    Log ""
-    Log "--- Generating paper ---"
+# Single Claude invocation — the orchestrator handles the quality loop internally
+Log ""
+Log "============================================================"
+Log "  INVOKING CLAUDE (internal quality loop)"
+Log "  The orchestrator will run up to 3 iterations internally."
+Log "  No Ctrl+C needed. Wait for completion."
+Log "============================================================"
+Log ""
 
-    # cmd /c isolates claude.cmd so its exit doesn't kill this script
-    cmd /c claude.cmd --dangerously-skip-permissions $InitFile
-    Log ""
-    Log "--- Claude exited ---"
+$StartTime = Get-Date
 
-    # Step 2: Find the latest project directory
-    $ProjectDir = Get-ChildItem -Path "$ShellRoot\papers" -Directory -Filter "$BaseSlug*" |
-        Sort-Object Name | Select-Object -Last 1
+# Read init file and pipe as prompt. Passing as positional arg causes Claude to
+# ask "What would you like to do?" instead of executing. Piping as stdin with -p
+# ensures Claude treats it as instructions to execute immediately.
+$InitContent = Get-Content $InitFile -Raw -Encoding UTF8
+$InitContent | cmd /c claude.cmd -p --dangerously-skip-permissions
+$Duration = (Get-Date) - $StartTime
 
-    if (-not $ProjectDir) {
-        Log "ERROR: No project directory found for $BaseSlug"
-        break
-    }
+Log ""
+Log "--- Claude exited after $([math]::Round($Duration.TotalMinutes, 1)) minutes ---"
 
-    $PaperPath = Join-Path $ProjectDir.FullName "paper.md"
-    if (-not (Test-Path $PaperPath)) {
-        Log "ERROR: No paper.md in $($ProjectDir.Name). Pipeline may have halted."
-        break
-    }
+# Find the project directory
+$ProjectDir = Get-ChildItem -Path "$ShellRoot\papers" -Directory -Filter "$BaseSlug*" |
+    Sort-Object Name | Select-Object -Last 1
 
-    $LineCount = (Get-Content $PaperPath | Measure-Object -Line).Lines
-    Log "Paper: $($ProjectDir.Name) ($LineCount lines)"
-
-    # Step 3: Run full-paper Steelman review
-    Log ""
-    Log "--- Running Steelman review ---"
-
-    $PaperText = Get-Content $PaperPath -Raw -Encoding UTF8
-    $SpecPath = Join-Path $ProjectDir.FullName "frozen_spec.md"
-    $SpecText = if (Test-Path $SpecPath) { Get-Content $SpecPath -Raw -Encoding UTF8 } else { "(not found)" }
-
-    $SteelmanPrompt = @"
-You are a senior associate editor who has reviewed 200+ papers.
-You have just read a complete academic paper. Write a referee report.
-
-Target venue context is provided in the frozen specification. Evaluate against
-that venue's standards and format expectations, not against an idealized
-research article.
-
-Organize your critique into:
-
-## STRUCTURAL ISSUES (would cause rejection)
-A structural issue is a MATHEMATICAL error in the paper's own derivations.
-These are ONLY:
-- A proof contains a logical error or incorrect derivation step
-- A theorem's stated conditions are violated within the paper's own proof
-- A definition is internally inconsistent (used one way in the definition,
-  differently in the proof)
-
-If the math is correct but you disagree with how the contribution is framed,
-that is a FRAMING issue, not structural. Specifically, these are NEVER structural:
-- The contribution is "trivial" or "just algebra" — that is a framing concern
-- The paper overclaims novelty relative to prior work — that is framing
-- A competing model can also derive a similar result — that is framing
-- Parameter interpretations or definitional choices you would make differently
-- Missing engagement with related literature
-- False claims about what prior work did or did not do — that is a CITATION error
-- Scope or framing concerns about how the contribution is presented
-
-Numbered list. If none, write "None identified."
-
-## FRAMING & POSITIONING ISSUES (would cause major revision)
-Numbered list. If none, write "None identified."
-
-## MINOR ISSUES (would appear in a revise-and-resubmit letter)
-Numbered list. If none, write "None identified."
-
-## VERDICT
-Use this rubric:
-- ACCEPT: No structural issues AND fewer than 3 framing issues AND all framing
-  issues are addressable without rewriting proofs or restructuring the paper.
-- MINOR_REVISION: No structural issues. Framing issues exist but do not require
-  rewriting proofs or restructuring the paper.
-- MAJOR_REVISION: Structural issues exist, OR framing issues require substantial
-  rewriting of proofs or paper structure.
-- REJECT: Fundamental mathematical errors, or the contribution does not exist.
-
-## REVISION INSTRUCTIONS
-If not ACCEPT: numbered actionable instructions. If ACCEPT: "No revisions needed."
-
-Here is the paper:
-$PaperText
-
-Here is the frozen specification:
-$SpecText
-"@
-
-    # Write prompt to temp file to avoid command line length limits
-    $TempFile = [System.IO.Path]::GetTempFileName()
-    Set-Content -Path $TempFile -Value $SteelmanPrompt -Encoding UTF8
-
-    $Critique = Get-Content $TempFile -Raw | cmd /c claude.cmd -p --output-format text --dangerously-skip-permissions 2>&1
-    Remove-Item $TempFile -ErrorAction SilentlyContinue
-
-    # Convert critique to a single string (it may come back as array from pipe)
-    $CritiqueStr = $Critique | Out-String
-
-    # Save critique to project dir
-    $CritiquePath = Join-Path $ProjectDir.FullName "steelman_full_paper_critique.md"
-    Set-Content -Path $CritiquePath -Value $CritiqueStr -Encoding UTF8
-    Log "Saved critique to $($ProjectDir.Name)\steelman_full_paper_critique.md"
-
-    # Consolidate findings into central logs
-    python src/consolidate.py --critique $CritiquePath 2>&1 | ForEach-Object { Log $_ }
-    $DeadEndsPath = Join-Path $ProjectDir.FullName "dead_ends.md"
-    if (Test-Path $DeadEndsPath) {
-        python src/consolidate.py --dead-ends $DeadEndsPath 2>&1 | ForEach-Object { Log $_ }
-    }
-
-    # Log the full critique
-    Add-Content -Path $LogFile -Value "============ STEELMAN CRITIQUE - Run $run ============" -Encoding UTF8
-    Add-Content -Path $LogFile -Value $CritiqueStr -Encoding UTF8
-    Add-Content -Path $LogFile -Value "============ END CRITIQUE ============" -Encoding UTF8
-
-    # Extract verdict from the VERDICT section specifically
-    $Verdict = "UNKNOWN"
-    # Find lines after ## VERDICT
-    $InVerdict = $false
-    foreach ($line in $CritiqueStr -split "`n") {
-        if ($line -match "^##\s*VERDICT") {
-            $InVerdict = $true
-            continue
-        }
-        if ($InVerdict -and $line -match "^##") {
-            break
-        }
-        if ($InVerdict -and $line.Trim().Length -gt 0) {
-            if ($line -match "REJECT") { $Verdict = "REJECT" }
-            elseif ($line -match "MAJOR_REVISION") { $Verdict = "MAJOR_REVISION" }
-            elseif ($line -match "MINOR_REVISION") { $Verdict = "MINOR_REVISION" }
-            elseif ($line -match "ACCEPT") { $Verdict = "ACCEPT" }
-            if ($Verdict -ne "UNKNOWN") { break }
-        }
-    }
-
-    Log ""
-    Log "  STEELMAN VERDICT: $Verdict"
-    Log ""
-
-    # Step 4: Check if we're done
-    if ($Verdict -eq "ACCEPT" -or $Verdict -eq "MINOR_REVISION") {
-        Log "Steelman $Verdict. Quality loop complete."
-        break
-    }
-
-    if ($run -ge $MaxRuns) {
-        Log "Max runs ($MaxRuns) reached."
-        break
-    }
-
-    # Step 5: Extract revision instructions and patch init file
-    # Parse the critique line by line to extract sections safely
-    $RevisionLines = @()
-    $StructuralLines = @()
-    $CurrentSection = ""
-
-    foreach ($line in $CritiqueStr -split "`n") {
-        if ($line -match "^##\s*STRUCTURAL ISSUES") { $CurrentSection = "structural"; continue }
-        elseif ($line -match "^##\s*FRAMING") { $CurrentSection = "framing"; continue }
-        elseif ($line -match "^##\s*MINOR") { $CurrentSection = "minor"; continue }
-        elseif ($line -match "^##\s*VERDICT") { $CurrentSection = "verdict"; continue }
-        elseif ($line -match "^##\s*REVISION INSTRUCTIONS") { $CurrentSection = "revision"; continue }
-        elseif ($line -match "^##\s") { $CurrentSection = ""; continue }
-
-        if ($CurrentSection -eq "structural" -and $line.Trim().Length -gt 0 -and $line.Trim() -ne "None identified.") {
-            $StructuralLines += $line
-        }
-        if ($CurrentSection -eq "revision" -and $line.Trim().Length -gt 0 -and $line.Trim() -ne "No revisions needed.") {
-            $RevisionLines += $line
-        }
-    }
-
-    $Patch = "`n# === STEELMAN REVISION BRIEF (from run $run) ===`n"
-    $Patch += "# The next run MUST address every item.`n"
-
-    if ($StructuralLines.Count -gt 0) {
-        $Patch += "# STRUCTURAL ISSUES:`n"
-        $Patch += ($StructuralLines -join "`n") + "`n"
-    }
-    if ($RevisionLines.Count -gt 0) {
-        $Patch += "# REVISION INSTRUCTIONS:`n"
-        $Patch += ($RevisionLines -join "`n") + "`n"
-    }
-
-    # Patch init file - remove previous brief, then insert new one
-    $InitContent = Get-Content $InitFile -Raw -Encoding UTF8
-    # Remove any existing revision brief (keep only the latest)
-    $InitContent = $InitContent -replace "(?s)# === STEELMAN REVISION BRIEF.*?(?=KNOWN_DRIFT_RISKS:)", ""
-    $InsertPoint = $InitContent.IndexOf("KNOWN_DRIFT_RISKS:")
-    if ($InsertPoint -ge 0) {
-        $InitContent = $InitContent.Insert($InsertPoint, "$Patch`n")
-    } else {
-        $InitContent += $Patch
-    }
-    Set-Content -Path $InitFile -Value $InitContent -Encoding UTF8
-    Log "Patched $InitFile with $($StructuralLines.Count) structural issues, $($RevisionLines.Count) revision instructions"
-    Log "Waiting 10s before next run..."
-    Start-Sleep -Seconds 10
+if (-not $ProjectDir) {
+    Log "ERROR: No project directory found for $BaseSlug"
+    exit 1
 }
 
-# Restore original init file
-if (Test-Path $BackupFile) {
-    Copy-Item $BackupFile $InitFile -Force
-    Log "Restored original $InitFile from backup"
+Log "Project directory: $($ProjectDir.Name)"
+
+# Check for best_paper.md (produced by the internal quality loop)
+$BestPaperPath = Join-Path $ProjectDir.FullName "best_paper.md"
+if (Test-Path $BestPaperPath) {
+    $LineCount = (Get-Content $BestPaperPath | Measure-Object -Line).Lines
+    Log "best_paper.md found ($LineCount lines)"
+} else {
+    # Fallback: check for paper.md in run directories
+    $LatestRun = Get-ChildItem -Path $ProjectDir.FullName -Directory -Filter "run*" |
+        Sort-Object Name | Select-Object -Last 1
+    if ($LatestRun) {
+        $PaperPath = Join-Path $LatestRun.FullName "paper.md"
+        if (Test-Path $PaperPath) {
+            Log "WARNING: No best_paper.md but found $($LatestRun.Name)/paper.md"
+        } else {
+            Log "WARNING: No paper.md found in latest run directory"
+        }
+    } else {
+        # Legacy structure: paper.md in project root
+        $PaperPath = Join-Path $ProjectDir.FullName "paper.md"
+        if (Test-Path $PaperPath) {
+            Log "Found paper.md in project root (legacy structure)"
+        } else {
+            Log "ERROR: No paper output found. Pipeline may have halted."
+            Log "Check state_vector.md for halt reason."
+        }
+    }
+}
+
+# Post-run consolidation (safety net — orchestrator should have done this already)
+$RunDirs = Get-ChildItem -Path $ProjectDir.FullName -Directory -Filter "run*" | Sort-Object Name
+foreach ($RunDir in $RunDirs) {
+    $CritiquePath = Join-Path $RunDir.FullName "steelman_critique.md"
+    if (Test-Path $CritiquePath) {
+        Log "Consolidating findings from $($RunDir.Name)/steelman_critique.md"
+        python src/consolidate.py --critique $CritiquePath 2>&1 | ForEach-Object { Log $_ }
+    }
+}
+
+# Consolidate dead ends if present
+$DeadEndsPath = Join-Path $ProjectDir.FullName "dead_ends.md"
+if (Test-Path $DeadEndsPath) {
+    Log "Consolidating dead ends from project"
+    python src/consolidate.py --dead-ends $DeadEndsPath 2>&1 | ForEach-Object { Log $_ }
+}
+
+# Report state vector
+$StateVectorPath = Join-Path $ProjectDir.FullName "state_vector.md"
+if (Test-Path $StateVectorPath) {
+    Log ""
+    Log "--- STATE VECTOR ---"
+    Get-Content $StateVectorPath | ForEach-Object { Log "  $_" }
+}
+
+# Report run manifest if present
+$ManifestPath = Join-Path $ProjectDir.FullName "outputs\run_manifest.md"
+if (Test-Path $ManifestPath) {
+    Log ""
+    Log "--- RUN MANIFEST ---"
+    Get-Content $ManifestPath | Select-Object -First 20 | ForEach-Object { Log "  $_" }
 }
 
 Log ""
 Log "============================================================"
 Log "  QUALITY LOOP COMPLETE"
-Log "  Runs: $run"
+Log "  Project: $($ProjectDir.Name)"
+Log "  Duration: $([math]::Round($Duration.TotalMinutes, 1)) minutes"
 Log "  Log: $LogFile"
 Log "============================================================"

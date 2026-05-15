@@ -1,0 +1,59 @@
+﻿[2026-05-14 21:26:21] SHELL Quality Loop Launcher v2
+[2026-05-14 21:26:21] Log file: C:\PROJECTS\SHELL\logs\quality_loop_20260514_212621.log
+[2026-05-14 21:26:21] Init file: papers/init_replication_crisis.md
+[2026-05-14 21:26:21] Base slug: REPLICATION_CRISIS_2026
+[2026-05-14 21:26:21] 
+[2026-05-14 21:26:21] ============================================================
+[2026-05-14 21:26:21]   INVOKING CLAUDE (internal quality loop)
+[2026-05-14 21:26:21]   The orchestrator will run up to 3 iterations internally.
+[2026-05-14 21:26:21]   No Ctrl+C needed. Wait for completion.
+[2026-05-14 21:26:21] ============================================================
+[2026-05-14 21:26:21] 
+[2026-05-14 22:12:14] 
+[2026-05-14 22:12:14] --- Claude exited after 45.9 minutes ---
+[2026-05-14 22:12:14] Project directory: REPLICATION_CRISIS_2026_2026-05-14_001
+[2026-05-14 22:12:14] best_paper.md found (276 lines)
+[2026-05-14 22:12:14] Consolidating dead ends from project
+[2026-05-14 22:12:15] Extracted 0 dead-ends from dead_ends.md
+[2026-05-14 22:12:15] 
+[2026-05-14 22:12:15] --- STATE VECTOR ---
+[2026-05-14 22:12:15]   TURN: 7
+[2026-05-14 22:12:15]   STATUS: AWAITING_REVIEW
+[2026-05-14 22:12:15]   MILESTONE: COMPLETE
+[2026-05-14 22:12:15]   RUN: 1
+[2026-05-14 22:12:15]   BEST_RUN: 1
+[2026-05-14 22:12:15]   AUTHOR_LOOPS: 5
+[2026-05-14 22:12:15]   EDITOR_LOOPS: 1
+[2026-05-14 22:12:15]   EXPERIMENT: A Bayesian Model of the Replication Crisis
+[2026-05-14 22:12:15]   TIMESTAMP: 2026-05-14
+[2026-05-14 22:12:15]   SPEC_FINGERPRINT: f630ed4339547685b1681451a69c36d9146022e12596d0910660dba5b7eb631e
+[2026-05-14 22:12:15]   QUALITY_VERDICT: Run 1 â€” ACCEPT (Steelman CONDITIONAL_ACCEPT, all milestones locked)
+[2026-05-14 22:12:15] 
+[2026-05-14 22:12:15] --- RUN MANIFEST ---
+[2026-05-14 22:12:15]   # Run Manifest
+[2026-05-14 22:12:15]   SHELL_VERSION: 6.2
+[2026-05-14 22:12:15]   PAPER: replication_crisis_2026_2026-05-14_001
+[2026-05-14 22:12:15]   DATE: 2026-05-14
+[2026-05-14 22:12:15]   ARCHITECTURE: Agent Dispatch (v5 orchestrator)
+[2026-05-14 22:12:15]   
+[2026-05-14 22:12:15]   ## Quality Loop
+[2026-05-14 22:12:15]   Total Runs: 1
+[2026-05-14 22:12:15]   Best Run: 1
+[2026-05-14 22:12:15]   Final Verdict: ACCEPT (Steelman CONDITIONAL_ACCEPT, all milestones locked on first run)
+[2026-05-14 22:12:15]   
+[2026-05-14 22:12:15]   ## Models
+[2026-05-14 22:12:15]   Author: Claude (Agent dispatch)
+[2026-05-14 22:12:15]   Peer Reviewer: Claude (Agent dispatch)
+[2026-05-14 22:12:15]   Steelman: Claude (Agent dispatch)
+[2026-05-14 22:12:15]   Editor: Claude (Agent dispatch)
+[2026-05-14 22:12:15]   Orchestrator: Claude (this session)
+[2026-05-14 22:12:15]   Accountability Auditor: SKIPPED (CLI-only mode)
+[2026-05-14 22:12:15]   
+[2026-05-14 22:12:15]   ## Pipeline (per run)
+[2026-05-14 22:12:15] 
+[2026-05-14 22:12:15] ============================================================
+[2026-05-14 22:12:15]   QUALITY LOOP COMPLETE
+[2026-05-14 22:12:15]   Project: REPLICATION_CRISIS_2026_2026-05-14_001
+[2026-05-14 22:12:15]   Duration: 45.9 minutes
+[2026-05-14 22:12:15]   Log: C:\PROJECTS\SHELL\logs\quality_loop_20260514_212621.log
+[2026-05-14 22:12:15] ============================================================

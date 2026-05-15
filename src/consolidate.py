@@ -254,27 +254,45 @@ def parse_dead_ends(path: Path) -> list[DeadEnd]:
 
     dead_ends = []
 
-    # Split on numbered items (handles both formats)
-    items = re.split(r"\n\s*\d+\.\s+", "\n" + text)
-    # Also catch "- " bullet items that aren't sub-bullets
-    if len(items) <= 1:
-        items = re.split(r"\n- (?=[A-Z])", "\n" + text)
+    # Try v5 format first: [Turn N] Run M MX REJECT: ...
+    v5_items = re.split(r"\n(?=\[Turn \d+\])", "\n" + text)
+    v5_items = [i.strip() for i in v5_items if re.match(r"\[Turn \d+\].*REJECT", i.strip())]
+
+    if v5_items:
+        items = v5_items
+    else:
+        # Fall back to numbered items (v3/v4 format)
+        items = re.split(r"\n\s*\d+\.\s+", "\n" + text)
+        # Also catch "- " bullet items that aren't sub-bullets
+        if len(items) <= 1:
+            items = re.split(r"\n- (?=[A-Z])", "\n" + text)
 
     for item in items:
         item = item.strip()
         if not item or len(item) < 15:
             continue
-        # Skip headers and metadata
+        # Skip headers, metadata, and revision/fix entries
         if item.startswith("#") or item.startswith("===") or item.startswith("[No additional"):
+            continue
+        if item.startswith("[No dead ends"):
+            continue
+        # Skip FIXES entries — we want failures, not corrections
+        if re.match(r"\[Turn \d+\].*Revision:", item) or "FIXES APPLIED:" in item:
             continue
 
         # Extract title: first line or text before first colon/dash
         first_line = item.split("\n")[0].strip()
-        title_match = re.match(r"([A-Z][A-Z_ ]+):", first_line)
-        if title_match:
-            title = title_match.group(1).strip()
+
+        # v5 format: extract the REJECT description
+        v5_match = re.match(r"\[Turn \d+\] Run \d+ M\d+ REJECT:\s*(.*)", first_line)
+        if v5_match:
+            title = v5_match.group(1)[:80].rstrip(".")
         else:
-            title = first_line[:80].rstrip(".")
+            title_match = re.match(r"([A-Z][A-Z_ ]+):", first_line)
+            if title_match:
+                title = title_match.group(1).strip()
+            else:
+                title = first_line[:80].rstrip(".")
 
         # Check for version headers in context
         version_ctx = re.search(r"(?:From |##\s*)(V\d+|v\d+|Run \d+)", item)

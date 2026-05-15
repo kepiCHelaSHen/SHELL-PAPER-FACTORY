@@ -488,6 +488,46 @@
 - **Tried:** V3 was 1038 lines. Too long for publication. V4 targets ~800.
 - **Failed:** See detail above.
 
+### [DE-096] Issue 2: Theorem 2(iii) lower bound via F(j*,q) sandwich: r/p_{j*} ≤ F ≤ (Δv_max
+- **Paper:** ACADEMIC_PUBLISHING_2026 | **Version:** v1
+- **Tried:** Issue 2: Theorem 2(iii) lower bound via F(j*,q) sandwich: r/p_{j*} ≤ F ≤ (Δv_max+r)·E[K]. No ≈.
+- **Failed:** See detail above.
+
+### [DE-097] Issue 3+6: Proposition 2(ii) restated — desk rejection modeled as rendering top 
+- **Paper:** ACADEMIC_PUBLISHING_2026 | **Version:** v1
+- **Tried:** Issue 3+6: Proposition 2(ii) restated — desk rejection modeled as rendering top journals inaccessible (p unchanged at j≥j*_D). Proof uses inductive E_k > E_{k+1} via Theorem 2(i) + Lemma 1. No ≈.
+- **Failed:** See detail above.
+
+### [DE-098] Issue 4: New Lemma 5 formally proves geometric acceptance growth from uniform th
+- **Paper:** ACADEMIC_PUBLISHING_2026 | **Version:** v1
+- **Tried:** Issue 4: New Lemma 5 formally proves geometric acceptance growth from uniform threshold spacing via compactness of R(z)>1.
+- **Failed:** See detail above.
+
+### [DE-099] Issue 5: Lemma 2 Part B restructured as backward induction. New Condition (P.ii)
+- **Paper:** ACADEMIC_PUBLISHING_2026 | **Version:** v1
+- **Tried:** Issue 5: Lemma 2 Part B restructured as backward induction. New Condition (P.ii) replaces circular "a fortiori" argument.
+- **Failed:** See detail above.
+
+### [DE-100] Issue 7: v_n > r added to Theorem 1 hypotheses
+- **Paper:** ACADEMIC_PUBLISHING_2026 | **Version:** v1
+- **Tried:** Issue 7: v_n > r added to Theorem 1 hypotheses.
+- **Failed:** DO NOT REPEAT: Circular reasoning in "skipping is suboptimal" proofs. Use backward induction instead.
+
+### [DE-102] Initial draft had circular inefficiency condition (v_B + n > v_A + n cancels to 
+- **Paper:** TECH_LOCKIN_2026 | **Version:** v1
+- **Tried:** [Turn 2] Run 1 M1 REJECT: Initial draft had circular inefficiency condition (v_B + n > v_A + n cancels to delta > 0), present-tense claims for unproven results, unsupported "first" priority claim, orphaned phi variable, discrete language in continuum model.
+- **Failed:** REASON: U5 internal consistency (Def 11 contradicts Introduction condition), M1.3 premature claims, U3 overclaiming, M1.1 orphaned symbol, notation sloppiness.
+
+### [DE-103] Existence argument for k* has gaps — Prop 1 tautological, unbounded support IVT 
+- **Paper:** TECH_LOCKIN_2026 | **Version:** v1
+- **Tried:** [Turn 10] Run 1 M2 REJECT: Existence argument for k* has gaps — Prop 1 tautological, unbounded support IVT fails (g negative at both ends), Thm 1(b) depends on Prop 1 conditions not in its hypotheses. sigma* dominant-strategy definition inconsistent with M1 Def 12. Section 2.5 (permanence) is redundant with Thm 1(a).
+- **Failed:** not in its hypotheses. sigma* dominant-strategy definition inconsistent with M1 Def 12. Section 2.5 (permanence) is redundant with Thm 1(a).
+
+### [DE-104] Proofs used informal approximations ("≈") in formal theorem statements
+- **Paper:** ACADEMIC_PUBLISHING_2026 | **Version:** v1
+- **Tried:** [Turn 10] Run 1 M2 REJECT: Proofs used informal approximations ("≈") in formal theorem statements
+- **Failed:** REASON: Theorem 2(iii) Θ lower bound, Proposition 2(ii) inequality chain, Theorem 2(iv) geometric growth assertion
+
 ## assumed_not_derived
 
 ## framing_overclaim
@@ -496,5 +536,10 @@
 - **Paper:** echo_chambers_v3_2026 | **Version:** V2
 - **Tried:** Novelty overclaimed vs control theory literature.
 - **Failed:** See detail above.
+
+### [DE-101] Author used present tense for results depending on M2 derivation ("We show that 
+- **Paper:** VACCINE_GAME_2026 | **Version:** v1
+- **Tried:** [Turn 2] Run 1 M1 REJECT: Author used present tense for results depending on M2 derivation ("We show that Delta is largest..." and "peak at intermediate transmissibility"). Also mixed e=1 and general-e in payoff definitions.
+- **Failed:** REASON: U2/U3/M1.3 — premature claims, overclaiming unproven structural result.
 
 ## assembly_error

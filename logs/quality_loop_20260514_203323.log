@@ -7,3 +7,26 @@
 [2026-05-14 20:33:23] ============================================================
 [2026-05-14 20:33:23] 
 [2026-05-14 20:33:23] --- Generating paper ---
+[2026-05-14 20:57:16] 
+[2026-05-14 20:57:16] --- Claude exited ---
+[2026-05-14 20:57:16] Paper: REPLICATION_CRISIS_2026_2026-05-14_001 (151 lines)
+[2026-05-14 20:57:16] 
+[2026-05-14 20:57:16] --- Running Steelman review ---
+[2026-05-14 21:00:46] Saved critique to REPLICATION_CRISIS_2026_2026-05-14_001\steelman_full_paper_critique.md
+[2026-05-14 21:00:46] Extracted 0 findings from steelman_full_paper_critique.md
+[2026-05-14 21:00:46] Extracted 0 dead-ends from dead_ends.md
+============ STEELMAN CRITIQUE - Run 1 ============
+API Error: 529 {"type":"error","error":{"type":"overloaded_error","message":"Overloaded"},"request_id":"req_011Cb3TAW51HTF5hDdt1TyMC"}
+
+============ END CRITIQUE ============
+[2026-05-14 21:00:46] 
+[2026-05-14 21:00:46]   STEELMAN VERDICT: UNKNOWN
+[2026-05-14 21:00:46] 
+[2026-05-14 21:00:46] Patched papers/init_replication_crisis.md with 0 structural issues, 0 revision instructions
+[2026-05-14 21:00:46] Waiting 10s before next run...
+[2026-05-14 21:00:56] 
+[2026-05-14 21:00:56] ============================================================
+[2026-05-14 21:00:56]   RUN 2 / 3
+[2026-05-14 21:00:56] ============================================================
+[2026-05-14 21:00:56] 
+[2026-05-14 21:00:56] --- Generating paper ---

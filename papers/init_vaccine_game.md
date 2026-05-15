@@ -9,162 +9,239 @@
 ## INPUTS — ALL PRE-FILLED
 
 PROJECT_NAME: Vaccination as a Public Goods Game: Nash Equilibria and the Free-Rider Threshold
-SLUG: vaccine_game_2026
+SLUG: VACCINE_GAME_2026
 AUTHOR: James P Rice Jr.
 TARGET_VENUE: Journal of Mathematical Biology
 PIPELINE: PAPER
 
 PROBLEM:
-Models vaccination decisions as a public goods game where each agent chooses whether
-to vaccinate (costly, private benefit + externality) or free-ride (benefits from herd
-immunity). Derives the Nash equilibrium vaccination rate as a function of vaccine
-efficacy, disease transmissibility (R0), and vaccine cost/risk ratio. Proves that the
-Nash equilibrium vaccination rate is always below the social optimum (herd immunity
-threshold), and quantifies the gap. Derives the exact subsidy needed to close the gap.
-The central failure of existing models is treating vaccination as an individual decision
-rather than a strategic interaction. This paper formalizes the game, derives the
-equilibrium, proves the gap theorem, and gives the policymaker the exact price tag
-for closing it.
+Models vaccination decisions as a public goods game where each agent chooses
+whether to vaccinate (costly, private benefit + externality) or free-ride
+(costless, benefits from herd immunity). Derives the Nash equilibrium
+vaccination rate as a closed-form function of vaccine efficacy, disease
+transmissibility (R0), and vaccine cost/risk ratio. Proves that the Nash
+equilibrium vaccination rate is always below the social optimum (herd immunity
+threshold), and quantifies the free-rider gap as a function of R0. Derives the
+exact subsidy needed to close the gap. The central contribution is the
+free-rider gap theorem: rational self-interested agents always under-vaccinate,
+and the gap is worst for moderately transmissible diseases.
 
 FROZEN_SPEC_PARAMETERS:
 
-PARAMETER: R0 baseline
-VALUE: 15 (measles)
-UNIT: dimensionless
-TOLERANCE: Range 12-18 explored in sensitivity analysis
-SOURCE: Anderson & May 1991 | Infectious Diseases of Humans | Oxford University Press
-NOTES: R0 = 15 is the central estimate for measles. Sensitivity analysis must cover
-       the full 12-18 range and show results hold across it.
-DRIFT_RISK: LOW — well-established parameter
+PARAMETER: Basic reproduction number (R0)
+VALUE: Varies by disease — measles ~15, COVID-19 ~3, influenza ~1.5
+UNIT: dimensionless ratio (secondary infections per primary case)
+TOLERANCE: explored parametrically (R0 from 1.1 to 20)
+SOURCE: Anderson & May 1991; Fine et al. 2011 | Epidemiological Reviews 33:5-21
+NOTES: R0 > 1 required for epidemic. Herd immunity threshold = 1 - 1/R0.
+DRIFT_RISK: LOW — standard epidemiological parameter
 
-PARAMETER: Herd immunity threshold
-VALUE: 1 - 1/R0
-UNIT: fraction of population
-TOLERANCE: exact — this is a derived quantity
-SOURCE: Standard epidemiology (Anderson & May 1991)
-NOTES: For R0=15, threshold = 14/15 ≈ 0.933. This is the social optimum the Nash
-       equilibrium must be compared against.
-DRIFT_RISK: LOW — standard result
-
-PARAMETER: Vaccine efficacy
-VALUE: 0.95 (measles vaccine)
+PARAMETER: Vaccine efficacy (e)
+VALUE: 0 < e <= 1 (perfect vaccine: e = 1)
 UNIT: probability
-TOLERANCE: ± 0.02
-SOURCE: WHO position paper on measles vaccines (2017)
-NOTES: Effective coverage = efficacy * vaccination rate. The model must distinguish
-       nominal vaccination rate from effective immunization rate.
-DRIFT_RISK: LOW — well-established parameter
+TOLERANCE: explored parametrically
+SOURCE: Standard epidemiological definition
+NOTES: e = 1 for baseline model. Sensitivity analysis with e < 1.
+       Effective reproduction number under vaccination: R_eff = R0 * (1 - e*p)
+       where p is vaccination rate.
+DRIFT_RISK: LOW — standard parameter
 
-PARAMETER: Game structure
-VALUE: Symmetric 2-strategy (Vaccinate / Free-ride), N players, well-mixed population
-UNIT: N/A
-TOLERANCE: N/A
-SOURCE: Bauch & Earn 2004 | PNAS 101(36):13391-13394
-NOTES: This is the canonical vaccination game structure. The model extends Bauch &
-       Earn by deriving the exact gap and the subsidy formula.
-DRIFT_RISK: MEDIUM — Author may drift into SIR dynamics instead of maintaining
-             game-theoretic framework throughout
-
-PARAMETER: Cost/risk ratio
-VALUE: c/r where c = vaccine cost (including side-effect risk), r = disease cost
+PARAMETER: Cost-risk ratio (c)
+VALUE: c = cost_of_vaccination / cost_of_infection, c in (0, 1)
 UNIT: dimensionless ratio
-TOLERANCE: explored parametrically (c/r from 0.01 to 0.5)
-SOURCE: Bauch & Earn 2004; Fine & Clarkson 1986
-NOTES: The Nash equilibrium vaccination rate is a decreasing function of c/r.
-       The paper must derive this relationship explicitly.
-DRIFT_RISK: MEDIUM — Author may fix c/r rather than deriving the full functional form
+TOLERANCE: explored parametrically (c from 0.01 to 0.99)
+SOURCE: Novel formalization — ratio captures the individual's trade-off
+NOTES: c < 1 means vaccination is cheaper than infection (individually rational
+       to vaccinate IF no herd immunity). c > 0 means vaccination is not free.
+       The free-rider problem arises because herd immunity makes infection
+       unlikely even without vaccination, reducing individual incentive.
+DRIFT_RISK: HIGH — Author may confuse individual cost with social cost.
+             Keep these strictly separate. Individual cost ratio c drives
+             the Nash equilibrium. Social cost is what the subsidy corrects.
+
+PARAMETER: Nash equilibrium vaccination rate (p*)
+VALUE: p* = (1/e) * (1 - 1/R0) - (1 - c)/(e * R0 * c) [to be derived]
+UNIT: probability
+TOLERANCE: must be derived, not assumed
+SOURCE: Novel derivation — this paper's contribution
+NOTES: The exact formula depends on modeling choices. The key properties to
+       prove: (1) p* < p_herd for all R0 > 1 and 0 < c < 1, (2) the gap
+       p_herd - p* increases with R0 up to a point then decreases,
+       (3) the gap is zero only if c = 0 (free vaccination).
+DRIFT_RISK: HIGH — Author may assume the Nash equilibrium formula rather
+             than deriving it from first principles. Must set up the game,
+             define payoffs, and solve for the equilibrium explicitly.
+
+PARAMETER: Herd immunity threshold (p_herd)
+VALUE: p_herd = 1 - 1/R0 (for perfect vaccine, e = 1)
+UNIT: probability
+TOLERANCE: exact
+SOURCE: Anderson & May 1991
+NOTES: For imperfect vaccine: p_herd = (1 - 1/R0) / e.
+DRIFT_RISK: LOW — textbook result
+
+PARAMETER: Optimal subsidy (s*)
+VALUE: To be derived — the per-vaccination subsidy that makes p* = p_herd
+UNIT: cost units (same as vaccination cost)
+TOLERANCE: must be derived as a closed-form function of R0, e, c
+SOURCE: Novel derivation
+NOTES: This is the policy payoff. The subsidy compensates for the externality.
+       Must be derived from the game-theoretic model, not asserted.
+DRIFT_RISK: MEDIUM — Author may derive the subsidy from a welfare argument
+             rather than from the game-theoretic equilibrium condition.
 
 MILESTONES:
 
-M1: Formal model setup — define agents, strategies (Vaccinate/Free-ride), payoff
-    functions as explicit functions of R0, vaccine efficacy, and c/r. Establish the
-    public goods structure: vaccination creates a positive externality. Show why
-    this is a public goods game, not merely an optimization problem. Establish notation.
+M1: Game-theoretic framework + definitions — define the vaccination game
+    (players, strategies, payoffs), R0, herd immunity threshold, vaccine
+    efficacy, cost-risk ratio. Establish the payoff functions for vaccinate
+    vs. free-ride. Establish notation. Introduction with literature gap:
+    Bauch & Earn (2004) showed the game-theoretic framing but did not derive
+    closed-form equilibrium as a function of R0.
 
-M2: Nash equilibrium derivation + gap theorem — derive the symmetric Nash equilibrium
-    vaccination rate p* as a function of R0, efficacy, and c/r. Prove Theorem 1:
-    p* < 1 - 1/R0 for all R0 > 1 and c/r > 0 (the gap theorem). Quantify the gap
-    as a function of parameters.
+M2: Nash equilibrium derivation + free-rider gap theorem — derive the Nash
+    equilibrium vaccination rate p* in closed form. Prove Theorem 1: p* < p_herd
+    for all R0 > 1 and c > 0. Derive the free-rider gap Delta = p_herd - p*.
+    Prove properties of Delta as a function of R0. Derive the optimal subsidy s*.
 
-M3: Subsidy mechanism + boundary conditions — derive the exact per-vaccine subsidy s*
-    that makes Vaccinate a dominant strategy (or shifts Nash equilibrium to herd
-    immunity threshold). Analyze boundary conditions: what happens as R0 -> 1,
-    as c/r -> 0, as efficacy -> 1. Sensitivity analysis table.
+M3: Disease mapping + boundary conditions — map at least 4 diseases onto the
+    model using published R0 and vaccine cost estimates. Show which diseases
+    have the largest free-rider gap. Boundary conditions: R0 -> 1 (disease
+    barely transmissible), R0 -> infinity (extremely transmissible), c -> 0
+    (free vaccine), c -> 1 (vaccine as costly as infection).
+    Sensitivity analysis table.
 
-M4: Full paper — Introduction (vaccination as strategic interaction), Related work
-    (Bauch & Earn 2004, Fine & Clarkson 1986, Geoffard & Philipson 1997),
-    Discussion (policy implications, limitations of well-mixed assumption),
+M4: Full paper — Introduction (vaccination as a collective action problem),
+    Related work (Bauch & Earn 2004, Geoffard & Philipson 1997, Brito et al. 1991),
+    Discussion (policy implications — subsidies, mandates, nudges),
     Conclusion. Self-contained Abstract.
 
 ORACLE:
 The model is valid if and only if:
-1. Payoff functions are explicitly defined for both strategies as functions of
-   the population vaccination rate, R0, efficacy, and c/r
-2. The Nash equilibrium vaccination rate p* is derived analytically
-3. The gap theorem (p* < 1 - 1/R0) is proven as a formal theorem, not observed
-4. The gap is quantified as a closed-form expression
-5. The subsidy s* is derived as a function of the gap
+1. The vaccination game is formally defined with explicit payoff functions
+2. The Nash equilibrium p* is derived (not assumed) from the payoff functions
+3. p* < p_herd is proven as a formal theorem for the stated parameter ranges
+4. The free-rider gap is characterized as a function of R0
+5. The optimal subsidy s* is derived from the equilibrium condition
+6. The disease mapping uses cited R0 values, not invented ones
 
-Peer Reviewer must verify: does the gap theorem follow from the payoff structure,
-or is it merely stated? If stated without proof, REJECT.
+Peer Reviewer must verify: is p* derived from the game's payoff functions,
+or is it assumed? If assumed, REJECT.
 
 KNOWN_DRIFT_RISKS:
-- Reverting to SIR epidemic dynamics instead of game-theoretic framework
-- Confusing individual rationality (Nash equilibrium) with social optimality
-  (herd immunity threshold) — these must be formally distinguished
-- Using wrong R0 values or failing to do sensitivity analysis across R0 range
-- Treating vaccination as a one-shot game when sequential dynamics matter —
-  state the one-shot assumption explicitly and discuss limitations
-- Confusing nominal vaccination rate with effective immunization rate
-  (must account for vaccine efficacy < 1)
-- Skipping the subsidy derivation or leaving it as "future work"
-- Making the public goods structure implicit rather than explicit —
-  the externality must be formally defined and quantified
-- Failing to compare with Bauch & Earn 2004 — must show what is new
-- Adding epidemiological complexity (SIR compartments, age structure) that
-  obscures the game-theoretic contribution — keep the disease model simple,
-  the game theory rigorous
+- Assuming the Nash equilibrium formula rather than deriving it from
+  first principles — the derivation IS the contribution
+- Confusing individual rationality with social optimality — the whole
+  point is that individually rational agents under-vaccinate
+- Using simulation results instead of analytical derivation — this is
+  a theory paper, not a simulation paper
+- Making the game too complex (heterogeneous agents, dynamic games,
+  network effects) — keep it a clean symmetric static game first,
+  discuss extensions as limitations
+- Confusing R0 with R_effective — R0 is the basic reproduction number
+  without intervention; R_eff = R0(1 - e*p) is with vaccination
+- Moralizing about anti-vaxxers — the model shows rational agents
+  free-ride. This is a game theory result, not a moral judgment.
+- Not citing Bauch & Earn (2004) as the natural enemy — must show
+  what is new beyond their framework
+- Overstating policy implications — the subsidy is derived from the
+  model's equilibrium condition. Real-world subsidies depend on
+  administrative costs, compliance, and behavioral factors the model
+  does not capture.
+- Using made-up cost-risk ratios for specific diseases — cite WHO or
+  published health economics estimates where available
 - Orphan figure references — every figure must have Python/matplotlib code.
   The paper should include at minimum:
-    Figure 1: Nash equilibrium p* vs R0 for different c/r values
-    Figure 2: The gap (social optimum - Nash equilibrium) vs R0
-    Figure 3: Required subsidy s* vs c/r ratio
+    Figure 1: Nash equilibrium p* and herd immunity threshold as functions of R0
+    Figure 2: Free-rider gap Delta as a function of R0 for different cost ratios
+    Figure 3: Disease map — 4+ diseases plotted with their R0 and free-rider gap
+
+# === CROSS-PAPER FINDINGS (from STEELMAN_FINDINGS.md) ===
+# Systemic Claude Author tendencies. Address ALL proactively.
+
+- [F-005] POLICY LANGUAGE OVERSHOOTS MODEL SCOPE — scope policy claims to what
+  the model actually proves. "Subsidies close the gap" is valid. "Subsidies
+  solve vaccine hesitancy" is not — the model has no behavioral component.
+
+- [F-002] "ILLUSTRATIVE" COMPONENT THAT IS LOAD-BEARING — the Nash equilibrium
+  derivation and free-rider gap theorem ARE the contribution. Do not present
+  them as "one of several results."
+
+- [F-036/F-024] FIGURES CODE-ONLY — figures must appear as rendered images in
+  the paper, not code blocks. Code goes in figures/figure_N.py.
+
+- [F-015] MISSING DATA/CODE AVAILABILITY STATEMENT — include a statement.
+
+- [F-006] NOTATION OVERLOAD — R0 is reproduction number ONLY. Do not reuse R
+  for anything else. p is vaccination rate, e is efficacy, c is cost ratio.
+
+- [F-037] RELATED WORK SECTION TOO LONG — keep Related Work under 600 words.
+
+- [F-014] EM DASH IN TITLE — use colon or subtitle format.
+
+- [DE-015/058/065/080] SCOPE DISGUISE — "heterogeneous agents" and "dynamic
+  games" are limitations, not open problems.
+
+- [DE-038] PLACEHOLDER VALUES IN TABLES — disease mapping table MUST have real
+  R0 values from cited sources.
+
+- [F-034] DO NOT CLAIM LEAN-READINESS unless the init file requests it.
+
+# === LESSONS FROM PRIOR RUNS ===
+
+- THEOREM FRAMING — if the core result is elementary (solving a payoff equation),
+  frame it as a "closed-form characterization" whose value is in the
+  interpretation and disease mapping, not proof difficulty.
+
+- CONDITION THE MAPPING — use language like "Under the cited R0 estimates,
+  measles has the largest free-rider gap." Do not present point estimates as
+  established facts. Report ranges where possible.
+
+- NATURAL ENEMY — Bauch & Earn (2004) is the natural competitor. Derive their
+  result as a special case if possible. Show explicitly what is new: the
+  closed-form gap characterization and the subsidy derivation.
 
 ---
 
 ## SETUP SEQUENCE — EXECUTE NOW
 
-### Step 1 — Create project directory
-Create C:\PROJECTS\SHELL\papers\VACCINE_GAME\ with:
-  spec/, state/, outputs/, results/raw/, results/validated/, results/final/,
-  devlog/, src/, papers/, papers/vaccine_game_2026/,
-  papers/vaccine_game_2026/figures/, prompts/
+### Step 1 — Create project directory (auto-versioned)
+Resolve the project directory using auto-versioning:
+1. List all existing directories matching C:\PROJECTS\SHELL\papers\VACCINE_GAME_2026_*
+2. If none exist: use VACCINE_GAME_2026_[TODAY]_001
+3. If some exist: find the highest sequence number, increment by 1,
+   use VACCINE_GAME_2026_[TODAY]_[NEXT_SEQ]
+Store as RESOLVED_DIR. Use RESOLVED_DIR for ALL paths below.
+
+Create RESOLVED_DIR with subdirectories:
+  figures/, outputs/, results/raw/, results/final/,
+  devlog/, prompts/
 
 ### Step 2 — Write CLAUDE.md
   # Vaccination as a Public Goods Game — NORTH STAR
 
   ## What We Are Building
-  A game-theoretic model proving Nash equilibrium vaccination is always below
-  herd immunity, with the exact subsidy to close the gap.
+  A game-theoretic model proving rational agents under-vaccinate relative to
+  the social optimum, with the free-rider gap derived as a function of R0.
 
   ## The Core Claim
-  The Nash equilibrium vaccination rate is provably below the herd immunity
-  threshold for all R0 > 1 and positive cost/risk ratios. The gap and the
-  subsidy to close it are derived in closed form.
+  The Nash equilibrium vaccination rate is always below the herd immunity
+  threshold for any R0 > 1 and positive vaccination cost. The gap is
+  characterized in closed form and the optimal subsidy is derived.
 
   ## Frozen Parameters (quick reference)
   | Parameter | Value | Source |
   |-----------|-------|--------|
-  | R0 (measles) | 15 | Anderson & May 1991 |
-  | Herd immunity | 1 - 1/R0 | Standard epidemiology |
-  | Vaccine efficacy | 0.95 | WHO |
-  | Game structure | Symmetric 2-strategy, N players | Bauch & Earn 2004 |
+  | R0 | 1.1 - 20 (by disease) | Anderson & May 1991 |
+  | Herd immunity | 1 - 1/R0 | Standard |
+  | Vaccine efficacy | 0 < e <= 1 | Standard |
+  | Cost ratio | c in (0,1) | Novel formalization |
 
   ## Critical Enforcements
-  - Game-theoretic framework throughout — not SIR dynamics
-  - Nash equilibrium derived analytically, not simulated
-  - Gap theorem must be a formal proof
-  - Subsidy formula derived, not approximated
+  - Nash equilibrium must be DERIVED from payoff functions, not assumed
+  - Free-rider gap theorem must be formally proven
+  - Disease mapping must use cited R0 values
+  - Individual rationality vs social optimality must be kept distinct
 
 ### Step 3 — Write frozen_spec.md
 Fill from FROZEN_SPEC_PARAMETERS above. Lock date today.
@@ -176,31 +253,24 @@ innovation_log.md — header with project name and timestamp
 dead_ends.md — header with project name
 
 ### Step 5 — Copy all prompts from SHELL
-Copy from C:\PROJECTS\SHELL\prompts\ into C:\PROJECTS\SHELL\papers\VACCINE_GAME\prompts\:
+Copy from C:\PROJECTS\SHELL\prompts\ into RESOLVED_DIR\prompts\:
   04_paper_orchestrator.md
   05_author.md
   06_peer_reviewer.md
   07_editor.md
-  run_milestone.md
+  08_steelman.md
 Do NOT copy 00_init.md — SHELL-level only.
 
 Also write prompts/turn_prompts_log.md:
-  # TURN PROMPTS LOG — vaccine_game_2026
+  # TURN PROMPTS LOG — VACCINE_GAME_2026
   # Every exact prompt logged here. Required for reproducibility.
   [No entries yet. First entry written at Turn 1 M1.]
-
-### Step 5b — Write run_pipeline.ps1
-
-Write run_pipeline.ps1 in the project root (C:\PROJECTS\SHELL\papers\VACCINE_GAME\) with
-the slug set to "vaccine_game_2026". Use the template from
-C:\PROJECTS\SHELL\prompts\00_init.md Step 15, replacing [SLUG] with
-vaccine_game_2026 and [SLUG] paths with VACCINE_GAME.
 
 ### Step 6 — Write STATUS.md
 Phase: INIT -> PAPER PIPELINE
 Turn: 0
 What Is Done: Scaffolded. Spec locked.
-What Is Next: Author writes M1 (formal model setup, game structure, payoff functions).
+What Is Next: Author writes M1 (game-theoretic framework, payoff definitions).
 
 ### Step 7 — Write remaining required files
 
@@ -210,20 +280,17 @@ Write README.md:
   **Target:** Journal of Mathematical Biology
   **Status:** In progress
   ## What This Is
-  A game-theoretic model of vaccination decisions. Nash equilibrium is always below
-  herd immunity. The gap and subsidy are derived in closed form.
-  ## How to Run
-  claude --dangerously-skip-permissions prompts/04_paper_orchestrator.md
+  A game-theoretic model deriving the Nash equilibrium vaccination rate and
+  proving it always falls below the herd immunity threshold.
 
 Write CHAIN_PROMPT.md:
   # CHAIN PROMPT — Vaccine Game Paper | THIS FILE WINS ALL CONFLICTS
   Name: Vaccination as a Public Goods Game
   Author: James P Rice Jr.
-  Core claim: Nash equilibrium vaccination rate is provably below herd immunity
-  threshold. The gap and subsidy to close it are derived in closed form.
+  Core claim: Nash equilibrium vaccination rate < herd immunity threshold
+  for all R0 > 1 and c > 0. Free-rider gap and optimal subsidy derived.
   Pipeline: PAPER — Claude-only, milestone-by-milestone gating.
-  Author: Claude | Peer Reviewer: Claude | Editor: Claude
-  [today] | Initialized from SHELL v3
+  [today] | Initialized from SHELL v6.2
 
 Write SACRED_FILES.md:
   # SACRED FILES | Lock date: [today] | Locked by: James P Rice Jr.
@@ -232,44 +299,27 @@ Write SACRED_FILES.md:
   | frozen_spec.md | Oracle. Never modify after lock. | [today] |
 
 Write BEST_PRACTICES.md:
-  # BEST PRACTICES — Vaccine Game Paper | SHELL v3 standards
-  - Game-theoretic framework first — not SIR epidemic dynamics.
-  - Nash equilibrium derived analytically as function of R0, efficacy, c/r.
-  - Gap theorem (p* < 1 - 1/R0) must be a formal proof with explicit assumptions.
-  - Subsidy formula derived in closed form from gap expression.
-  - Natural enemy: Bauch & Earn 2004 — must show what is new beyond their framework.
-  - Sensitivity analysis required: R0 in [12-18], c/r in [0.01-0.5], efficacy in [0.9-1.0].
-  - Milestone-by-milestone. No section opens until previous is Peer Reviewer ACCEPT.
-  - Every figure needs Python/matplotlib code. No orphan figure references.
-  - Lean-ready proofs: all hypotheses explicit, every derivation step justified.
+  # BEST PRACTICES — Vaccine Game Paper
+  - Nash equilibrium must be derived from payoff functions, not assumed.
+  - Free-rider gap must be a formal theorem.
+  - Disease mapping uses cited R0 values from Anderson & May 1991 or WHO.
+  - Individual rationality != social optimality. Keep distinct throughout.
+  - Natural enemy: Bauch & Earn 2004. Show what is new.
+  - Sensitivity analysis required: R0 in [1.1, 20], c in (0, 1).
+  - Milestone-by-milestone. No section opens until previous is locked.
 
 Write devlog/DEV_LOG.md:
-  # DEVELOPMENT LOG — vaccine_game_2026
+  # DEVELOPMENT LOG — VACCINE_GAME_2026
   ## [today] — Session 1
-  Initialized from SHELL v3. Spec locked. All files created. Git initialized.
-  Pipeline: PAPER, Claude-only, milestone-by-milestone gating.
-  Models: Claude (Author) -> Claude (Peer Reviewer) -> Claude (Editor).
-
-Write outputs/options.md:
-  # OPTIONS LOG — vaccine_game_2026
-  [No options yet.]
-
-Write outputs/state_vector_backup.md:
-  # STATE VECTOR BACKUP — vaccine_game_2026
-  [No backups yet.]
+  Initialized from SHELL v6.2. Spec locked. All files created.
 
 ### Step 8 — Initialize git
-  cd C:\PROJECTS\SHELL\papers\VACCINE_GAME
+  cd RESOLVED_DIR
   git init
   git add -A
-  git commit -m "Turn 0 | Init | vaccine_game_2026"
+  git commit -m "Turn 0 | Init | VACCINE_GAME_2026"
 
-### Step 9 — Print confirmation and hand off:
-  PROJECT INITIALIZED: vaccine_game_2026
-  Spec locked. All files created. Git initialized.
-  Beginning paper pipeline — M1 (Formal Model Setup) first.
-  Output: papers/vaccine_game_2026/paper.md
-  Running. James P Rice Jr. reviews when done.
+### Step 9 — Print confirmation and hand off
 
 ---
 
@@ -283,8 +333,8 @@ to summarize — it is your operating manual. Execute it.
 
 YOUR INPUTS:
   PROBLEM: [the full PROBLEM text from the INPUTS section above]
-  DATA: No empirical data beyond frozen spec parameters. All results derived analytically from the game-theoretic model.
-  SLUG: vaccine_game_2026
+  DATA: No empirical data beyond cited epidemiological parameters. All results derived analytically from the game-theoretic model.
+  SLUG: VACCINE_GAME_2026
   DRIFT_RISKS: [paste KNOWN_DRIFT_RISKS above into every Author and Reviewer prompt]
   FROZEN_SPEC: [pass full frozen_spec.md to Peer Reviewer on every review pass]
 
