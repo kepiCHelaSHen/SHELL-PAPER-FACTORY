@@ -96,21 +96,27 @@ if (Test-Path $BestPaperPath) {
     }
 }
 
-# Post-run consolidation (safety net — orchestrator should have done this already)
-$RunDirs = Get-ChildItem -Path $ProjectDir.FullName -Directory -Filter "run*" | Sort-Object Name
-foreach ($RunDir in $RunDirs) {
-    $CritiquePath = Join-Path $RunDir.FullName "steelman_critique.md"
-    if (Test-Path $CritiquePath) {
-        Log "Consolidating findings from $($RunDir.Name)/steelman_critique.md"
-        python src/consolidate.py --critique $CritiquePath 2>&1 | ForEach-Object { Log $_ }
-    }
+# Post-run consolidation (safety net — orchestrator may not have done this)
+# Consolidate ALL steelman critiques found anywhere in the project
+Log "--- Post-run consolidation ---"
+$AllCritiques = Get-ChildItem -Path $ProjectDir.FullName -Recurse -Filter "steelman_critique*.md" | Sort-Object FullName
+foreach ($Critique in $AllCritiques) {
+    Log "Consolidating findings from $($Critique.FullName.Replace($ProjectDir.FullName, ''))"
+    python src/consolidate.py --critique $Critique.FullName 2>&1 | ForEach-Object { Log $_ }
 }
 
-# Consolidate dead ends if present
-$DeadEndsPath = Join-Path $ProjectDir.FullName "dead_ends.md"
-if (Test-Path $DeadEndsPath) {
-    Log "Consolidating dead ends from project"
-    python src/consolidate.py --dead-ends $DeadEndsPath 2>&1 | ForEach-Object { Log $_ }
+# Consolidate ALL dead_ends.md files found anywhere in the project
+$AllDeadEnds = Get-ChildItem -Path $ProjectDir.FullName -Recurse -Filter "dead_ends.md" | Sort-Object FullName
+foreach ($DeadEnd in $AllDeadEnds) {
+    Log "Consolidating dead ends from $($DeadEnd.FullName.Replace($ProjectDir.FullName, ''))"
+    python src/consolidate.py --dead-ends $DeadEnd.FullName 2>&1 | ForEach-Object { Log $_ }
+}
+
+# Also consolidate the project-level dead_ends.md if it exists at root
+$RootDeadEnds = Join-Path $ProjectDir.FullName "dead_ends.md"
+if (Test-Path $RootDeadEnds) {
+    Log "Consolidating project-level dead ends"
+    python src/consolidate.py --dead-ends $RootDeadEnds 2>&1 | ForEach-Object { Log $_ }
 }
 
 # Report state vector

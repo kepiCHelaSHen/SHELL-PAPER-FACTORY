@@ -37,6 +37,7 @@ You are called once per milestone. Your checklist adjusts by milestone.
 - DATA: original data or "none" for theory papers
 - FROZEN SPEC: the locked parameters and oracle
 - LOCKED MILESTONES: prior approved sections (for consistency checking)
+- ASSAY DATA: empirical evidence from the ASSAY analytics engine (if provided)
 
 ## WHAT YOU PRODUCE
 
@@ -92,6 +93,32 @@ A figure reference without code or data is a placeholder. Flag every one.
 If any figure reference lacks code or data: REJECT.
 Exception: if the Author has stated "No figures required" explicitly,
 accept that statement only if the paper body contains zero figure references.
+
+**U8 — ASSAY Data Integration (if ASSAY data provided)**
+When ASSAY empirical data has been provided, check ALL of the following:
+
+(a) **Calibration, not decoration.** Did the Author use ASSAY values to TEST
+    model predictions (e.g., "Model predicts X, ASSAY computes Y, they match")?
+    Or did the Author merely cite ASSAY values as background context without
+    connecting them to the model? If decorative only: REJECT with instruction
+    "ASSAY values must calibrate model predictions, not just provide context."
+
+(b) **Domain constraints respected.** Does any ASSAY-derived value fall outside
+    the model's valid parameter range? (e.g., probability > 1, negative variance,
+    rate outside [0,1]). If so: did the Author flag and explain the violation?
+    If an out-of-domain value is used silently: REJECT.
+
+(c) **Forbidden interpretations respected.** Does the paper make any claim that
+    the ASSAY integration block explicitly forbids? (e.g., causal claims when
+    ASSAY says "do not interpret as causal"). If violated: REJECT.
+
+(d) **No "illustrative" for computed values.** Does the paper call any
+    ASSAY-computed value "illustrative," "assumed," or "order-of-magnitude"?
+    ASSAY values are computed from data with CIs. If the Author treats them as
+    assumptions: REJECT with instruction to use the computed values as computed.
+
+(e) **ASSAY report cited.** Is the specific ASSAY report ID cited for every
+    ASSAY-derived number? (e.g., "ASSAY Report PHI_EST, Table 1"). If not: REJECT.
 
 ---
 

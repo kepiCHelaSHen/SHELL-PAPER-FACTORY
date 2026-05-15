@@ -112,6 +112,7 @@ Never save a failed dispatch result as a milestone draft or critique.
 - The draft to review
 - Frozen spec
 - Data (if applicable)
+- ASSAY integration blocks (if referenced in the init file — pass the YAML content)
 - Does NOT receive: Author reasoning, steelman critiques, prior rejection history
 
 **Steelman Agent** (per milestone for GATING/ADVISORY, once for full paper):
@@ -138,10 +139,50 @@ accountability audit (GPT-4o, single call at the end).
 
 ---
 
+## ASSAY INTEGRATION (read before dispatching any Author agent)
+
+If the init file references ASSAY integration blocks, read them BEFORE the first
+Author dispatch. The orchestrator is responsible for ensuring ASSAY data flows
+correctly to the Author and is validated by the Peer Reviewer.
+
+### Rules:
+
+1. **Read the integration block YAML.** Extract: point estimates, CIs, methods,
+   sample sizes, forbidden_interpretations, and figure paths.
+
+2. **Pass ASSAY data to the Author agent** as part of the milestone inputs.
+   Include the key computed values and explicitly state:
+   "Use these ASSAY-computed values to CALIBRATE your model. Show that the
+   model's predictions match (or honestly don't match) the empirical values.
+   Do NOT just cite them as context."
+
+3. **Pass ASSAY data to the Peer Reviewer agent.** The Peer Reviewer must check:
+   - Did the Author USE the ASSAY values to test model predictions?
+   - Did the Author respect forbidden_interpretations?
+   - Are all ASSAY-cited values within the model's valid domain?
+   - If any computed value violates domain constraints (e.g., probability > 1),
+     did the Author flag and explain it?
+
+4. **Domain constraint checking.** Before passing any ASSAY value to the Author,
+   verify it falls within the model's parameter domain. If it doesn't:
+   - Flag it in the Author's inputs: "WARNING: ASSAY value X = Y is outside
+     the model's valid range [A, B]. Address this in the paper."
+   - Do NOT silently pass invalid values.
+
+5. **No "illustrative" when ASSAY has computed values.** If an ASSAY integration
+   block provides a value, the paper must use it. The word "illustrative" should
+   not appear next to any quantity that ASSAY has computed.
+
+6. **Forbidden interpretations are binding.** If the ASSAY integration block says
+   "Do not interpret phi as a causal estimate," the paper must not make causal
+   claims about phi. The orchestrator passes these to both Author and Peer Reviewer.
+
+---
+
 ## INPUTS (passed in at start)
 
 - PROBLEM: [the research question]
-- DATA: [results, numbers, or supporting material — or "none" for theory papers]
+- DATA: [ASSAY integration block paths, or "none" for theory-only papers]
 - SLUG: [short filesystem-safe name]
 - DRIFT_RISKS: [paste from frozen spec]
 - FROZEN_SPEC: [full contents of frozen_spec.md]

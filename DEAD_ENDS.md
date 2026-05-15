@@ -73,6 +73,16 @@
 - **Tried:** No figures produced despite spec calling for three.
 - **Failed:** See detail above.
 
+### [DE-109] Author rounded ASSAY values (2.19 instead of 2.1882, etc.), claimed NP variation
+- **Paper:** GEO_VARIATION_2026 | **Version:** v1
+- **Tried:** [Turn 1] Run 1 M1 REJECT: Author rounded ASSAY values (2.19 instead of 2.1882, etc.), claimed NP variation consistent with model prediction when model has single market-wide alpha (no provider-type-specific alpha), and wrote utility function mixing rate-level choice variable with encounter-level signal realization.
+- **Failed:** REASON: U1 spec compliance (rounding), U3 overclaiming (NP/alpha_k), U5 internal consistency (utility function).
+
+### [DE-114] Author conflated OAT sensitivity range [0.269, 0.615] with ASSAY joint envelope 
+- **Paper:** TECH_LOCKIN_2026 | **Version:** v1
+- **Tried:** [Turn 3] Run 1 M2 REJECT: Author conflated OAT sensitivity range [0.269, 0.615] with ASSAY joint envelope [0.192, 0.692]. K_ref defined as 95th percentile in M2 but as "near threshold" in M1. Alpha exponents for network effects never specified. Figure 3 used simulated Beta distribution instead of actual bootstrap draws.
+- **Failed:** but as "near threshold" in M1. Alpha exponents for network effects never specified. Figure 3 used simulated Beta distribution instead of actual bootstrap draws.
+
 ## author_hallucination
 
 ### [DE-038] Validation table EMPTY every run — "[from code execution]" placeholders
@@ -527,6 +537,46 @@
 - **Paper:** ACADEMIC_PUBLISHING_2026 | **Version:** v1
 - **Tried:** [Turn 10] Run 1 M2 REJECT: Proofs used informal approximations ("≈") in formal theorem statements
 - **Failed:** REASON: Theorem 2(iii) Θ lower bound, Proposition 2(ii) inequality chain, Theorem 2(iv) geometric growth assertion
+
+### [DE-105] Author used strictly concave payoff structure (quadratic deviation cost + convex
+- **Paper:** OPIOID_PRESCRIBING_2026 | **Version:** v1
+- **Tried:** [Turn 2] Run 1 M1 REJECT: Author used strictly concave payoff structure (quadratic deviation cost + convex penalty) which guarantees continuous best response by maximum theorem. Discontinuous deterrence threshold is impossible under these assumptions.
+- **Failed:** REASON: U5 — Internal consistency. Strictly concave U_i with smooth g(r) = r^γ yields unique continuous maximizer. Need either: (a) fixed cost of prescribing to create entry/exit discontinuity, (b) threshold-based penalty with jump, or (c) redefine discontinuity as rapid continuous transition.
+
+### [DE-106] Author submitted with placeholder values in constants table, premature claim lan
+- **Paper:** DRUG_SPENDING_2026 | **Version:** v1
+- **Tried:** [Turn 1] Run 1 M1 REJECT: Author submitted with placeholder values in constants table, premature claim language, missing p_i definition, no references
+- **Failed:** REASON: U1 (DE-038 placeholder values), M1.3 (theorem stated as proven), M1.1 (p_i undefined), U6 (no bibliography)
+
+### [DE-107] Author submitted definitions + intro with smooth exponential monitoring function
+- **Paper:** OPIOID_PRESCRIBING_2026 | **Version:** v1
+- **Tried:** [Turn 1] Run 1 M1 REJECT: Author submitted definitions + intro with smooth exponential monitoring function and claimed discontinuous phase transition.
+- **Failed:** REASON: (1) Smooth B and smooth m guarantee smooth r*(lambda) by implicit function theorem — no discontinuity possible without non-convexity or strategic complementarity. (2) No strategic interaction among physicians — calling it Nash equilibrium is vacuous. Need Stackelberg regulator-physician structure. (3) Benefit function B(r) completely unspecified despite driving all results. (4) Homogeneous P contradicts cross-state variation motivation. (5) B notation collision with bootstrap replicates B=2000. (6) PDMP conflated with model's monitoring function without justification.
+
+### [DE-108] Author submitted proof section with visible working notes,
+- **Paper:** ACADEMIC_PUBLISHING_2026 | **Version:** v1
+- **Tried:** [Turn 3] Run 1 M2 REJECT: Author submitted proof section with visible working notes,
+- **Failed:** notes,
+
+### [DE-110] Theorem 3 Step 4 switches from population-mean optimization (Lemma 1) to empiric
+- **Paper:** GEO_VARIATION_2026 | **Version:** v1
+- **Tried:** [Turn 5] Run 1 M2 REJECT: Theorem 3 Step 4 switches from population-mean optimization (Lemma 1) to empirical-mean optimization without justification. theta_bar_gi and tau^2_g undefined in M1 primitives. Silent model change between homogeneous Theorem 1 and heterogeneous Theorem 3. Kappa claimed "identified from observables" but contains unobservable gamma, delta.
+- **Failed:** but contains unobservable gamma, delta.
+
+### [DE-111] Author attempted to prove Theorem 1 (Concentration Theorem) using star-shaped or
+- **Paper:** DRUG_SPENDING_2026 | **Version:** v1
+- **Tried:** [Turn 2] Run 1 M2 REJECT: Author attempted to prove Theorem 1 (Concentration Theorem) using star-shaped ordering from Shaked-Shanthikumar (2007, Theorem 3.A.1), invoked via right-tail dominance.
+- **Failed:** REASON: Right-tail dominance (survival function dominance) does NOT imply star-shaped ordering (quantile ratio monotonicity). These are different stochastic orders. The proof has an unproven step at its core.
+
+### [DE-112] Author invoked Theorem 2 decomposition but never reported numerical values of C_
+- **Paper:** DRUG_SPENDING_2026 | **Version:** v1
+- **Tried:** [Turn 4] Run 1 M3 REJECT: Author invoked Theorem 2 decomposition but never reported numerical values of C_{q|s}, C_{p|s}, I. Claimed interaction "empirically small" without evidence. Also failed to compute Pyatt decomposition components for Corollary 2.
+- **Failed:** but never reported numerical values of C_{q|s}, C_{p|s}, I. Claimed interaction "empirically small" without evidence. Also failed to compute Pyatt decomposition components for Corollary 2.
+
+### [DE-113] Author used p=0.065 instead of spec p=0.0687, producing inconsistent Lambda (15
+- **Paper:** ACADEMIC_PUBLISHING_2026 | **Version:** v1
+- **Tried:** [Turn 8] Run 1 M3 REJECT: Author used p=0.065 instead of spec p=0.0687, producing inconsistent Lambda (15.38 vs 14.55), negative waste in s=1 policy table row, wrong combination calculation.
+- **Failed:** wrong combination calculation.
 
 ## assumed_not_derived
 

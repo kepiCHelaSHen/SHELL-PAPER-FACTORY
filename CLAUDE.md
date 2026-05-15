@@ -1,32 +1,42 @@
-# [EXPERIMENT NAME] — NORTH STAR
+# SHELL (THESIS) — Autonomous Academic Paper Generation Framework
 # Read this at the start of every session. Two minutes or less.
-# If anything here conflicts with CHAIN_PROMPT.md — CHAIN_PROMPT.md wins.
 
 ## What We Are Building
-[One sentence.]
+An autonomous pipeline that generates rigorous, publication-ready academic papers
+through adversarial multi-agent validation, with empirical evidence from the ASSAY
+companion analytics engine.
 
-## Key Files
-- `CHAIN_PROMPT.md` — Master doc. All decisions. Authoritative.
-- `frozen_spec.md` — The oracle. Never modify after lock.
-- `innovation_log.md` — Full audit trail.
-- `state_vector.md` — Save game. Read after every context reset.
-- `dead_ends.md` — Failed approaches. Do not repeat.
-- `prompts/00_orchestrator.md` — The loop. Run with Claude CLI.
+## Key Files — READ IN THIS ORDER
+1. `LEARNINGS.md` — **READ THIS FIRST.** Accumulated operational knowledge from
+   every mistake and success. Covers init quality, Steelman classification, agent
+   dispatch, ASSAY integration, cost management. Ignoring this file costs money.
+2. `STATUS.md` — Current project state, completed papers, what's next.
+3. `STEELMAN_FINDINGS.md` — 154 cross-paper findings. Pre-load relevant ones into inits.
+4. `DEAD_ENDS.md` — 104 failed approaches. Never repeat.
+5. `BEST_PRACTICES.md` — Operational rules.
+6. `prompts/04_paper_orchestrator.md` — v5 agent dispatch orchestrator.
+7. `prompts/09_external_review.md` — Standardized AI review prompt.
 
-## Frozen Coefficients
-[Paste the frozen spec table here — the most critical parameters at a glance]
+## Critical Rules
+- **LEARNINGS.md is mandatory reading.** It exists because mistakes cost $25-75 each.
+- Every init file must point to SPECIFIC ASSAY integration block paths. No "if available."
+- ASSAY data must be CALIBRATED against the model, not just cited as context.
+- Sanity check ALL ASSAY values against model domain constraints before writing inits.
+- Steelman STRUCTURAL = mathematical errors ONLY. Everything else is FRAMING.
+- Never suggest manual workarounds. Fix the system.
+- Never hack around broken components. Fix the root cause.
 
-| Parameter | Value | Source |
-|-----------|-------|--------|
-| [param]   | [val] | [src]  |
+## ASSAY Integration
+- ASSAY reports live at C:\PROJECTS\ASSAY\reports\[SLUG]\integration_block.yaml
+- Each integration block has computed values, CIs, forbidden_interpretations, and figure paths.
+- The Author must USE these values to test model predictions, not just mention them.
+- Negative ASSAY results (model doesn't fit data) make papers MORE credible.
 
-## Architecture Rules (Reviewer enforces these)
-- [Rule 1]
-- [Rule 2]
-- [Rule 3]
-- All randomness seeded. Same seed = identical results.
-- Max 500 lines per file.
-- No print statements inside engines. Structured logging only.
+## Architecture
+- v5 Agent Dispatch: Author/Reviewer/Steelman/Editor as separate agents, fresh contexts
+- Internal quality loop: max 3 runs, stops on ACCEPT or MINOR_REVISION
+- Consolidated findings ratchet: every paper makes the next one better
+- Papers auto-version to papers/[SLUG]_[DATE]_[SEQ]/run1/, run2/, run3/
 
 ## Current Status
 See STATUS.md.

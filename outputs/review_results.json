@@ -1,0 +1,58 @@
+{
+  "VACCINE_GAME_2026_2026-05-15_002": {
+    "gpt": {
+      "model": "GPT-4o",
+      "composite": 8.0,
+      "scores": {
+        "Originality": 8.0,
+        "Mathematical Rigor": 9.0,
+        "Literature Awareness": 8.0,
+        "Intellectual Honesty": 7.0,
+        "Clarity of Writing": 8.0,
+        "Policy Relevance": 7.0,
+        "Conceptual Compression": 9.0,
+        "Empirical Grounding": 6.0,
+        "Publishability": 8.0,
+        "Overall Coherence": 8.0
+      },
+      "review_file": "papers\\VACCINE_GAME_2026_2026-05-15_002\\reviews\\gpt_review_2026-05-15.md",
+      "elapsed_seconds": 18
+    },
+    "grok": {
+      "model": "Grok-3",
+      "composite": 7.8,
+      "scores": {
+        "Originality": 7.0,
+        "Mathematical Rigor": 9.0,
+        "Literature Awareness": 8.0,
+        "Intellectual Honesty": 9.0,
+        "Clarity of Writing": 8.0,
+        "Policy Relevance": 7.0,
+        "Conceptual Compression": 9.0,
+        "Empirical Grounding": 6.0,
+        "Publishability": 7.0,
+        "Overall Coherence": 8.0
+      },
+      "review_file": "papers\\VACCINE_GAME_2026_2026-05-15_002\\reviews\\grok_review_2026-05-15.md",
+      "elapsed_seconds": 25
+    },
+    "gemini": {
+      "model": "Gemini-2.5",
+      "composite": 9.0,
+      "scores": {
+        "Originality": 7.0,
+        "Mathematical Rigor": 10.0,
+        "Literature Awareness": 9.0,
+        "Intellectual Honesty": 10.0,
+        "Clarity of Writing": 10.0,
+        "Policy Relevance": 8.0,
+        "Conceptual Compression": 9.0,
+        "Empirical Grounding": 8.0,
+        "Publishability": 9.0,
+        "Overall Coherence": 10.0
+      },
+      "review_file": "papers\\VACCINE_GAME_2026_2026-05-15_002\\reviews\\gemini_review_2026-05-15.md",
+      "elapsed_seconds": 28
+    }
+  }
+}

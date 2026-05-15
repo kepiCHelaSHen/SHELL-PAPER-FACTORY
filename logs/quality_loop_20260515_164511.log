@@ -1,0 +1,36 @@
+﻿[2026-05-15 16:45:11] SHELL Quality Loop Launcher v2
+[2026-05-15 16:45:11] Log file: C:\PROJECTS\SHELL\logs\quality_loop_20260515_164511.log
+[2026-05-15 16:45:11] Init file: papers/init_REPLICATION_CRISIS_2026.md
+[2026-05-15 16:45:11] Base slug: REPLICATION_CRISIS_2026
+[2026-05-15 16:45:11] 
+[2026-05-15 16:45:11] ============================================================
+[2026-05-15 16:45:11]   INVOKING CLAUDE (internal quality loop)
+[2026-05-15 16:45:11]   The orchestrator will run up to 3 iterations internally.
+[2026-05-15 16:45:11]   No Ctrl+C needed. Wait for completion.
+[2026-05-15 16:45:11] ============================================================
+[2026-05-15 16:45:11] 
+[2026-05-15 17:19:18] 
+[2026-05-15 17:19:18] --- Claude exited after 34.1 minutes ---
+[2026-05-15 17:19:18] Project directory: REPLICATION_CRISIS_2026_2026-05-15_003
+[2026-05-15 17:19:18] WARNING: No paper.md found in latest run directory
+[2026-05-15 17:19:18] Consolidating dead ends from project
+[2026-05-15 17:19:18] Extracted 0 dead-ends from dead_ends.md
+[2026-05-15 17:19:18] 
+[2026-05-15 17:19:18] --- STATE VECTOR ---
+[2026-05-15 17:19:18]   # STATE VECTOR â€” REPLICATION_CRISIS_2026
+[2026-05-15 17:19:18]   TURN: 11
+[2026-05-15 17:19:18]   STATUS: RUNNING
+[2026-05-15 17:19:18]   MILESTONE: M3 LOCKED (ADVISORY)
+[2026-05-15 17:19:18]   RUN: 1
+[2026-05-15 17:19:18]   AUTHOR_LOOPS: 0
+[2026-05-15 17:19:18]   EDITOR_LOOPS: 0
+[2026-05-15 17:19:18]   EXPERIMENT: A Bayesian Model of the Replication Crisis
+[2026-05-15 17:19:18]   TIMESTAMP: 2026-05-15
+[2026-05-15 17:19:18]   SPEC_FINGERPRINT: 111997502d732b598b91aa7f420beccde4f7c49311323d4571caa92996e59309
+[2026-05-15 17:19:18] 
+[2026-05-15 17:19:18] ============================================================
+[2026-05-15 17:19:18]   QUALITY LOOP COMPLETE
+[2026-05-15 17:19:18]   Project: REPLICATION_CRISIS_2026_2026-05-15_003
+[2026-05-15 17:19:18]   Duration: 34.1 minutes
+[2026-05-15 17:19:18]   Log: C:\PROJECTS\SHELL\logs\quality_loop_20260515_164511.log
+[2026-05-15 17:19:18] ============================================================
