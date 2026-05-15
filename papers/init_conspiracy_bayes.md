@@ -168,6 +168,14 @@ If the authors wish to resubmit, the following changes are necessary:
 # === STEELMAN REVISION BRIEF (from run 2) ===
 # The next run MUST address every item.
 
+
+# === STEELMAN REVISION BRIEF (from run 3) ===
+# The next run MUST address every item.
+
+
+# === STEELMAN REVISION BRIEF (from run 4) ===
+# The next run MUST address every item.
+
 KNOWN_DRIFT_RISKS:
 - Making the model too simple — single Bayesian update instead of sequential
   updating with convergence analysis
@@ -370,5 +378,7 @@ YOUR INPUTS:
 
 BEGIN NOW. Run M1. Do not ask for confirmation. Do not summarize the orchestrator.
 Execute it. Write the paper.
+
+
 
 

@@ -1,4 +1,4 @@
-# INIT — BAYESIAN MODEL OF THE REPLICATION CRISIS
+﻿# INIT — BAYESIAN MODEL OF THE REPLICATION CRISIS
 # EXECUTE IMMEDIATELY. Do not summarize, analyze, or ask questions.
 # Read the INPUTS below, then execute the SETUP SEQUENCE step by step.
 # Load prompts/00_init.md for the setup procedure, then run it with these inputs.
@@ -137,15 +137,107 @@ KNOWN_DRIFT_RISKS:
     Figure 2: Critical threshold phi* as a function of R for different alpha
     Figure 3: Discipline map — 5+ fields plotted on the PPV surface
 
+# === CROSS-PAPER FINDINGS (from STEELMAN_FINDINGS.md) ===
+# These are systemic Claude Author tendencies caught across multiple papers.
+# Address ALL of them proactively.
+
+- [F-005] POLICY LANGUAGE OVERSHOOTS MODEL SCOPE — Author writes policy claims
+  stronger than the math supports. For this paper: "pre-registration fixes the
+  crisis" must be scoped to "pre-registration reduces phi" with explicit bounds.
+  Do not claim the model proves more than it does. The model says high phi kills
+  PPV — it does not say which interventions reduce phi by how much.
+
+- [F-002] "ILLUSTRATIVE" COMPONENT THAT IS LOAD-BEARING — Author tends to
+  downplay the novel contribution as "one of several extensions." The phi
+  parameter and critical threshold phi* ARE the contribution. Do not present
+  phi as optional or illustrative. It is the theorem.
+
+- [F-036/F-024] FIGURES CODE-ONLY — Author generates matplotlib code but does
+  not render or embed figures. All 3 figures must appear as rendered output in
+  the paper, not just code blocks. Code goes in appendix or supplementary.
+
+- [F-015] MISSING DATA/CODE AVAILABILITY STATEMENT — PNAS requires a data
+  availability statement. Include: "No empirical data were collected. All
+  results are analytical. Figure code is available at [repository]."
+
+- [F-006] NOTATION OVERLOAD — Author reuses symbols across different meanings.
+  In this paper: alpha is the false positive rate ONLY. Do not reuse alpha for
+  anything else. Keep R, phi, alpha, beta strictly single-meaning throughout.
+
+- [F-037] RELATED WORK SECTION TOO LONG — Author writes 1,800+ word Related
+  Work sections. PNAS Perspective format is short. Related Work should be
+  ~500 words max, integrated into Introduction, not a standalone section.
+
+- [F-014] EM DASH IN TITLE — Journal submission systems mangle em dashes.
+  Use a colon or subtitle format for the title.
+
+- [DE-015/058/065/080] SCOPE DISGUISE — Author presents limitations as "future
+  work" or "open problems." State limitations as limitations. Examples for this
+  paper: "the model assumes study independence" is a limitation, not an open
+  problem. "We do not model p-hacking" is a scope choice, not future work.
+
+- [DE-038] PLACEHOLDER VALUES IN TABLES — Author writes "[from code execution]"
+  instead of actual numbers. The discipline mapping table (M3) MUST have real
+  values from cited sources. If a cell cannot be filled from the literature,
+  mark it "not estimated" with a citation explaining why, not a placeholder.
+
+- [F-034] DO NOT CLAIM LEAN-READINESS — Author tends to claim proofs are
+  "structured for Lean formalization" when they are not formalized. This is a
+  PNAS Perspective, not a proof theory paper. Do not mention Lean.
+
+# === LESSONS FROM PRIOR RUNS (v1/v2 Steelman feedback, distilled) ===
+# These are real substantive issues caught in prior runs. Address proactively.
+
+- PHI DEFINITION MUST BE CONSISTENT — Define phi as the effective false
+  positive inflation factor (alpha_eff = alpha * phi) from the start. Do NOT
+  define phi as a publication probability ratio that then gets redefined. If
+  you show that a naive publication filter cancels (Proposition 0), make clear
+  that phi captures within-study inflation (selective reporting, multiple
+  testing, analytic flexibility), not the between-study file drawer. One
+  coherent definition throughout.
+
+- THEOREM FRAMING — phi* = R/alpha is elementary algebra. Do not frame it as
+  a "deep theorem." Frame it as a "closed-form critical boundary" whose value
+  is in the interpretation and the discipline mapping, not in the proof
+  difficulty. The contribution is making the implicit explicit and actionable,
+  not proving something hard.
+
+- SCOPE PHI HONESTLY — phi conflates multiple mechanisms (file drawer,
+  selective reporting, p-hacking). Acknowledge this explicitly as a modeling
+  choice. State that phi captures the net effect and that decomposing it
+  requires empirical data the model does not provide.
+
+- CONDITION THE DISCIPLINE MAPPING — Use language like "Under the illustrative
+  phi estimates in Table 1, three of five fields would operate above their
+  critical thresholds." Do not present illustrative estimates as established
+  facts. Report phi ranges, not point estimates, where possible.
+
+- IOANNIDIS u* HAS A CLOSED FORM — DO NOT CLAIM OTHERWISE. Setting
+  PPV_Ioannidis = 0.5 and solving for u yields:
+  u* = ((1-beta)*R - alpha) / ((1-beta) - beta*R)
+  This is closed-form. The paper MUST NOT claim phi "enables" a threshold
+  that was "previously impossible." Derive u* explicitly in the paper,
+  compare it to phi* = R/alpha, and argue for phi on the correct grounds:
+  phi* is simpler, more interpretable, isolates the actionable parameter
+  (false-positive inflation), and decomposes into policy levers. The
+  contribution is interpretability and applied value, not mathematical
+  novelty over Ioannidis.
+
 ---
 
 ## SETUP SEQUENCE — EXECUTE NOW
 
-### Step 1 — Create project directory
-Create C:\PROJECTS\SHELL\papers\REPLICATION_CRISIS\ with:
-  spec/, state/, outputs/, results/raw/, results/validated/, results/final/,
-  devlog/, src/, papers/, papers/replication_crisis_2026/,
-  papers/replication_crisis_2026/figures/, prompts/
+### Step 1 — Create project directory (auto-versioned)
+Resolve the project directory using auto-versioning:
+1. List all existing directories matching C:\PROJECTS\SHELL\papers\REPLICATION_CRISIS_2026_*
+2. If none exist: use REPLICATION_CRISIS_2026_[TODAY]_001
+3. If some exist: find the highest sequence number, increment by 1,
+   use REPLICATION_CRISIS_2026_[TODAY]_[NEXT_SEQ]
+Store as RESOLVED_DIR. Use RESOLVED_DIR for ALL paths below.
+
+Create RESOLVED_DIR with subdirectories:
+  figures/, outputs/, results/raw/, results/final/,
+  devlog/, prompts/
 
 ### Step 2 — Write CLAUDE.md
   # Bayesian Model of the Replication Crisis — NORTH STAR
@@ -296,3 +388,5 @@ YOUR INPUTS:
 
 BEGIN NOW. Run M1. Do not ask for confirmation. Do not summarize the orchestrator.
 Execute it. Write the paper.
+
+

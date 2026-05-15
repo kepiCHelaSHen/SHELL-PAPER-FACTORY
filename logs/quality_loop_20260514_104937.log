@@ -1,0 +1,329 @@
+﻿[2026-05-14 10:49:37] Log file: C:\PROJECTS\SHELL\logs\quality_loop_20260514_104937.log
+[2026-05-14 10:49:37] Backed up papers/init_replication_crisis.md
+[2026-05-14 10:49:37] Base slug: REPLICATION_CRISIS_2026
+[2026-05-14 10:49:37] 
+[2026-05-14 10:49:37] ============================================================
+[2026-05-14 10:49:37]   RUN 1 / 3
+[2026-05-14 10:49:37] ============================================================
+[2026-05-14 10:49:37] 
+[2026-05-14 10:49:37] --- Generating paper ---
+[2026-05-14 12:34:52] 
+[2026-05-14 12:34:52] --- Claude exited ---
+[2026-05-14 12:34:52] Paper: replication_crisis_2026_2026-05-14_001 (383 lines)
+[2026-05-14 12:34:52] 
+[2026-05-14 12:34:52] --- Running Steelman review ---
+[2026-05-14 12:36:09] Saved critique to replication_crisis_2026_2026-05-14_001\steelman_full_paper_critique.md
+[2026-05-14 12:36:10] Extracted 11 findings from steelman_full_paper_critique.md
+[2026-05-14 12:36:10]   [F-078] MATH_ERROR: The Definition 6 / Definition 9 bridge is load-bearing but u
+[2026-05-14 12:36:10]   [F-079] MATH_ERROR: Overclaiming novelty of the phi parameter
+[2026-05-14 12:36:10]   [F-080] FRAMING_OVERCLAIM: The discipline mapping presents point estimates without unce
+[2026-05-14 12:36:10]   [F-081] FRAMING_OVERCLAIM: Section 4.1 ("Natural Enemy") understates Ioannidis's treatm
+[2026-05-14 12:36:10]   [F-082] AUTHOR_TENDENCY: Particle physics R estimate is unsourced
+[2026-05-14 12:36:10]   [F-083] MATH_ERROR: Corollary 3 (threshold independence from sample size) is tri
+[2026-05-14 12:36:10]   [F-084] AUTHOR_TENDENCY: Encoding artifacts
+[2026-05-14 12:36:10]   [F-085] ASSEMBLY_ERROR: The Related Work section (Section 5) substantially duplicate
+[2026-05-14 12:36:10]   [F-086] SPEC_MATH_MISMATCH: The genomics phi estimate (phi = 20) cites Franco et al. (20
+[2026-05-14 12:36:10]   [F-087] ASSEMBLY_ERROR: Figure code is included but figures are not rendered in the 
+[2026-05-14 12:36:10]   [F-088] CITATION_ERROR: Social psychology power estimate cites Cohen (1962)
+[2026-05-14 12:36:10] Extracted 0 dead-ends from dead_ends.md
+============ STEELMAN CRITIQUE - Run 1 ============
+## Referee Report
+
+**Paper:** "A Bayesian Model of the Replication Crisis: Prior Odds, Publication Bias, and the Positive Predictive Value of Science"
+
+---
+
+## STRUCTURAL ISSUES (would cause rejection)
+
+None identified.
+
+The mathematical framework is correct. Theorem 1 is properly derived, the corollaries follow, and the proofs are valid. The paper is internally consistent and the central claim (a closed-form critical threshold exists for all achievable power levels) is established rigorously.
+
+---
+
+## FRAMING & POSITIONING ISSUES (would cause major revision)
+
+1. **The Definition 6 / Definition 9 bridge is load-bearing but unresolved.** The entire contribution rests on the assumption that phi (measured empirically as a publication ratio, Definition 6) approximates the effective false positive inflation factor (Definition 9). If phi operates symmetrically on all positive results, it cancels from PPV and the model collapses to Ioannidis (2005). The author is admirably transparent about this (Section 4.2, Assumption 4; Section 3.1, note on phi estimation), but transparency does not resolve the problem. The paper currently asserts asymmetry is "well-documented" citing John et al. (2012) and Simmons et al. (2011), but neither paper quantifies the *degree* of asymmetry. Without at least a bounding argument ΓÇö e.g., "if asymmetry is at least X%, the threshold theorem holds for phi values above Y" ΓÇö the reader cannot assess whether the theorem applies to the real world or only to the model. This is not a fatal flaw, but it must be addressed more rigorously than a paragraph acknowledging the limitation.
+
+2. **Overclaiming novelty of the phi parameter.** Definition 6 states phi is "novel to this paper," but the concept of a publication probability ratio has been parameterized in selection models (Hedges, 1992; Vevea & Hedges, 1995) and is closely related to the selection functions in those frameworks. The novelty is the *threshold theorem applied to this parameterization*, not the parameterization itself. The abstract, Definition 6, and introduction should be revised to claim the threshold theorem as the contribution, not the parameter.
+
+3. **The discipline mapping presents point estimates without uncertainty.** Table 1 assigns single values of R, power, and phi to each field, yielding PPV values reported to three decimal places (e.g., PPV = 0.023 for social psychology). This precision is illusory. The sensitivity analysis in Table 2 shows that conclusions flip for clinical trials at R = 0.05 and phi ~ 8, yet the main text presents the mapping as though the classification (above/below threshold) is robust. The paper should either (a) present ranges or confidence intervals for each parameter and propagate uncertainty through PPV, or (b) explicitly frame Table 1 as illustrative scenarios rather than empirical estimates. The current framing falls between these and risks misleading readers.
+
+4. **Section 4.1 ("Natural Enemy") understates Ioannidis's treatment of bias.** The paper claims Ioannidis (2005) "treats publication as a binary filter" and did not isolate bias as a parameter. Ioannidis's original paper includes a parameter *u* representing the proportion of relationships probed that would not have been probed absent bias, and discusses several forms of bias explicitly. The distinction between Ioannidis's treatment and this paper's is real (Ioannidis did not derive a closed-form threshold), but the characterization of Ioannidis as lacking a bias parameter is inaccurate and should be corrected.
+
+---
+
+## MINOR ISSUES (would appear in a revise-and-resubmit letter)
+
+1. **Particle physics R estimate is unsourced.** The paper states R = 0.50 for particle physics is "the author's conservative estimate" and that "Ioannidis (2005) does not cover this field." If no empirical source exists, either cite a particle physics meta-analysis or drop this field from the mapping and note the gap. An author's estimate does not meet the standard the paper sets for itself ("empirically estimated values... from the meta-research literature").
+
+2. **Corollary 3 (threshold independence from sample size) is trivially true.** The "proof" that sample size does not appear in an expression that does not contain sample size is not informative. This corollary can be folded into the discussion after Theorem 1 as a remark.
+
+3. **Encoding artifacts.** Multiple instances of "?" appear throughout the text (e.g., "rates far exceeding what statistical power alone would predict ? 64% of psychology findings"). These appear to be corrupted em-dashes or similar characters and should be fixed.
+
+4. **The Related Work section (Section 5) substantially duplicates the Introduction and Section 4.5 (Competing Models).** Gelman & Carlin, p-curve, selection models, and replication markets are discussed in both Section 4.5 and Section 5. Consolidate into one location. A natural structure would be: Section 4.5 for technical comparison (what each model can/cannot do), and a shorter Related Work section for historical positioning only.
+
+5. **The genomics phi estimate (phi = 20) cites Franco et al. (2014), a social science study.** The justification states "Genomics has similar or stronger publication bias for positive GWAS hits" without a genomics-specific citation. Cite a genomics-specific source (e.g., Ioannidis et al., 2001, on candidate gene studies) or qualify the estimate more carefully.
+
+6. **Figure code is included but figures are not rendered in the manuscript.** The paper includes Python code for three figures but references them as "[Figure 1: ...]" placeholders. For review, the figures should be generated and included. (This may be a manuscript preparation issue rather than a content issue.)
+
+7. **Social psychology power estimate cites Cohen (1962).** Cohen's estimate is over 60 years old. The paper also cites Szucs & Ioannidis (2017), which is more appropriate as the primary source. Lead with the modern estimate.
+
+---
+
+## VERDICT
+
+**MAJOR_REVISION**
+
+The mathematical framework is sound and the threshold theorem is a genuine, if modest, contribution to the meta-science literature. The paper is well-structured, honest about limitations, and tackles an important problem. However, the Definition 6/9 bridge ΓÇö the central empirical assumption ΓÇö needs more rigorous treatment, the novelty claims need calibration, and the discipline mapping needs uncertainty quantification. These are addressable in revision.
+
+---
+
+## REVISION INSTRUCTIONS
+
+1. **Strengthen the Definition 6/9 bridge.** Provide a bounding analysis: derive PPV under partial asymmetry (e.g., a fraction *f* of phi operates on false positives, with *1-f* operating symmetrically). Show how the threshold theorem degrades as *f* decreases from 1 to 0. This gives readers a way to assess robustness without requiring exact knowledge of asymmetry.
+
+2. **Correct the novelty claim for phi.** Remove "novel to this paper" from Definition 6. Acknowledge prior parameterizations of publication bias ratios (Hedges 1992, selection models). Reframe the contribution as the threshold theorem applied to this parameterization, not the parameterization itself.
+
+3. **Add uncertainty to the discipline mapping.** For each field in Table 1, report plausible ranges for R, power, and phi (drawing from the cited sources), and propagate these through the PPV formula. At minimum, report PPV under optimistic and pessimistic parameter combinations. Three decimal places of precision from point estimates is misleading.
+
+4. **Correct the characterization of Ioannidis (2005).** Acknowledge Ioannidis's bias parameter *u* and his explicit discussion of multiple bias mechanisms. State precisely what Ioannidis did not do (derive a closed-form threshold, prove universality across power levels) rather than what he did not consider.
+
+5. **Source or remove the particle physics estimate.** Either cite an empirical basis for R = 0.50 in particle physics or replace this field with one that has documented parameter estimates (e.g., preclinical cancer biology, which has replication data from Errington et al. 2021, already cited).
+
+6. **Consolidate the Related Work and Competing Models sections.** Eliminate the duplication between Sections 4.5 and 5. One technical comparison section is sufficient.
+
+7. **Render and include all figures.** The placeholder references must be replaced with actual figures for the next submission.
+
+8. **Fix encoding artifacts** throughout the manuscript.
+
+============ END CRITIQUE ============
+[2026-05-14 12:36:10] 
+[2026-05-14 12:36:10]   STEELMAN VERDICT: MAJOR_REVISION
+[2026-05-14 12:36:10] 
+[2026-05-14 12:36:10] Patched papers/init_replication_crisis.md with 2 structural issues, 8 revision instructions
+[2026-05-14 12:36:10] Waiting 10s before next run...
+[2026-05-14 12:36:20] 
+[2026-05-14 12:36:20] ============================================================
+[2026-05-14 12:36:20]   RUN 2 / 3
+[2026-05-14 12:36:20] ============================================================
+[2026-05-14 12:36:20] 
+[2026-05-14 12:36:20] --- Generating paper ---
+[2026-05-14 13:21:28] 
+[2026-05-14 13:21:28] --- Claude exited ---
+[2026-05-14 13:21:28] Paper: replication_crisis_2026_2026-05-14_002 (299 lines)
+[2026-05-14 13:21:28] 
+[2026-05-14 13:21:28] --- Running Steelman review ---
+[2026-05-14 13:22:42] Saved critique to replication_crisis_2026_2026-05-14_002\steelman_full_paper_critique.md
+[2026-05-14 13:22:42] Extracted 18 findings from steelman_full_paper_critique.md
+[2026-05-14 13:22:42]   [F-089] ASSEMBLY_ERROR: Figures are code blocks, not rendered figures
+[2026-05-14 13:22:42]   [F-090] MATH_ERROR: Publication path weights in Definition 7 are asserted, not d
+[2026-05-14 13:22:42]   [F-091] MATH_ERROR: Missing Section 3.5
+[2026-05-14 13:22:42]   [F-092] MATH_ERROR: Overclaimed novelty of the threshold result
+[2026-05-14 13:22:42]   [F-093] SPEC_MATH_MISMATCH: Phi estimates are poorly sourced and heterogeneous
+[2026-05-14 13:22:42]   [F-094] MATH_ERROR: The Ioannidis (2005) differentiation is overstated in places
+[2026-05-14 13:22:42]   [F-095] FRAMING_OVERCLAIM: Policy claims exceed model scope
+[2026-05-14 13:22:42]   [F-096] FRAMING_OVERCLAIM: Related Work is redundant with Section 5
+[2026-05-14 13:22:42]   [F-097] CITATION_ERROR: Pre-registered RCTs with R = 1.0 is questionable
+[2026-05-14 13:22:42]   [F-098] AUTHOR_TENDENCY: Title contains an em dash (or the Unicode equivalent)
+[2026-05-14 13:22:42]   [F-099] AUTHOR_TENDENCY: Abstract reports "phi ?" with an apparent encoding artifact
+[2026-05-14 13:22:42]   [F-083] MATH_ERROR: Corollary 4 (Independence from Sample Size) is trivially obv
+[2026-05-14 13:22:42]   [F-100] AUTHOR_TENDENCY: Table 2 PPV calculations should be spot-checked
+[2026-05-14 13:22:42]   [F-101] AUTHOR_TENDENCY: Definition 7 weights true negatives and false negatives as 1
+[2026-05-14 13:22:42]   [F-102] AUTHOR_TENDENCY: The sensitivity analysis (Table 3) uses "10x Lower/Higher" w
+[2026-05-14 13:22:42]   [F-103] AUTHOR_TENDENCY: Data Availability Statement says "Code is available at the a
+[2026-05-14 13:22:42]   [F-104] CITATION_ERROR: Reference: Iyengar and Greenhouse (1988) appears in the refe
+[2026-05-14 13:22:42]   [F-105] SPEC_MATH_MISMATCH: The Allen and Mehler (2019) citation is used for phi estimat
+[2026-05-14 13:22:42] Extracted 0 dead-ends from dead_ends.md
+============ STEELMAN CRITIQUE - Run 2 ============
+# Referee Report: A Bayesian Model of the Replication Crisis
+
+**Manuscript reviewed:** Rice (2026), "A Bayesian Model of the Replication Crisis: Prior Odds, Publication Bias, and the Positive Predictive Value of Science"
+
+---
+
+## STRUCTURAL ISSUES (would cause rejection)
+
+1. **Figures are code blocks, not rendered figures.** Figures 1-3 are presented as Python source code with placeholder text ("[Figure 1: ...]"). A submitted manuscript must contain rendered figures. No reviewer or editor can evaluate the discipline mapping or PPV surface from code alone. This is a submission-completeness failure.
+
+2. **Publication path weights in Definition 7 are asserted, not derived.** True positives are weighted 1 and false positives are weighted phi, but the text provides no justification for why true positives should escape publication bias amplification. If a journal preferentially publishes positive results, it publishes *all* positive results preferentially ΓÇö true and false alike. The asymmetry (phi on false positives only, 1 on true positives) is the load-bearing modeling choice of the entire paper, yet it receives no derivation, no empirical justification, and no sensitivity analysis until the f-generalization in Theorem 2, which is itself underexplored. The paper gestures at "Section 3.5 of the proof section" for the bounding analysis, but **no Section 3.5 exists in the manuscript**. This is a missing section, not a minor omission.
+
+3. **Missing Section 3.5.** The paper references "Section 3.5" for the f-parameterized bounding analysis at least twice (Definition 9, Theorem 2), but the manuscript jumps from Section 3.4 directly to Section 4. This is either a drafting error or an incomplete submission. The f-generalization is central to addressing the asymmetry concern ΓÇö its absence is structural.
+
+---
+
+## FRAMING & POSITIONING ISSUES (would cause major revision)
+
+1. **Overclaimed novelty of the threshold result.** The "critical threshold theorem" is solving PPV = 0.5 for phi in a one-line rational function. The algebra is trivial ΓÇö cross-multiply and isolate. Calling this a "theorem" with a 7-step proof, corollaries, and claims of "universality" inflates a straightforward algebraic manipulation into something it is not. The contribution should be framed as *formalizing and parameterizing* an insight Ioannidis expressed informally, not as a deep mathematical result. The word "universality" (Corollary 1) is particularly misleading ΓÇö it means only that a finite ratio exists for any finite parameters, which is obvious from the functional form.
+
+2. **Phi estimates are poorly sourced and heterogeneous.** The discipline mapping is the applied payoff of the paper, but phi estimates are the weakest link. Franco et al. (2014) studied 221 NSF-funded studies ΓÇö one source for a parameter that varies enormously across fields. Turner et al. (2008) studied antidepressant trials specifically, not clinical trials generally. Preclinical cancer biology's phi is "inferred from replication failure rates" ΓÇö this is circular (using the outcome the model is supposed to predict as input to the model). The paper needs to be transparent that phi is the least constrained parameter and that the discipline mapping is therefore illustrative, not definitive.
+
+3. **The Ioannidis (2005) differentiation is overstated in places.** The Introduction states Ioannidis's "treatment of bias was descriptive and tabular rather than analytical." Ioannidis presented a general formula incorporating bias parameter u and computed PPV across parameter configurations. The difference is that Ioannidis did not isolate a closed-form threshold for u ΓÇö but characterizing his work as merely "descriptive and tabular" understates his analytical contribution. Tighten the differentiation to exactly what is new: the closed-form threshold and the proof that no power level compensates.
+
+4. **Policy claims exceed model scope.** Section 7.1 states that reducing phi from 15 to 1.5 in social psychology "would raise PPV from 0.063 to 0.400." This is a conditional prediction from the model, but the paper presents it as a policy recommendation without acknowledging that (a) the model assumes fixed R and power under intervention, which is unlikely, and (b) the phi = 1.5 target is aspirational with no empirical basis. Policy language should be scoped as "the model predicts that *if* phi were reduced to X *holding other parameters constant*, then..."
+
+5. **Related Work is redundant with Section 5.** The Boundary Conditions section (5.1, 5.5) and Related Work section (6) cover substantially the same territory ΓÇö Ioannidis, selection models, Benjamin et al., registered reports. Consolidate into a single technical comparison, likely in the Introduction or a dedicated "Prior Work" section.
+
+6. **Pre-registered RCTs with R = 1.0 is questionable.** R = 1.0 means the prior probability that the tested hypothesis is true is 50%. The cited source (Nosek et al. 2018) discusses pre-registration methodology, not prior odds of pre-registered hypotheses. The claim that pre-registered RCTs have R = 1.0 needs a stronger citation or should be presented as an assumption with justification.
+
+---
+
+## MINOR ISSUES (would appear in a revise-and-resubmit letter)
+
+1. **Title contains an em dash (or the Unicode equivalent).** Use a colon: "A Bayesian Model of the Replication Crisis: Prior Odds, Publication Bias, and the Positive Predictive Value of Science." (This appears already done but confirm in final formatting.)
+
+2. **Abstract reports "phi ?" with an apparent encoding artifact.** Clean all encoding issues throughout.
+
+3. **Corollary 4 (Independence from Sample Size) is trivially obvious.** Once you condition on power, sample size is irrelevant by definition ΓÇö power is the sufficient statistic. This does not need to be a corollary.
+
+4. **Table 2 PPV calculations should be spot-checked.** For exploratory genomics: PPV = 0.80 ├ù 0.001 / (0.80 ├ù 0.001 + 0.05 ├ù 20) = 0.0008 / (0.0008 + 1.0) = 0.0008. Checks out. For social psychology: PPV = 0.50 ├ù 0.10 / (0.50 ├ù 0.10 + 0.05 ├ù 15) = 0.05 / (0.05 + 0.75) = 0.0625. Reported as 0.063. Fine.
+
+5. **Definition 7 weights true negatives and false negatives as 1/phi.** This implies that negative results are *less* likely to be published as phi increases, which is reasonable, but the symmetry (positive results get phi, negative results get 1/phi) is a stronger assumption than simply "positive results are phi times more likely." Under the simpler formulation (positives published with weight 1, negatives with weight 1/phi), the PPV formula would differ. Justify or acknowledge this choice.
+
+6. **The sensitivity analysis (Table 3) uses "10x Lower/Higher" which is crude.** For a parameter like power that is bounded [0,1], "10x Higher" than 0.50 is capped at 1.0. This is fine but should be noted in the table caption rather than leaving the reader to infer it.
+
+7. **Data Availability Statement says "Code is available at the author's repository upon request."** For a paper arguing for open science reforms, the code should be publicly available, not available "upon request." This is a credibility issue given the paper's subject matter.
+
+8. **Reference: Iyengar and Greenhouse (1988) appears in the reference list but is not cited in the text.** Remove or cite.
+
+9. **The Allen and Mehler (2019) citation is used for phi estimates of pre-registered RCTs, but this paper is about open science practices broadly, not a quantitative estimate of publication bias ratios.** Verify the citation supports the specific claim.
+
+---
+
+## VERDICT
+
+**MAJOR_REVISION**
+
+The core idea is sound and the paper addresses a genuine gap: formalizing the relationship between publication bias and literature reliability with a closed-form threshold. However, the missing Section 3.5 (the f-generalization bounding analysis), the unrendered figures, and the unjustified asymmetry in Definition 7 are substantive problems that prevent acceptance. The framing issues ΓÇö overclaimed novelty, poorly sourced phi values, and policy language exceeding model scope ΓÇö require careful revision but are addressable.
+
+---
+
+## REVISION INSTRUCTIONS
+
+1. **Write and include Section 3.5.** The f-parameterized bounding analysis is referenced twice but absent. Derive PPV_f, prove the generalized threshold phi*_f = [(1-╬▓)R/╬▒]^{1/f}, and show how the threshold degrades across f Γêê [0,1]. This is critical for addressing the asymmetry concern in Definition 7.
+
+2. **Render all figures.** Replace Python code blocks with actual rendered figures (PDF/PNG). The code can go in supplementary materials or a repository, but the manuscript must contain the visual output.
+
+3. **Justify the publication weight asymmetry in Definition 7.** Explain why true positives receive weight 1 rather than phi. If the argument is that phi captures *differential* bias (false positives are disproportionately published even among positive results), state this explicitly and provide a reference or formal argument. If the argument is that phi captures the positive-vs-negative publication ratio and applies equally to all positive results, then the PPV formula needs to be re-derived without the asymmetry (which would change the threshold).
+
+4. **Downgrade the rhetorical register of Theorem 1.** Remove "universality" language. Frame the result as a closed-form characterization, not a deep mathematical theorem. The proof is algebraic manipulation; present it as such.
+
+5. **Strengthen phi sourcing or scope the discipline mapping as illustrative.** Either find additional empirical sources for phi by field, or explicitly label the discipline mapping as "illustrative under plausible parameter ranges" rather than definitive. Remove the circular inference for preclinical cancer biology (phi inferred from replication failure rates).
+
+6. **Consolidate Related Work (Section 6) and Competing Models (Section 5.5) into one section.** Eliminate redundancy with the Introduction's literature discussion.
+
+7. **Scope all policy claims.** Every policy prediction should be conditional: "if phi were reduced to X, holding other parameters constant, the model predicts Y." Acknowledge that interventions may change multiple parameters simultaneously.
+
+8. **Provide a citation or argument for R = 1.0 in pre-registered RCTs.** Nosek et al. (2018) does not estimate prior odds.
+
+9. **Fix the orphan reference** (Iyengar and Greenhouse 1988) and verify Allen and Mehler (2019) supports the specific claim about phi in registered reports.
+
+10. **Make code publicly available** in a repository, not "upon request." The paper argues for open science; the submission should embody it.
+
+============ END CRITIQUE ============
+[2026-05-14 13:22:42] 
+[2026-05-14 13:22:42]   STEELMAN VERDICT: MAJOR_REVISION
+[2026-05-14 13:22:42] 
+[2026-05-14 13:22:42] Patched papers/init_replication_crisis.md with 4 structural issues, 10 revision instructions
+[2026-05-14 13:22:42] Waiting 10s before next run...
+[2026-05-14 13:22:52] 
+[2026-05-14 13:22:52] ============================================================
+[2026-05-14 13:22:52]   RUN 3 / 3
+[2026-05-14 13:22:52] ============================================================
+[2026-05-14 13:22:52] 
+[2026-05-14 13:22:52] --- Generating paper ---
+[2026-05-14 13:55:13] 
+[2026-05-14 13:55:13] --- Claude exited ---
+[2026-05-14 13:55:13] Paper: replication_crisis_2026_2026-05-14_003 (302 lines)
+[2026-05-14 13:55:13] 
+[2026-05-14 13:55:13] --- Running Steelman review ---
+[2026-05-14 13:56:23] Saved critique to replication_crisis_2026_2026-05-14_003\steelman_full_paper_critique.md
+[2026-05-14 13:56:23] Extracted 14 findings from steelman_full_paper_critique.md
+[2026-05-14 13:56:23]   [F-106] AUTHOR_TENDENCY: Circularity in preclinical cancer biology phi estimate
+[2026-05-14 13:56:23]   [F-089] MATH_ERROR: Figures are code, not figures
+[2026-05-14 13:56:23]   [F-107] FRAMING_OVERCLAIM: The asymmetric weighting assumption (Definition 7) needs str
+[2026-05-14 13:56:23]   [F-108] CITATION_ERROR: R ~ 1.0 for pre-registered studies is weakly sourced
+[2026-05-14 13:56:23]   [F-109] FRAMING_OVERCLAIM: GWAS classification as "above threshold" is misleading given
+[2026-05-14 13:56:23]   [F-110] MATH_ERROR: Corollary 3 ("Independence from sample size") overstates the
+[2026-05-14 13:56:23]   [F-111] FRAMING_OVERCLAIM: Section 7.3's back-calculation is presented as model validat
+[2026-05-14 13:56:23]   [F-112] MATH_ERROR: Corollary 4 states "Reducing alpha by factor k multiplies ph
+[2026-05-14 13:56:23]   [F-113] AUTHOR_TENDENCY: Proposition 3 derivative expression
+[2026-05-14 13:56:23]   [F-114] SPEC_MATH_MISMATCH: Definition 6 uses a question mark where a special character 
+[2026-05-14 13:56:23]   [F-115] AUTHOR_TENDENCY: Table 2 sensitivity analysis for f = 0.1 shows PPV = 0.393 a
+[2026-05-14 13:56:23]   [F-116] MATH_ERROR: The abstract claims the threshold "is independent of sample 
+[2026-05-14 13:56:23]   [F-117] CITATION_ERROR: Reference formatting
+[2026-05-14 13:56:23]   [F-118] AUTHOR_TENDENCY: Edge case E2 ("R(1╬ô├¬├åΓò¼Γûô) < Γò¼ΓûÆ gives PPV < 0.5 even without b
+[2026-05-14 13:56:23] Extracted 0 dead-ends from dead_ends.md
+============ STEELMAN CRITIQUE - Run 3 ============
+## STRUCTURAL ISSUES (would cause rejection)
+
+1. **Circularity in preclinical cancer biology phi estimate.** The paper acknowledges in Table 1's notes that phi for preclinical cancer biology is "inferred from replication failure rates," which is circular ΓÇö the model predicts replication failures from phi, then phi is estimated from replication failures. Despite the disclosure, this field is then listed as "YES" above threshold in the main results. A discipline mapping entry built on a circular estimate should be flagged as illustrative or removed from the primary table, not presented alongside independently-sourced entries.
+
+2. **Figures are code, not figures.** The manuscript contains three Python code blocks but no rendered figures. A submitted paper must contain actual figures in the body. Code can appear in a supplementary appendix, but Figures 1ΓÇô3 as presented are unparseable to a reviewer or reader who is not running the scripts. This is a submission-readiness failure, not a minor formatting issue ΓÇö the visual evidence for the discipline mapping (the paper's applied payoff) is absent.
+
+## FRAMING & POSITIONING ISSUES (would cause major revision)
+
+1. **The asymmetric weighting assumption (Definition 7) needs stronger justification.** The paper assigns weight 1 to true positives and weight phi to false positives, with the rationale that novelty premiums, analytic flexibility, and replication asymmetry differentially amplify false positives. But these mechanisms are described informally in three bullet points (Section 3.1) and never modeled. The f-parameterization in Section 3.5 provides bounds but does not resolve the question of what f actually is in any field. The entire edifice rests on this asymmetry ΓÇö if true positives are also amplified (as they would be by novelty premiums for surprising-but-true findings), the effective f shrinks toward 0 and the threshold diverges. The paper should either (a) provide empirical evidence that the asymmetry is substantial or (b) present the primary model as a worst-case bound rather than a central estimate.
+
+2. **R ~ 1.0 for pre-registered studies is weakly sourced.** The table cites this as an "illustrative upper bound" with no empirical source. Pre-registration constrains hypothesis quality, but R = 1.0 implies a 50/50 chance any pre-registered hypothesis is true ΓÇö a strong claim. This inflates phi* for pre-registered studies, making them look safer than may be warranted. The "Source" column should have a citation or this entry should be marked as conjectural.
+
+3. **GWAS classification as "above threshold" is misleading given the field's actual practice.** The paper notes in Section 4.2 that GWAS uses genome-wide significance (alpha ~ 5├ù10Γü╗Γü╕), which increases phi* by ~10Γü╢. Yet Table 1 evaluates GWAS at alpha = 0.05 and labels it "YES" for above threshold. This is technically correct under the stated alpha but practically misleading ΓÇö GWAS as actually practiced may be below threshold. The table should include a column or row for GWAS at its operational alpha, or the "Above threshold?" column should reflect actual practice, not a counterfactual.
+
+4. **Corollary 3 ("Independence from sample size") overstates the result.** phi* = (1-╬▓)R/╬▒ contains no explicit sample size term, but power (1-╬▓) is a function of sample size and effect size. Increasing sample size increases power, which increases phi*. The corollary is technically about the formula's algebraic form, but the discussion (Section 7.1: "A field with high publication bias cannot publish-its-way-to-reliability by running larger studies") implies a stronger claim. The paper should clarify that sample size acts indirectly through power, and that "independence" means phi* has no *additional* sample size dependence beyond its effect on power.
+
+5. **Section 7.3's back-calculation is presented as model validation but is not.** The calculation showing that PPV = 0.36, replication power = 0.92, and alpha = 0.05 yield a replication rate of 0.363 (matching the observed 36%) has four free parameters and one equation. Any PPV value could be made consistent with the observed replication rate by adjusting replication power. The paper calls this "illustrative," which is appropriate, but the placement and framing suggest it carries more evidential weight than it does. This should be moved or explicitly labeled as a consistency check, not a prediction.
+
+## MINOR ISSUES (would appear in a revise-and-resubmit letter)
+
+1. **Corollary 4 states "Reducing alpha by factor k multiplies phi* by k" but should say "multiplies phi* by 1/k" or "dividing alpha by k multiplies phi* by k."** Reducing alpha by a factor of 10 means alpha goes from 0.05 to 0.005; phi* = (1-╬▓)R/╬▒ increases by a factor of 10. The phrasing "reducing by factor k" is ambiguous ΓÇö does k = 10 mean the new alpha is ╬▒/10 or ╬▒├ù10? Clarify.
+
+2. **Proposition 3 derivative expression.** The paper states d(phi\*_f)/df = ΓêÆ[ln(c)]/f┬▓ ┬╖ phi\*_f where c = R(1ΓêÆ╬▓)/╬▒. Since phi\*_f = c^(1/f), we have d(phi\*_f)/df = ΓêÆln(c)/f┬▓ ┬╖ c^(1/f), which checks out. But the sign depends on whether c > 1 or c < 1 (i.e., whether phi\* > 1 at f = 1). For fields where R(1ΓêÆ╬▓) < ╬▒ (which includes social psychology and genomics), c < 1 and ln(c) < 0, so the derivative is positive ΓÇö the threshold *increases* as f decreases. This is counterintuitive and should be discussed: for fields already below PPV = 0.5 at phi = 1, the f-parameterization behaves differently than for fields above.
+
+3. **Definition 6 uses a question mark where a special character was intended** ("phi ?" appears to be "phi ΓëÑ"). Fix encoding.
+
+4. **Table 2 sensitivity analysis for f = 0.1 shows PPV = 0.393 and phi\* = 39.8.** The reader should be warned that f = 0.1 (near-symmetric bias) is likely unrealistic if the three mechanisms in Section 3.1 are accepted. Without this caveat, the row suggests the threshold problem nearly disappears at low f, undermining the paper's central message.
+
+5. **The abstract claims the threshold "is independent of sample size and cannot be overcome by increasing power alone."** These are two different claims. The first is about algebraic form (Corollary 3); the second is about the limit behavior of phi* as power ΓåÆ 1 (Proposition 2(e): phi* ΓåÆ R/╬▒, which is finite). The abstract should not conjoin them as if they are the same result.
+
+6. **Reference formatting.** Several references use inconsistent date-author formatting (e.g., "Ioannidis et al. 2011" in Table 1 source column but full citation not in References). Add all cited works to the reference list.
+
+7. **Edge case E2 ("R(1ΓêÆ╬▓) < ╬▒ gives PPV < 0.5 even without bias") deserves more discussion.** This means some fields are below the PPV = 0.5 line even at phi = 1, before any publication bias. This is a strong claim about exploratory genomics and GWAS and should be highlighted, not buried in edge cases.
+
+## VERDICT
+
+**MAJOR_REVISION**
+
+## REVISION INSTRUCTIONS
+
+1. **Render all figures.** Replace Python code blocks in the body with actual rendered figures (PNG/PDF). Move code to a supplementary appendix or data availability section.
+
+2. **Address the preclinical cancer biology circularity.** Either (a) find an independent phi estimate for this field, (b) present it in a separate "illustrative" panel of Table 1 distinct from independently-sourced entries, or (c) remove it and note the gap.
+
+3. **Strengthen the asymmetric weighting justification.** Add at least one paragraph in Section 3.1 engaging with the empirical evidence for differential (not just overall) amplification of false positives vs. true positives. Cite Franco et al. (2014) data on this specific question if possible. Alternatively, reframe the primary model as an upper bound on the damage from publication bias.
+
+4. **Fix the GWAS presentation.** Add a row or annotation in Table 1 showing GWAS at its operational alpha (~5├ù10Γü╗Γü╕). The current presentation evaluates a field at a significance level it does not use.
+
+5. **Source the R ~ 1.0 estimate for pre-registered studies** or clearly mark it as an assumption, not a parameter estimate. Consider a sensitivity range (e.g., R = 0.3ΓÇô1.0) with explicit acknowledgment that the lower bound is more defensible.
+
+6. **Clarify Corollary 3.** Add a sentence: "Sample size affects PPV indirectly through its effect on power; Corollary 3 states that there is no additional sample-size dependence beyond this channel."
+
+7. **Fix Corollary 4 phrasing** to remove ambiguity about the direction of the factor k.
+
+8. **Separate the two claims in the abstract** about sample-size independence and the impossibility of overcoming the threshold through power alone. These are related but distinct results.
+
+9. **Elevate Edge Case E2** from a bullet point to a discussed result. If PPV < 0.5 at phi = 1 for some fields, that is a substantive finding deserving its own brief treatment.
+
+10. **Verify all Table 1 sources appear in the reference list** (specifically Ioannidis et al. 2011 and FDA guidance).
+
+============ END CRITIQUE ============
+[2026-05-14 13:56:23] 
+[2026-05-14 13:56:23]   STEELMAN VERDICT: MAJOR_REVISION
+[2026-05-14 13:56:23] 
+[2026-05-14 13:56:23] Max runs (3) reached.
+[2026-05-14 13:56:23] Restored original papers/init_replication_crisis.md from backup
+[2026-05-14 13:56:23] 
+[2026-05-14 13:56:23] ============================================================
+[2026-05-14 13:56:23]   QUALITY LOOP COMPLETE
+[2026-05-14 13:56:23]   Runs: 3
+[2026-05-14 13:56:23]   Log: C:\PROJECTS\SHELL\logs\quality_loop_20260514_104937.log
+[2026-05-14 13:56:23] ============================================================

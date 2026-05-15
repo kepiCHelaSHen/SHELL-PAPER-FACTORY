@@ -1,0 +1,108 @@
+﻿[2026-05-14 14:35:35] Log file: C:\PROJECTS\SHELL\logs\quality_loop_20260514_143535.log
+[2026-05-14 14:35:35] Backed up papers/init_replication_crisis.md
+[2026-05-14 14:35:35] Base slug: REPLICATION_CRISIS_2026
+[2026-05-14 14:35:35] 
+[2026-05-14 14:35:35] ============================================================
+[2026-05-14 14:35:35]   RUN 1 / 3
+[2026-05-14 14:35:35] ============================================================
+[2026-05-14 14:35:35] 
+[2026-05-14 14:35:35] --- Generating paper ---
+[2026-05-14 15:50:09] 
+[2026-05-14 15:50:09] --- Claude exited ---
+[2026-05-14 15:50:09] Paper: replication_crisis_2026_2026-05-14_001 (200 lines)
+[2026-05-14 15:50:09] 
+[2026-05-14 15:50:09] --- Running Steelman review ---
+[2026-05-14 15:51:17] Saved critique to replication_crisis_2026_2026-05-14_001\steelman_full_paper_critique.md
+[2026-05-14 15:51:18] Extracted 14 findings from steelman_full_paper_critique.md
+[2026-05-14 15:51:18]   [F-119] MATH_ERROR: The phi parameter is not what it claims to be, and the paper
+[2026-05-14 15:51:18]   [F-120] MATH_ERROR: The critical threshold theorem is trivially implied by the P
+[2026-05-14 15:51:18]   [F-121] SPEC_MATH_MISMATCH: Phi is doing double duty and the model cannot separate its c
+[2026-05-14 15:51:18]   [F-122] AUTHOR_TENDENCY: Overclaiming relative to Ioannidis (2005)
+[2026-05-14 15:51:18]   [F-123] FRAMING_OVERCLAIM: The discipline mapping uses illustrative estimates but draws
+[2026-05-14 15:51:18]   [F-124] MATH_ERROR: The policy discussion exceeds the model's reach
+[2026-05-14 15:51:18]   [F-125] SPEC_MATH_MISMATCH: Missing engagement with Goodhart's Law dynamics
+[2026-05-14 15:51:18]   [F-126] AUTHOR_TENDENCY: The sensitivity analysis (Section 5.4) tests parameters at 1
+[2026-05-14 15:51:18]   [F-127] MATH_ERROR: Corollary 2 lists phi* = 0.02 for exploratory genomics and n
+[2026-05-14 15:51:18]   [F-128] SPEC_MATH_MISMATCH: The Abstract says "for any field with prior odds R and signi
+[2026-05-14 15:51:18]   [F-129] AUTHOR_TENDENCY: Definition 7 defines phi* as "the value of phi above which P
+[2026-05-14 15:51:18]   [F-130] CITATION_ERROR: The reference list omits Smaldino and McElreath (2016), "The
+[2026-05-14 15:51:18]   [F-131] CITATION_ERROR: Figure references cannot be verified (figures are external i
+[2026-05-14 15:51:18]   [F-132] AUTHOR_TENDENCY: Section 2.2 title ("Why a Simple Publication Filter Does Not
+[2026-05-14 15:51:18] Extracted 0 dead-ends from dead_ends.md
+============ STEELMAN CRITIQUE - Run 1 ============
+## STRUCTURAL ISSUES (would cause rejection)
+
+1. **The phi parameter is not what it claims to be, and the paper knows it.** Proposition 0 proves that a publication bias factor defined as Definition 5 states (ratio of publication probabilities for positive vs. negative results) *cancels from PPV and has no effect*. The paper then pivots in the Remark to redefine phi as a multiplier on the effective false positive rate ΓÇö a fundamentally different quantity. But Definition 5 is never revised, creating a formal inconsistency: the parameter that enters Lemma 1 is not the parameter defined in Definition 5. The paper acknowledges this ("Definition 5's publication probability ratio is the *observable* manifestation of this inflation") but this is hand-waving, not mathematics. The proof of Lemma 1 assumes phi multiplies alpha, but the only formal definition of phi (Definition 5) provably does not multiply alpha. This is a foundational gap ΓÇö the central object of the paper lacks a coherent formal definition.
+
+2. **The critical threshold theorem is trivially implied by the PPV formula.** Theorem 1 states that phi* = R/alpha is the threshold above which PPV < 0.5 for all power levels. But this is a direct algebraic consequence of setting PPV = 0.5 in the formula PPV = (1-╬▓)R / ((1-╬▓)R + ╬▒╧å) and taking (1-╬▓) ΓåÆ 1. The "proof" is five lines of algebra with no non-obvious steps. The paper frames this as "the central contribution" and a "formal theorem," but it is an observation about a monotone function, not a deep result. The frozen spec asks: "is the critical bias threshold a proven theorem, or is it merely observed from a plot?" The answer is: it is proven, but the proof is trivial enough that calling it a theorem overstates its depth. This is a framing issue that borders on structural ΓÇö the paper's entire novelty claim rests on this result.
+
+3. **Phi is doing double duty and the model cannot separate its components.** The paper defines phi as capturing the file drawer effect, selective reporting, outcome bias, and garden-of-forking-paths (Section 5.2, Assumption 4: "These effects are partially captured by phi"). But selective reporting inflates the *within-study* false positive rate (a multiplier on alpha), while the file drawer effect is a *between-study* publication filter (which Proposition 0 proves cancels). Lumping both into a single scalar is not merely a simplification ΓÇö it conflates two mechanisms with opposite mathematical effects. The paper never addresses why a between-study filter that provably cancels should be combined with a within-study inflation that does not cancel.
+
+## FRAMING & POSITIONING ISSUES (would cause major revision)
+
+1. **Overclaiming relative to Ioannidis (2005).** The paper repeatedly positions itself as extending Ioannidis by introducing phi, but Ioannidis's parameter u already captures bias as a factor that increases false positives. The distinction offered ΓÇö that u is bounded [0,1] while phi is unbounded ΓÇö is valid but narrow. The threshold phi* = R/alpha can be derived from Ioannidis's framework with minor reparameterization (set the effective false positive rate to ╬▒ + u(1-╬▒) and solve for the threshold). The paper should honestly characterize its contribution as a reparameterization that yields a cleaner closed-form threshold, not as a fundamentally new framework.
+
+2. **The discipline mapping uses illustrative estimates but draws strong conclusions.** The paper states phi estimates are "order-of-magnitude approximations" and "the least certain parameters in the table," then concludes that three of five fields have majority-false literatures. The hedge is appropriate, but the conclusions read as definitive. The paper should either provide empirical grounding for the phi estimates or soften the conclusions to conditional statements ("if phi Γëê 3 in psychology, then...").
+
+3. **The policy discussion exceeds the model's reach.** Section 7.1 ranks interventions (reducing phi > increasing R > reducing alpha) and makes specific predictions ("reducing phi from 3.0 to 1.0 in psychology would increase PPV from 0.25 to 0.50"). The model can rank *parameters* by sensitivity, but ranking *interventions* requires knowing the cost and feasibility of changing each parameter, which the model says nothing about. Pre-registration may reduce phi but may also reduce R (by discouraging exploratory research). The ranking is presented as a theorem-derived result when it is actually a judgment call.
+
+4. **Missing engagement with Goodhart's Law dynamics.** If phi becomes a policy target, fields may respond by redefining what counts as "positive" or shifting the boundary between exploratory and confirmatory work. The static model cannot capture this, and the limitation is not acknowledged.
+
+## MINOR ISSUES (would appear in a revise-and-resubmit letter)
+
+1. The sensitivity analysis (Section 5.4) tests parameters at 10x perturbations but power at "~1.0" rather than 10x (which would be 5.0, an impossible value). This is correct but inconsistent with the stated "10x Higher" column header. Label it differently.
+
+2. Corollary 2 lists phi* = 0.02 for exploratory genomics and notes "phi* < 1: PPV < 50% even without publication bias." This is correct but deserves more emphasis ΓÇö it means the problem in genomics is low prior odds, not publication bias, which partially undermines the paper's thesis that phi is the "binding constraint."
+
+3. The Abstract says "for any field with prior odds R and significance level alpha" ΓÇö this should specify alpha Γêê (0,1) and R > 0 to avoid degenerate cases.
+
+4. Definition 7 defines phi* as "the value of phi above which PPV < 0.5 for all achievable statistical power levels (1-╬▓) < 1" but should clarify (1-╬▓) Γêê (0,1), since (1-╬▓) = 0 gives PPV = 0 trivially.
+
+5. The reference list omits Smaldino and McElreath (2016), "The natural selection of bad science," which models the evolutionary dynamics of publication bias and is directly relevant.
+
+6. Figure references cannot be verified (figures are external images). The paper should include figure descriptions sufficient for a referee to assess them from the text alone ΓÇö the captions provided are minimal.
+
+7. Section 2.2 title ("Why a Simple Publication Filter Does Not Alter PPV") is pedagogically useful but structurally odd ΓÇö it proves a proposition the paper then immediately circumvents. Consider folding it into the Remark or making the rhetorical purpose clearer.
+
+## VERDICT
+
+**MAJOR_REVISION**
+
+The paper has a structural issue at its foundation: the formal definition of phi (Definition 5) is proven by the paper's own Proposition 0 to be irrelevant to PPV, and the parameter that actually enters the model (a multiplier on the false positive rate) is never formally defined. The central theorem, while correct, is algebraically trivial and overclaimed. The contribution is real but narrower than presented ΓÇö it is a useful reparameterization of Ioannidis (2005) that yields a clean closed-form threshold, not a new framework.
+
+## REVISION INSTRUCTIONS
+
+1. **Resolve the phi definition inconsistency.** Either (a) redefine phi formally as the ratio of the effective false positive rate to the nominal alpha (phi = ╬▒_eff / ╬▒), derive this from microfoundations (selective reporting, multiple testing), and drop Definition 5; or (b) keep Definition 5 but model the *mechanism* by which differential publication rates inflate the effective false positive rate, proving the relationship rather than asserting it in a Remark. Proposition 0 must be reconciled with Lemma 1 through formal argument, not narrative.
+
+2. **Downgrade the theorem framing.** Present phi* = R/alpha as a "closed-form threshold" or "critical boundary," not as a deep theorem. Acknowledge that it follows directly from the PPV formula by elementary algebra. The value is in the *interpretation* and *application*, not in the proof.
+
+3. **Honestly scope the contribution relative to Ioannidis.** Show explicitly how phi relates to Ioannidis's u (e.g., phi = 1 + u(1-╬▒)/╬▒ or similar). Demonstrate that the threshold cannot be derived as cleanly from u, or acknowledge that it can with reparameterization.
+
+4. **Condition the discipline mapping conclusions.** Replace "three of five fields operate above their critical thresholds" with conditional language: "Under the illustrative phi estimates in Table X, three of five fields would operate above their critical thresholds." Discuss what phi values would be needed to change the conclusions.
+
+5. **Separate the mechanisms lumped into phi.** At minimum, acknowledge formally that the file drawer effect (between-study filter) and selective reporting (within-study inflation) have different mathematical signatures, and that phi captures only the net effect. Discuss when the conflation matters.
+
+6. **Temper the policy ranking.** Present the sensitivity analysis as ranking *parameters by PPV sensitivity*, not *interventions by effectiveness*. Note that intervention rankings require cost-effectiveness data the model does not provide.
+
+============ END CRITIQUE ============
+[2026-05-14 15:51:18] 
+[2026-05-14 15:51:18]   STEELMAN VERDICT: MAJOR_REVISION
+[2026-05-14 15:51:18] 
+[2026-05-14 15:51:18] Patched papers/init_replication_crisis.md with 3 structural issues, 6 revision instructions
+[2026-05-14 15:51:18] Waiting 10s before next run...
+[2026-05-14 15:51:28] 
+[2026-05-14 15:51:28] ============================================================
+[2026-05-14 15:51:28]   RUN 2 / 3
+[2026-05-14 15:51:28] ============================================================
+[2026-05-14 15:51:28] 
+[2026-05-14 15:51:28] --- Generating paper ---
+[2026-05-14 20:07:49] 
+[2026-05-14 20:07:49] --- Claude exited ---
+[2026-05-14 20:07:49] ERROR: No paper.md in REPLICATION_CRISIS_2026_2026-05-14_001. Pipeline may have halted.
+[2026-05-14 20:07:49] Restored original papers/init_replication_crisis.md from backup
+[2026-05-14 20:07:49] 
+[2026-05-14 20:07:49] ============================================================
+[2026-05-14 20:07:49]   QUALITY LOOP COMPLETE
+[2026-05-14 20:07:49]   Runs: 2
+[2026-05-14 20:07:49]   Log: C:\PROJECTS\SHELL\logs\quality_loop_20260514_143535.log
+[2026-05-14 20:07:49] ============================================================

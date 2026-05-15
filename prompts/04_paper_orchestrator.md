@@ -147,6 +147,18 @@ After each Peer Reviewer verdict, append to innovation_log.md:
     notes: "[one-line summary]"
   ```
 
+After each Peer Reviewer REJECT, also append to dead_ends.md:
+
+  [Turn N] M[milestone] REJECT: [one-line summary of what the Author tried]
+  REASON: [the specific checklist items or parameters that failed]
+  DO NOT REPEAT this approach.
+
+This is critical for the consolidated findings system. Dead ends that are never
+logged cannot be learned from across papers. Every rejection is a data point.
+If the Author makes the same mistake twice in a row (same checklist item fails
+on consecutive loops), escalate: add "REPEATED FAILURE" prefix and flag the
+specific drift pattern so it can be pre-loaded into future init files.
+
 After each Editor verdict (M4 only), append to innovation_log.md:
 
   ```yaml
@@ -545,6 +557,33 @@ If a figure script fails (non-zero exit code or missing output file):
 Append to innovation_log.md:
   FIGURES: [N extracted] | [N rendered] | [N failed]
   [If failures: list each with one-line error summary]
+
+### Step 6 — Replace code blocks with image references in paper.md
+
+THIS STEP IS CRITICAL. The paper must contain rendered figures, not code blocks.
+A reviewer or Steelman seeing Python code instead of figures will reject.
+
+For each figure that rendered successfully (PASS in the status table):
+
+  1. Find the Python code block in paper.md that starts with `# Figure N:`
+  2. Find the figure description/caption text immediately before the code block
+  3. Replace the entire code block (from opening ``` to closing ```) with:
+
+       ![Figure N: description](figures/figure_N.png)
+
+  4. Keep the caption text that was before the code block. If no caption exists,
+     add one: **Figure N.** [description from the code block's first comment line]
+
+For figures that FAILED to render:
+  Replace the code block with:
+    [Figure N failed to render — see figures/figure_N_error.txt for details]
+
+The Python code is preserved in figures/figure_N.py for reproducibility.
+It must NOT remain in paper.md. The paper body must contain only image
+references and captions, never executable code.
+
+After all replacements, verify: grep paper.md for triple-backtick python blocks.
+If any remain that start with `# Figure`, the replacement is incomplete. Fix it.
 
 ---
 

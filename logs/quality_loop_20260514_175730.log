@@ -1,0 +1,126 @@
+﻿[2026-05-14 17:57:30] Log file: C:\PROJECTS\SHELL\logs\quality_loop_20260514_175730.log
+[2026-05-14 17:57:30] Backed up papers/init_replication_crisis.md
+[2026-05-14 17:57:30] Base slug: REPLICATION_CRISIS_2026
+[2026-05-14 17:57:30] 
+[2026-05-14 17:57:30] ============================================================
+[2026-05-14 17:57:30]   RUN 1 / 3
+[2026-05-14 17:57:30] ============================================================
+[2026-05-14 17:57:30] 
+[2026-05-14 17:57:30] --- Generating paper ---
+[2026-05-14 20:26:03] 
+[2026-05-14 20:26:03] --- Claude exited ---
+[2026-05-14 20:26:03] Paper: REPLICATION_CRISIS_2026_2026-05-14_001 (196 lines)
+[2026-05-14 20:26:04] 
+[2026-05-14 20:26:04] --- Running Steelman review ---
+[2026-05-14 20:27:58] Saved critique to REPLICATION_CRISIS_2026_2026-05-14_001\steelman_full_paper_critique.md
+[2026-05-14 20:27:58] Extracted 13 findings from steelman_full_paper_critique.md
+[2026-05-14 20:27:58]   [F-133] MATH_ERROR: The central differentiating claim is mathematically false
+[2026-05-14 20:27:58]   [F-134] AUTHOR_TENDENCY: Novelty is overstated relative to the actual contribution
+[2026-05-14 20:27:58]   [F-135] SPEC_MATH_MISMATCH: The discipline mapping lacks empirical phi estimates, limiti
+[2026-05-14 20:27:58]   [F-136] CITATION_ERROR: The sensitivity analysis is vacuous
+[2026-05-14 20:27:58]   [F-137] FRAMING_OVERCLAIM: Proposition 0 does important but under-motivated work
+[2026-05-14 20:27:58]   [F-138] FRAMING_OVERCLAIM: The paper does not engage with the fact that its model and I
+[2026-05-14 20:27:58]   [F-139] AUTHOR_TENDENCY: The abstract is placed after the Data Availability Statement
+[2026-05-14 20:27:58]   [F-140] AUTHOR_TENDENCY: The edge case table lists phi* ╬ô├Ñ├å 0 when Power ╬ô├Ñ├å 0, but t
+[2026-05-14 20:27:58]   [F-141] MATH_ERROR: Corollary 1 states the result for alpha = 0.005 but the sens
+[2026-05-14 20:27:58]   [F-142] MATH_ERROR: The claim that phi* is "independent of sample size" (Theorem
+[2026-05-14 20:27:58]   [F-143] AUTHOR_TENDENCY: Table 1 cites "Cohen 1962; Button et al. 2013" for cognitive
+[2026-05-14 20:27:58]   [F-144] CITATION_ERROR: The Benjamini & Hochberg (1995) reference appears in the ref
+[2026-05-14 20:27:58]   [F-145] CITATION_ERROR: Figure references cannot be evaluated because figures are ex
+[2026-05-14 20:27:58] Extracted 0 dead-ends from dead_ends.md
+============ STEELMAN CRITIQUE - Run 1 ============
+## Referee Report
+
+**Paper:** "A Bayesian Model of the Replication Crisis: Prior Odds, Publication Bias, and the Positive Predictive Value of Science"
+
+---
+
+## STRUCTURAL ISSUES (would cause rejection)
+
+1. **The central differentiating claim is mathematically false.** The paper repeatedly asserts that Ioannidis's bias parameter *u* "prevents a closed-form threshold" and "requires numerical solution." This is incorrect. Setting PPV_Ioannidis = 0.5 and solving for *u* yields:
+
+   u* = ((1 - beta) * R - alpha) / ((1 - beta) - beta * R)
+
+   This is closed-form, explicit, and requires no numerical methods. The algebra takes four lines. Because the paper's primary contribution claim is that the phi reparameterization "enables" a closed-form threshold that was previously impossible, and this premise is false, the central claim of differentiation from Ioannidis (2005) does not follow from the mathematics as stated. The phi formulation may be *simpler* or *more interpretable* than the u* expression above, but "simpler" is a framing argument, not the "enables vs. impossible" argument the paper makes.
+
+   This error appears in at least three locations: the "Relation to Ioannidis (2005)" section, the "Natural Enemy" section, and the Related Work discussion of Ioannidis. Each instance asserts impossibility where none exists.
+
+---
+
+## FRAMING & POSITIONING ISSUES (would cause major revision)
+
+1. **Novelty is overstated relative to the actual contribution.** Once the closed-form u* is acknowledged, the paper's contribution reduces to: (a) a reparameterization that isolates false-positive inflation from true-positive inflation, and (b) a simpler expression for the critical threshold. These are legitimate contributions ΓÇö the phi* formula is more interpretable and decomposes more cleanly into policy levers ΓÇö but they are contributions of *modeling clarity*, not of *mathematical enablement*. The paper's rhetoric throughout treats this as a qualitative advance ("makes the implicit explicit," "obscured it") when it is a quantitative improvement in notational transparency. The introduction, Natural Enemy section, and conclusion all need rewriting to accurately characterize the contribution.
+
+2. **The discipline mapping lacks empirical phi estimates, limiting its applied value.** The paper derives phi* for five fields but never estimates actual phi for any field. Without knowing where fields *are* relative to their thresholds (only where the thresholds lie), the classification into "above" and "below" threshold is speculative. The paper acknowledges this but still draws conclusions like "social psychology... even the nominal false positive rate without any inflation already exceeds the threshold" ΓÇö which is a statement about phi, not phi*, and requires an empirical claim the paper explicitly declines to make. Either provide phi estimates (even rough ones from p-curve or selection model literature) or soften these claims to conditional statements.
+
+3. **The sensitivity analysis is vacuous.** The table confirms that an algebraic identity holds under parameter perturbation, which is tautological. A meaningful sensitivity analysis would examine how the *discipline classifications* change under plausible variation in the cited R and power estimates ΓÇö e.g., if social psychology's R is 0.20 rather than 0.10 (a defensible alternative reading of Dreber et al. 2015), phi* doubles and the field's classification may change.
+
+4. **Proposition 0 does important but under-motivated work.** The proposition shows that a naive between-study publication filter cancels in PPV. This is a critical modeling assumption ΓÇö it justifies excluding the file-drawer effect from the model ΓÇö but it is presented before the introduction, without motivation, and its significance is easy to miss. A reader encountering Definition 5 naturally asks "why doesn't phi capture the file drawer?" and must wait for Proposition 0 to find out. The paper would be clearer if the relationship between within-study bias (phi) and between-study bias (file drawer) were motivated in the introduction.
+
+5. **The paper does not engage with the fact that its model and Ioannidis's model make *different predictions*.** Because phi inflates only false positives while u inflates both pathways, the two models are not mere reparameterizations ΓÇö they are different models with different assumptions. For any given level of underlying bias, they predict different PPV values. The paper should explicitly state the empirical conditions under which the models diverge and discuss which is more realistic.
+
+---
+
+## MINOR ISSUES (would appear in a revise-and-resubmit letter)
+
+1. The abstract is placed after the Data Availability Statement rather than before the introduction. Standard formatting places it first.
+
+2. The edge case table lists phi* ΓåÆ 0 when Power ΓåÆ 0, but this deserves a note: if power is exactly 0, PPV is undefined (0/0), not zero. The limit is 0, but the point itself is degenerate.
+
+3. Corollary 1 states the result for alpha = 0.005 but the sensitivity analysis in Definition 3 lists alpha Γêê {0.005, 0.01, 0.05}. The alpha = 0.01 case is never discussed and could be dropped from Definition 3 or added to the analysis.
+
+4. The claim that phi* is "independent of sample size" (Theorem 1, property (a)) is true only in the sense that sample size does not appear as a separate variable. Sample size affects power, which affects phi*. The statement is technically correct but potentially misleading ΓÇö a reader might infer that larger samples provide no benefit, when in fact they do (through the power channel) up to the ceiling.
+
+5. Table 1 cites "Cohen 1962; Button et al. 2013" for cognitive psychology power but provides a wide range (0.50ΓÇô0.80). The lower bound (Cohen 1962) is over 60 years old. A note on the temporal gap would be appropriate.
+
+6. The Benjamini & Hochberg (1995) reference appears in the reference list but is never cited in the text.
+
+7. Figure references cannot be evaluated because figures are external images. The referee cannot verify Figures 1ΓÇô3.
+
+---
+
+## VERDICT
+
+**MAJOR_REVISION**
+
+Structural issue #1 ΓÇö the false claim that Ioannidis's parameterization cannot yield a closed-form threshold ΓÇö is load-bearing for the paper's contribution claim. The underlying model and theorem are mathematically correct, so this is not a fatal error, but the paper as written makes a demonstrably false assertion about the prior literature that inflates the contribution. Correcting this requires rewriting the contribution statement, the Ioannidis comparison section, the Natural Enemy section, and portions of the introduction and conclusion ΓÇö a substantial restructuring.
+
+---
+
+## REVISION INSTRUCTIONS
+
+1. **Derive u* in closed form and include it in the paper.** Add the derivation u* = ((1 - beta) * R - alpha) / ((1 - beta) - beta * R) to the "Relation to Ioannidis (2005)" section. Then explicitly compare u* to phi* and argue for phi*'s advantages on the correct grounds: interpretability, decomposability into policy levers, and isolation of the false-positive channel ΓÇö not impossibility of a closed-form alternative.
+
+2. **Rewrite the contribution statement.** Replace all claims that the phi reparameterization "enables" a closed-form threshold with accurate claims about what it provides: a simpler, more interpretable threshold that isolates the actionable parameter (false-positive inflation) from the non-actionable one (true-positive pathway effects of bias). This affects the abstract, introduction (contribution list item 2), Relation to Ioannidis section, Natural Enemy section, Related Work, and conclusion.
+
+3. **Add a section explicitly comparing the phi and u models as *different models*.** State the conditions under which they diverge in predictions, and argue for phi's modeling assumptions on empirical or conceptual grounds.
+
+4. **Strengthen the sensitivity analysis.** Replace the current tautological table with an analysis of how discipline classifications change under plausible variation in cited R and power estimates. Show which classifications are robust and which are sensitive to the input estimates.
+
+5. **Either provide rough phi estimates for the mapped disciplines or rewrite the discipline mapping as purely conditional.** If estimates are provided (even order-of-magnitude from existing meta-research), the mapping gains applied value. If not, all statements of the form "field X operates above/below its threshold" must be rewritten as "field X *would* operate above/below its threshold *if* phi exceeds Y."
+
+6. **Move the abstract to its conventional position** before the introduction.
+
+7. **Drop the uncited Benjamini & Hochberg (1995) reference** or add a citation in the text where appropriate (e.g., the genomics discussion of multiple testing correction).
+
+============ END CRITIQUE ============
+[2026-05-14 20:27:58] 
+[2026-05-14 20:27:58]   STEELMAN VERDICT: MAJOR_REVISION
+[2026-05-14 20:27:58] 
+[2026-05-14 20:27:58] Patched papers/init_replication_crisis.md with 5 structural issues, 7 revision instructions
+[2026-05-14 20:27:58] Waiting 10s before next run...
+[2026-05-14 20:28:08] 
+[2026-05-14 20:28:08] ============================================================
+[2026-05-14 20:28:08]   RUN 2 / 3
+[2026-05-14 20:28:08] ============================================================
+[2026-05-14 20:28:08] 
+[2026-05-14 20:28:08] --- Generating paper ---
+[2026-05-14 20:33:20] 
+[2026-05-14 20:33:20] --- Claude exited ---
+[2026-05-14 20:33:20] ERROR: No project directory found for REPLICATION_CRISIS_2026
+[2026-05-14 20:33:20] 
+[2026-05-14 20:33:20] ============================================================
+[2026-05-14 20:33:20]   QUALITY LOOP COMPLETE
+[2026-05-14 20:33:20]   Runs: 2
+[2026-05-14 20:33:20]   Log: C:\PROJECTS\SHELL\logs\quality_loop_20260514_175730.log
+[2026-05-14 20:33:20] ============================================================

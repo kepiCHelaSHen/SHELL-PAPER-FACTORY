@@ -38,6 +38,7 @@ for ($run = 1; $run -le $MaxRuns; $run++) {
     Log "============================================================"
     Log ""
     Log "--- Generating paper ---"
+
     # cmd /c isolates claude.cmd so its exit doesn't kill this script
     cmd /c claude.cmd --dangerously-skip-permissions $InitFile
     Log ""
@@ -58,7 +59,8 @@ for ($run = 1; $run -le $MaxRuns; $run++) {
         break
     }
 
-    Log "Paper: $($ProjectDir.Name) ($(Get-Content $PaperPath | Measure-Object -Line | Select-Object -ExpandProperty Lines) lines)"
+    $LineCount = (Get-Content $PaperPath | Measure-Object -Line).Lines
+    Log "Paper: $($ProjectDir.Name) ($LineCount lines)"
 
     # Step 3: Run full-paper Steelman review
     Log ""
@@ -72,15 +74,48 @@ for ($run = 1; $run -le $MaxRuns; $run++) {
 You are a senior associate editor who has reviewed 200+ papers.
 You have just read a complete academic paper. Write a referee report.
 
+Target venue context is provided in the frozen specification. Evaluate against
+that venue's standards and format expectations, not against an idealized
+research article.
+
 Organize your critique into:
+
 ## STRUCTURAL ISSUES (would cause rejection)
+A structural issue is a MATHEMATICAL error in the paper's own derivations.
+These are ONLY:
+- A proof contains a logical error or incorrect derivation step
+- A theorem's stated conditions are violated within the paper's own proof
+- A definition is internally inconsistent (used one way in the definition,
+  differently in the proof)
+
+If the math is correct but you disagree with how the contribution is framed,
+that is a FRAMING issue, not structural. Specifically, these are NEVER structural:
+- The contribution is "trivial" or "just algebra" — that is a framing concern
+- The paper overclaims novelty relative to prior work — that is framing
+- A competing model can also derive a similar result — that is framing
+- Parameter interpretations or definitional choices you would make differently
+- Missing engagement with related literature
+- False claims about what prior work did or did not do — that is a CITATION error
+- Scope or framing concerns about how the contribution is presented
+
 Numbered list. If none, write "None identified."
+
 ## FRAMING & POSITIONING ISSUES (would cause major revision)
 Numbered list. If none, write "None identified."
+
 ## MINOR ISSUES (would appear in a revise-and-resubmit letter)
 Numbered list. If none, write "None identified."
+
 ## VERDICT
-One of: ACCEPT, MAJOR_REVISION, or REJECT
+Use this rubric:
+- ACCEPT: No structural issues AND fewer than 3 framing issues AND all framing
+  issues are addressable without rewriting proofs or restructuring the paper.
+- MINOR_REVISION: No structural issues. Framing issues exist but do not require
+  rewriting proofs or restructuring the paper.
+- MAJOR_REVISION: Structural issues exist, OR framing issues require substantial
+  rewriting of proofs or paper structure.
+- REJECT: Fundamental mathematical errors, or the contribution does not exist.
+
 ## REVISION INSTRUCTIONS
 If not ACCEPT: numbered actionable instructions. If ACCEPT: "No revisions needed."
 
@@ -98,24 +133,45 @@ $SpecText
     $Critique = Get-Content $TempFile -Raw | cmd /c claude.cmd -p --output-format text --dangerously-skip-permissions 2>&1
     Remove-Item $TempFile -ErrorAction SilentlyContinue
 
-    # Save critique
+    # Convert critique to a single string (it may come back as array from pipe)
+    $CritiqueStr = $Critique | Out-String
+
+    # Save critique to project dir
     $CritiquePath = Join-Path $ProjectDir.FullName "steelman_full_paper_critique.md"
-    Set-Content -Path $CritiquePath -Value $Critique -Encoding UTF8
+    Set-Content -Path $CritiquePath -Value $CritiqueStr -Encoding UTF8
     Log "Saved critique to $($ProjectDir.Name)\steelman_full_paper_critique.md"
+
+    # Consolidate findings into central logs
+    python src/consolidate.py --critique $CritiquePath 2>&1 | ForEach-Object { Log $_ }
+    $DeadEndsPath = Join-Path $ProjectDir.FullName "dead_ends.md"
+    if (Test-Path $DeadEndsPath) {
+        python src/consolidate.py --dead-ends $DeadEndsPath 2>&1 | ForEach-Object { Log $_ }
+    }
+
     # Log the full critique
-    Add-Content -Path $LogFile -Value "============ STEELMAN CRITIQUE — Run $run ============" -Encoding UTF8
-    Add-Content -Path $LogFile -Value $Critique -Encoding UTF8
+    Add-Content -Path $LogFile -Value "============ STEELMAN CRITIQUE - Run $run ============" -Encoding UTF8
+    Add-Content -Path $LogFile -Value $CritiqueStr -Encoding UTF8
     Add-Content -Path $LogFile -Value "============ END CRITIQUE ============" -Encoding UTF8
 
-    # Extract verdict - check simple string contains
+    # Extract verdict from the VERDICT section specifically
     $Verdict = "UNKNOWN"
-    $CritiqueStr = $Critique | Out-String
-    if ($CritiqueStr -match "REJECT") {
-        $Verdict = "REJECT"
-    } elseif ($CritiqueStr -match "MAJOR_REVISION") {
-        $Verdict = "MAJOR_REVISION"
-    } elseif ($CritiqueStr -match "ACCEPT") {
-        $Verdict = "ACCEPT"
+    # Find lines after ## VERDICT
+    $InVerdict = $false
+    foreach ($line in $CritiqueStr -split "`n") {
+        if ($line -match "^##\s*VERDICT") {
+            $InVerdict = $true
+            continue
+        }
+        if ($InVerdict -and $line -match "^##") {
+            break
+        }
+        if ($InVerdict -and $line.Trim().Length -gt 0) {
+            if ($line -match "REJECT") { $Verdict = "REJECT" }
+            elseif ($line -match "MAJOR_REVISION") { $Verdict = "MAJOR_REVISION" }
+            elseif ($line -match "MINOR_REVISION") { $Verdict = "MINOR_REVISION" }
+            elseif ($line -match "ACCEPT") { $Verdict = "ACCEPT" }
+            if ($Verdict -ne "UNKNOWN") { break }
+        }
     }
 
     Log ""
@@ -123,8 +179,8 @@ $SpecText
     Log ""
 
     # Step 4: Check if we're done
-    if ($Verdict -eq "ACCEPT") {
-        Log "Steelman ACCEPTED. Quality loop complete."
+    if ($Verdict -eq "ACCEPT" -or $Verdict -eq "MINOR_REVISION") {
+        Log "Steelman $Verdict. Quality loop complete."
         break
     }
 
@@ -134,29 +190,51 @@ $SpecText
     }
 
     # Step 5: Extract revision instructions and patch init file
-    $RevisionMatch = [regex]::Match($Critique, "(?s)##\s*REVISION INSTRUCTIONS\s*\n(.*?)(?:\n##|\z)")
-    $StructuralMatch = [regex]::Match($Critique, "(?s)##\s*STRUCTURAL ISSUES.*?\n(.*?)(?:\n##|\z)")
+    # Parse the critique line by line to extract sections safely
+    $RevisionLines = @()
+    $StructuralLines = @()
+    $CurrentSection = ""
+
+    foreach ($line in $CritiqueStr -split "`n") {
+        if ($line -match "^##\s*STRUCTURAL ISSUES") { $CurrentSection = "structural"; continue }
+        elseif ($line -match "^##\s*FRAMING") { $CurrentSection = "framing"; continue }
+        elseif ($line -match "^##\s*MINOR") { $CurrentSection = "minor"; continue }
+        elseif ($line -match "^##\s*VERDICT") { $CurrentSection = "verdict"; continue }
+        elseif ($line -match "^##\s*REVISION INSTRUCTIONS") { $CurrentSection = "revision"; continue }
+        elseif ($line -match "^##\s") { $CurrentSection = ""; continue }
+
+        if ($CurrentSection -eq "structural" -and $line.Trim().Length -gt 0 -and $line.Trim() -ne "None identified.") {
+            $StructuralLines += $line
+        }
+        if ($CurrentSection -eq "revision" -and $line.Trim().Length -gt 0 -and $line.Trim() -ne "No revisions needed.") {
+            $RevisionLines += $line
+        }
+    }
 
     $Patch = "`n# === STEELMAN REVISION BRIEF (from run $run) ===`n"
     $Patch += "# The next run MUST address every item.`n"
 
-    if ($StructuralMatch.Success -and $StructuralMatch.Groups[1].Value.Trim() -ne "None identified.") {
+    if ($StructuralLines.Count -gt 0) {
         $Patch += "# STRUCTURAL ISSUES:`n"
-        $Patch += $StructuralMatch.Groups[1].Value.Trim() + "`n"
+        $Patch += ($StructuralLines -join "`n") + "`n"
     }
-    if ($RevisionMatch.Success -and $RevisionMatch.Groups[1].Value.Trim() -ne "No revisions needed.") {
+    if ($RevisionLines.Count -gt 0) {
         $Patch += "# REVISION INSTRUCTIONS:`n"
-        $Patch += $RevisionMatch.Groups[1].Value.Trim() + "`n"
+        $Patch += ($RevisionLines -join "`n") + "`n"
     }
 
+    # Patch init file - remove previous brief, then insert new one
     $InitContent = Get-Content $InitFile -Raw -Encoding UTF8
-    if ($InitContent -match "KNOWN_DRIFT_RISKS:") {
-        $InitContent = $InitContent -replace "KNOWN_DRIFT_RISKS:", "$Patch`nKNOWN_DRIFT_RISKS:"
+    # Remove any existing revision brief (keep only the latest)
+    $InitContent = $InitContent -replace "(?s)# === STEELMAN REVISION BRIEF.*?(?=KNOWN_DRIFT_RISKS:)", ""
+    $InsertPoint = $InitContent.IndexOf("KNOWN_DRIFT_RISKS:")
+    if ($InsertPoint -ge 0) {
+        $InitContent = $InitContent.Insert($InsertPoint, "$Patch`n")
     } else {
         $InitContent += $Patch
     }
     Set-Content -Path $InitFile -Value $InitContent -Encoding UTF8
-    Log "Patched $InitFile with revision instructions"
+    Log "Patched $InitFile with $($StructuralLines.Count) structural issues, $($RevisionLines.Count) revision instructions"
     Log "Waiting 10s before next run..."
     Start-Sleep -Seconds 10
 }

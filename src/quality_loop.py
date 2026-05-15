@@ -265,6 +265,20 @@ def steelman_paper(project_dir: Path, run_num: int, meta_log: Path) -> str:
     )
     log(f"Saved: {critique_path.name}", meta_log)
 
+    # Consolidate findings into central logs
+    subprocess.run(
+        [sys.executable, str(SHELL_ROOT / "src" / "consolidate.py"),
+         "--critique", str(critique_path)],
+        check=False, capture_output=True,
+    )
+    dead_ends_path = project_dir / "dead_ends.md"
+    if dead_ends_path.exists():
+        subprocess.run(
+            [sys.executable, str(SHELL_ROOT / "src" / "consolidate.py"),
+             "--dead-ends", str(dead_ends_path)],
+            check=False, capture_output=True,
+        )
+
     # Also log the critique to the meta log
     with open(meta_log, "a", encoding="utf-8") as f:
         f.write(f"\n{'='*60}\n")
