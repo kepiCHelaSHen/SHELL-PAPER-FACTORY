@@ -2,16 +2,45 @@
 
 import subprocess
 import shutil
+import os
 from pathlib import Path
+
+# MiKTeX common install locations on Windows
+_MIKTEX_PATHS = [
+    Path(os.environ.get("LOCALAPPDATA", "")) / "Programs/MiKTeX/miktex/bin/x64",
+    Path("C:/Program Files/MiKTeX/miktex/bin/x64"),
+    Path("C:/Users") / os.environ.get("USERNAME", "z") / "AppData/Local/Programs/MiKTeX/miktex/bin/x64",
+]
+
+
+def _extend_path():
+    """Add MiKTeX to PATH if not already there."""
+    for p in _MIKTEX_PATHS:
+        if p.exists() and str(p) not in os.environ.get("PATH", ""):
+            os.environ["PATH"] = str(p) + os.pathsep + os.environ.get("PATH", "")
+            return
+
+
+_PANDOC_PATHS = [
+    Path(os.environ.get("LOCALAPPDATA", "")) / "Pandoc",
+    Path("C:/Program Files/Pandoc"),
+    Path("C:/Users") / os.environ.get("USERNAME", "z") / "AppData/Local/Pandoc",
+]
 
 
 def pandoc_available() -> bool:
     """Check if pandoc is installed."""
+    _extend_path()
+    # Also add pandoc paths
+    for p in _PANDOC_PATHS:
+        if p.exists() and str(p) not in os.environ.get("PATH", ""):
+            os.environ["PATH"] = str(p) + os.pathsep + os.environ.get("PATH", "")
     return shutil.which("pandoc") is not None
 
 
 def detect_pdf_engine() -> str | None:
     """Detect the best available PDF engine."""
+    _extend_path()
     for engine in ("xelatex", "pdflatex", "wkhtmltopdf"):
         if shutil.which(engine):
             return engine
@@ -56,7 +85,7 @@ def render_pdf(paper_md: Path, output_pdf: Path, title: str, author: str) -> boo
 
     try:
         result = subprocess.run(
-            cmd, capture_output=True, text=True, timeout=120
+            cmd, capture_output=True, text=True, timeout=300
         )
         if result.returncode == 0 and output_pdf.exists():
             print(f"  PDF rendered: {output_pdf.name} ({output_pdf.stat().st_size // 1024}KB)")
@@ -69,7 +98,8 @@ def render_pdf(paper_md: Path, output_pdf: Path, title: str, author: str) -> boo
                     print(f"    {line}")
             return False
     except subprocess.TimeoutExpired:
-        print("  WARNING: pandoc timed out after 120s. Skipping PDF.")
+        print("  WARNING: pandoc timed out after 300s. Skipping PDF.")
+        print("  (First run may be slow as MiKTeX downloads LaTeX packages.)")
         return False
     except FileNotFoundError:
         print("  WARNING: pandoc not found at runtime. Skipping PDF.")
