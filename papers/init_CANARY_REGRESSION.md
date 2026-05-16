@@ -80,9 +80,20 @@ M4: Full paper assembly. Abstract, Related Work, Discussion, Conclusion.
 3. Initialize state_vector.md
 4. Run pipeline: prompts/04_paper_orchestrator.md
 
-## REGRESSION BASELINE (fill after first successful run)
-- Gemini composite: [TBD]
-- Grok composite: [TBD]
-- AI detection (B1): [TBD]
-- Citation integrity (B3): [TBD]
-- Acceptable degradation threshold: 0.5 points on composite
+## REGRESSION BASELINE (established 2026-05-16)
+- Gemini composite: ~7.5 (DESK_REJECT on novelty — expected for textbook result)
+- Grok run1 composite: ~7.8 (MINOR_REVISION)
+- Grok run2 composite: 6.90
+- AI detection (B1): Grok=NO_APPEARS_HUMAN, Gemini=UNCERTAIN
+- Human authorship: Grok=YES_CONVINCINGLY, Gemini=UNCERTAIN
+- Citation integrity (B3): N/A (pure theory paper, no citations to fabricate)
+
+## REGRESSION THRESHOLDS
+- D2 (Math Rigor): must stay >= 8. If drops: proofs got sloppy.
+- D6 (Reproducibility): must stay >= 9. If drops: definitions became implicit.
+- D9 (Intellectual Honesty): must stay >= 8. If drops: overclaiming crept in.
+- D10 (Precision/Economy): must stay >= 8. If drops: verbosity introduced.
+- D12 (Internal Consistency): must stay >= 9. If drops: coherence lost.
+- D1 (Originality): should stay 1-4. If goes UP: Author is overclaiming novelty.
+- D13 (Impact): should stay 2-4. If goes UP: Author is inflating significance.
+- B1 (AI detection): Grok should stay NO_APPEARS_HUMAN. If flips to YES: writing discipline regressed.
