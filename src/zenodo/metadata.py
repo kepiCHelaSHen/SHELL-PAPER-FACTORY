@@ -65,6 +65,9 @@ def build_metadata(slug: str, config: dict) -> dict:
     }
 
     # Community (if specified)
+    # NOTE: Community must exist on Zenodo before papers can be submitted to it.
+    # Create at: https://zenodo.org/communities/new (or sandbox equivalent)
+    # If community doesn't exist, Zenodo silently ignores it — no error, just no grouping.
     community = config.get("community")
     if community:
         metadata["communities"] = [{"identifier": community}]
