@@ -118,3 +118,48 @@ class ZenodoClient:
     def get_deposition(self, deposition_id: int) -> dict:
         """Get deposition status/details."""
         return self._request("GET", f"/deposit/depositions/{deposition_id}")
+
+    def accept_community_requests(self, community_slug: str) -> int:
+        """Accept all pending community inclusion requests.
+
+        When you own the community and papers are submitted via the metadata
+        communities field, they create 'submitted' requests that need acceptance.
+        Returns the number of requests accepted.
+        """
+        # First get the community UUID
+        try:
+            community = self._request("GET", f"/communities/{community_slug}")
+        except ZenodoAPIError:
+            return 0
+        community_id = community.get("id", "")
+
+        # List open requests
+        try:
+            data = self._request(
+                "GET",
+                f"/requests?q=receiver.community:{community_id}&is_open=true&size=50"
+            )
+        except ZenodoAPIError:
+            return 0
+
+        hits = data.get("hits", {}).get("hits", [])
+        accepted = 0
+        for req_data in hits:
+            accept_url = req_data.get("links", {}).get("actions", {}).get("accept")
+            if accept_url:
+                # Accept via full URL (not relative path)
+                import urllib.request as _ur
+                ar = _ur.Request(
+                    accept_url, method="POST",
+                    data=b"{}",
+                    headers={
+                        "Authorization": f"Bearer {self.token}",
+                        "Content-Type": "application/json",
+                    }
+                )
+                try:
+                    with _ur.urlopen(ar, timeout=30, context=_ctx) as resp:
+                        accepted += 1
+                except Exception:
+                    pass
+        return accepted

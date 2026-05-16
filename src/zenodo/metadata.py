@@ -15,7 +15,11 @@ def extract_title(paper_path: Path) -> str:
 
 
 def extract_abstract(paper_path: Path) -> str:
-    """Extract abstract section content."""
+    """Extract abstract section content, converted to HTML for Zenodo.
+
+    Zenodo renders the description field as HTML. Plain text with newlines
+    displays as a blob. We convert paragraphs to <p> tags.
+    """
     text = paper_path.read_text(encoding="utf-8")
     match = re.search(r'##\s+Abstract\s*\n(.*?)(?=\n##\s|\Z)', text, re.DOTALL | re.IGNORECASE)
     if match:
@@ -23,8 +27,21 @@ def extract_abstract(paper_path: Path) -> str:
         # Truncate if too long (Zenodo has limits)
         if len(abstract) > 5000:
             abstract = abstract[:4997] + "..."
-        return abstract
-    return "Abstract not available."
+        # Convert to HTML paragraphs for proper Zenodo rendering
+        paragraphs = [p.strip() for p in abstract.split("\n\n") if p.strip()]
+        html = "\n".join(f"<p>{_escape_html(p)}</p>" for p in paragraphs)
+        return html
+    return "<p>Abstract not available.</p>"
+
+
+def _escape_html(text: str) -> str:
+    """Minimal HTML escaping for abstract text."""
+    # Replace markdown emphasis with HTML
+    text = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', text)
+    text = re.sub(r'\*(.+?)\*', r'<em>\1</em>', text)
+    # Replace single newlines with spaces (within a paragraph)
+    text = text.replace("\n", " ")
+    return text
 
 
 def build_metadata(slug: str, config: dict) -> dict:

@@ -11,7 +11,17 @@ Usage:
 
 import argparse
 import sys
+import os
 from pathlib import Path
+
+# Fix Windows terminal encoding for Unicode
+if sys.platform == "win32":
+    os.environ.setdefault("PYTHONIOENCODING", "utf-8")
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except (AttributeError, OSError):
+        pass
 
 from .config import load_config, load_tokens, BASE
 from .api import ZenodoClient, ZenodoAPIError
@@ -182,6 +192,16 @@ def run(args):
     if not successful:
         print("All sandbox publishes failed. Aborting.")
         return 1
+
+    # Accept community inclusion requests (auto-accept since we own the community)
+    community = config.get("community")
+    if community and successful:
+        accepted = sandbox_client.accept_community_requests(community)
+        if accepted:
+            print(f"  Community '{community}': {accepted} inclusion requests accepted.")
+        else:
+            print(f"  Community '{community}': no pending requests (may need manual acceptance).")
+        print()
 
     # Phase 4: Interactive review gate
     if args.sandbox_only:
