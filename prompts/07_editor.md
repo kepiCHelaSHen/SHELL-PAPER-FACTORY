@@ -223,6 +223,42 @@ Flag any citation where the characterization is:
 If the Steelman critique (steelman_critique_M4.md) flagged citation concerns,
 verify whether the Author addressed them.
 
+**E21 — Sentence rhythm variation**
+Count the word count of each sentence in every paragraph. Flag any sequence
+of 4 or more consecutive sentences whose word counts are within ±5 words
+of each other. Monotone rhythm is the strongest AI detection signal.
+Example: four consecutive 18-22 word sentences = flag.
+Exception: numbered lists and formal definition blocks are exempt.
+Suggest: "Break rhythm — vary sentence length between 8 and 50 words."
+
+**E22 — Hedging phrase density**
+Scan the full paper for these phrases:
+  "we note," "we emphasize," "it is important to note," "consistent with,"
+  "the model predicts," "it should be noted," "it is worth mentioning"
+Each phrase may appear AT MOST ONCE in the entire paper. Flag any phrase
+appearing twice or more, with exact locations. The Author prompt (Rule 0C)
+limits these, but the Editor enforces the count.
+
+**E23 — Code in paper body**
+Scan the paper body (everything BEFORE a section titled "Supplementary
+Materials" or "Appendix") for:
+  - Python keywords: import, def, class, print(, plt., np., pd.
+  - Code comments: lines starting with #
+  - Code fences containing executable code (```python)
+Flag every instance. All code belongs in Supplementary Materials only.
+Exception: inline mathematical notation in backticks (e.g., `alpha`) and
+single-word code references to variable names are acceptable.
+
+**E24 — ASSAY citation format**
+Scan the paper body for any of these patterns:
+  - "ASSAY Report" (case-insensitive)
+  - "ASSAY-" followed by an alphanumeric report ID
+  - Any string matching [A-Z]+-[A-Z]+-[A-Z]+.*-\d{4}-\d{2}-\d{2}-\d{3}
+Flag every instance. ASSAY report IDs belong ONLY in the Data Appendix
+or Data Availability section, never in the main paper body. The paper
+should cite the public data source (e.g., "CMS Medicare Part D data")
+not the internal pipeline report identifier.
+
 ---
 
 ## OUTPUT FORMAT

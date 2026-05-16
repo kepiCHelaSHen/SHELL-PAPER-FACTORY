@@ -105,6 +105,14 @@ Never save a failed dispatch result as a milestone draft or critique.
 - Drift risks (from spec + any steelman feedback from prior runs)
 - Dead ends relevant to this paper
 - Locked prior milestones (for continuity)
+- ASSAY DATA (if init file references integration blocks):
+  - Key computed values with CIs and methods
+  - forbidden_interpretations (per-result constraints)
+  - forbidden_interpretations_prose (aggregated, if present in YAML)
+  - At M4 ONLY: data_appendix_fragment and data_availability_statement
+  - CITATION RULE: "Cite PUBLIC DATA SOURCES per Author Rule 5F. NEVER cite
+    'ASSAY Report [ID]' in the paper body. All ASSAY report IDs go in the
+    Data Appendix section ONLY."
 - Does NOT receive: review history, steelman critiques, other milestone drafts
 
 **Peer Reviewer Agent** (per milestone):
@@ -147,8 +155,14 @@ correctly to the Author and is validated by the Peer Reviewer.
 
 ### Rules:
 
-1. **Read the integration block YAML.** Extract: point estimates, CIs, methods,
-   sample sizes, forbidden_interpretations, and figure paths.
+1. **Read the integration block YAML.** Extract:
+   - results[]: point estimates, CIs, methods, sample sizes, forbidden_interpretations
+   - Top-level: forbidden_interpretations_prose (if present — v1.1 field)
+   - Top-level: data_appendix_fragment (if present — pass to Author at M4)
+   - Top-level: data_availability_statement (if present — pass to Author at M4)
+   - Top-level: data_sources[] (if present — structured provenance)
+   - figures[]: paths and descriptions
+   If v1.1 fields are missing (older v1.0 blocks), skip gracefully.
 
 2. **Pass ASSAY data to the Author agent** as part of the milestone inputs.
    Include the key computed values and explicitly state:
@@ -406,6 +420,10 @@ Section B: INTRODUCTION
     DRIFT RISKS: [DRIFT_RISKS] + [ADDITIONAL_DRIFT_RISKS if run > 1]
     FROZEN SPEC: [FROZEN_SPEC]
     DEAD ENDS: [relevant entries from dead_ends.md for this paper]
+    ASSAY DATA: [Key computed values from integration blocks with CIs, methods,
+      and forbidden_interpretations. Include calibration instructions from init.]
+    ASSAY CITATION RULE: Cite public data sources per Rule 5F. NEVER write
+      "ASSAY Report [ID]" in the paper body.
 
   Save output to run{N}/M1_draft.md.
 
@@ -473,6 +491,10 @@ Do NOT hardcode "Lean-ready" claims — let the frozen spec dictate.
     PROBLEM: [PROBLEM]
     DRIFT RISKS: [DRIFT_RISKS] + [ADDITIONAL_DRIFT_RISKS if run > 1]
     FROZEN SPEC: [FROZEN_SPEC]
+    ASSAY DATA: [Computed values relevant to the proof — empirical parameters
+      the proof must reference, domain constraints from ASSAY.]
+    ASSAY CITATION RULE: Cite public data sources per Rule 5F. NEVER write
+      "ASSAY Report [ID]" in the paper body.
 
   Save output to run{N}/M2_draft.md.
 
@@ -534,6 +556,11 @@ Section B: BOUNDARY CONDITIONS (adversarial stress-test — MANDATORY)
     PROBLEM: [PROBLEM]
     DRIFT RISKS: [DRIFT_RISKS] + [ADDITIONAL_DRIFT_RISKS if run > 1]
     FROZEN SPEC: [FROZEN_SPEC]
+    ASSAY DATA: [Key computed values for application and calibration. Include
+      sensitivity-relevant parameters and CIs for boundary conditions.
+      Include forbidden_interpretations_prose for the limitations section.]
+    ASSAY CITATION RULE: Cite public data sources per Rule 5F. NEVER write
+      "ASSAY Report [ID]" in the paper body.
 
   Save output to run{N}/M3_draft.md.
 
@@ -591,6 +618,9 @@ literature gap formula. If a paragraph duplicates the Introduction, cut it.
     YOUR TASK: Assemble the complete paper from the locked milestones.
     Write the Abstract LAST. Write Related Work as comparative critique.
     Do not introduce new claims. Do not re-derive results.
+    Include a Data Appendix section using DATA_APPENDIX_FRAGMENT below.
+    Include a Data Availability section using DATA_AVAILABILITY_STATEMENT below.
+    All figure code goes in a Supplementary Materials appendix, NOT in the paper body.
     LOCKED M1: [full contents of run{N}/M1_draft.md]
     LOCKED M2: [full contents of run{N}/M2_draft.md]
     LOCKED M3: [full contents of run{N}/M3_draft.md]
@@ -598,6 +628,16 @@ literature gap formula. If a paragraph duplicates the Introduction, cut it.
     PROBLEM: [PROBLEM]
     DRIFT RISKS: [DRIFT_RISKS] + [ADDITIONAL_DRIFT_RISKS if run > 1]
     FROZEN SPEC: [FROZEN_SPEC]
+    ASSAY DATA: [All key computed values with CIs]
+    DATA_APPENDIX_FRAGMENT: [Full text from integration_block.yaml field —
+      Author includes this as the Data Appendix section at end of paper]
+    DATA_AVAILABILITY_STATEMENT: [Full text from integration_block.yaml field —
+      Author includes in Data Availability section]
+    FORBIDDEN_INTERPRETATIONS_PROSE: [Full aggregated text if present in YAML —
+      Author uses in limitations/caveats discussion]
+    ASSAY CITATION RULE: Cite public data sources per Rule 5F. NEVER write
+      "ASSAY Report [ID]" in the paper body. All ASSAY report IDs go in the
+      Data Appendix section ONLY.
 
   Save output to run{N}/M4_draft.md.
 

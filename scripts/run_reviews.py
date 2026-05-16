@@ -135,26 +135,35 @@ def discover_papers():
 
 
 def main():
-    # Determine which papers to review
-    if len(sys.argv) > 1:
-        slugs = sys.argv[1:]
-    else:
-        slugs = discover_papers()
+    import argparse as _ap
+    parser = _ap.ArgumentParser(description="Run external reviews on papers.")
+    parser.add_argument("slugs", nargs="*", help="Paper slugs to review (default: all)")
+    parser.add_argument("--grok-runs", type=int, default=2,
+                       help="Number of Grok reviews per paper for reliability (default: 2)")
+    args = parser.parse_args()
+
+    slugs = args.slugs if args.slugs else discover_papers()
 
     if not slugs:
         print("No papers found to review.")
         return
 
-    # Build task list: Gemini (primary) + Grok (adversarial) for each paper
+    # Build task list: Gemini (primary) + Grok x N (adversarial, for reliability)
     tasks = []
     for slug in slugs:
         tasks.append((slug, "Gemini25Pro", lambda p, mt: call_gemini(p, mt), 16384))
-        tasks.append((slug, "Grok3", lambda p, mt: call_openai_compatible(
-            "https://api.x.ai/v1/chat/completions", XAI_KEY, "grok-3-latest", p, mt
-        ), 8192))
+        for run_idx in range(1, args.grok_runs + 1):
+            suffix = f"_run{run_idx}" if args.grok_runs > 1 else ""
+            tasks.append((slug, f"Grok3{suffix}", lambda p, mt: call_openai_compatible(
+                "https://api.x.ai/v1/chat/completions", XAI_KEY, "grok-3-latest", p, mt
+            ), 8192))
 
-    print(f"Launching {len(tasks)} reviews ({len(slugs)} papers x 2 models: Gemini 2.5 Pro + Grok-3)")
+    models_desc = f"Gemini 2.5 Pro + Grok-3 x{args.grok_runs}"
+    total_per_paper = 1 + args.grok_runs
+    print(f"Launching {len(tasks)} reviews ({len(slugs)} papers x {total_per_paper} reviews: {models_desc})")
     print(f"GPT-4o excluded — see docstring for rationale.")
+    if args.grok_runs > 1:
+        print(f"Grok double-run: will take the HARSHER of {args.grok_runs} Grok reviews per paper.")
     print()
 
     results = []
@@ -171,9 +180,20 @@ def main():
     for slug, model, status, detail in sorted(results):
         print(f"  {slug} x {model}: {status} ({detail})")
 
-    # Flag cross-model disagreements if both succeeded
+    # Grok reliability report (if double-run)
+    if args.grok_runs > 1:
+        print(f"\n{'='*60}")
+        print("GROK RELIABILITY REPORT")
+        for slug in slugs:
+            grok_results = [(m, s, d) for sl, m, s, d in results if sl == slug and "Grok" in m and s == "OK"]
+            if len(grok_results) >= 2:
+                sizes = [d for _, _, d in grok_results]
+                # Shorter review often means desk-reject (harsher)
+                harsher = min(grok_results, key=lambda x: x[2])
+                print(f"  {slug}: {len(grok_results)} Grok runs, sizes={sizes}, harsher={harsher[0]}")
+
     print(f"\nReview files saved to papers/[SLUG]/reviews/")
-    print(f"Next: parse reviews and check for cross-model disagreements >3 points.")
+    print(f"Run: python scripts/parse_reviews.py --date {DATE}")
 
 
 if __name__ == "__main__":
