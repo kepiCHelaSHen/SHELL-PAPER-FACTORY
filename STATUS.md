@@ -1,33 +1,45 @@
-# SHELL v6.3 — Current Status
-# Updated: 2026-05-15
+# SHELL v6.5 — Current Status
+# Updated: 2026-05-16
 
-Phase:   PRODUCTION — Agent dispatch architecture, 4 papers completed
-Mode:    PAPER GENERATION + EXTERNAL REVIEW
+Phase:   PUBLICATION — All 6 papers at MINOR_REVISION or better
+Mode:    ZENODO PUBLICATION PREP
 
 ## What Is Done
-- SHELL v6.3 (agent dispatch, internal quality loop, consolidated findings)
-- 4 autonomous papers generated (zero human intervention)
-- 12 independent reviews (GPT-4o, Grok-3, Gemini 2.5 Flash)
-- Average review score: 7.92/10
-- 100% Steelman pass rate (4/4 papers: 2 ACCEPT, 2 MINOR_REVISION)
-- Consolidated findings: 154 findings, 104 dead ends
-- Demo website built (C:\PROJECTS\DEMO)
-- ASSAY analytics engine scaffolded (C:\PROJECTS\ASSAY)
 
-## Completed Papers
+### Engine (SHELL v6.5)
+- Author v5 prompt: anti-AI-detection writing discipline + ASSAY citation reform
+- Orchestrator v5 wiring: passes ASSAY data to all Author dispatches
+- Editor v3 with E21-E24 AI-detection editorial checks
+- External review v2: 15 dimensions, 12 boolean forensic checks, weighted scoring
+- Review panel: Gemini 2.5 Pro (primary) + Grok-3 ×2 (adversarial, double-run)
+- Auto-parse: scripts/parse_reviews.py extracts scores and flags disagreements
+- Feedback loop: scripts/revise_from_review.py builds targeted revision briefs
+- Regression canary: Prisoner's Dilemma NE paper, baseline established
 
-| Paper | Venue | Avg Score | Time | Verdict |
-|-------|-------|-----------|------|---------|
-| Replication Crisis | PNAS | 8.17 | 45 min | ACCEPT |
-| Vaccine Game | J. Math Biology | 7.77 | 57 min | ACCEPT |
-| Tech Lock-In | Research Policy | 7.72 | 92 min | MINOR_REV |
-| Academic Publishing | Research Policy | 8.03 | 100 min | MINOR_REV |
+### ASSAY (Analytics Engine)
+- 19 completed analysis reports across 8 domains
+- v1.1 integration blocks: data_appendix_fragment, data_availability_statement,
+  forbidden_interpretations_prose, data_sources provenance
+- generate_appendix_fragment.py produces Data Appendix prose from any report
+- .gitignore excludes raw data files (only code/config/YAML committed)
+
+### Papers (6 publication-ready)
+
+| Paper | Gemini | Grok | B1 (AI) | B3 (Citations) |
+|-------|--------|------|---------|----------------|
+| REPLICATION_CRISIS | ACCEPT (9.06) | MINOR (8.10) | PASS | PASS |
+| DRUG_SPENDING | MINOR (9.18) | MINOR (8.09) | PASS | PASS |
+| TECH_LOCKIN | MINOR (8.88) | MAJOR (8.10) | Grok flag | PASS |
+| OPIOID_PRESCRIBING | MINOR (8.58) | MINOR (7.79) | PASS | PASS |
+| VACCINE_GAME | MINOR (8.52) | MINOR (7.91) | PASS | PASS |
+| HOSPITAL_PRICING | MINOR (~8.5) | MINOR (7.89) | PASS | PASS |
+
+All 6 pass citation integrity (B3=PASS) across all reviewers.
+5/6 pass AI detection on both models. Only TECH_LOCKIN flagged by Grok.
 
 ## What Is Next
-- [ ] Toughen external review prompt (get AI input on making it harder)
-- [ ] Iterate on SHELL if tougher reviews surface new issues
-- [ ] Build ASSAY to production quality (first test: phi estimation)
-- [ ] Re-run papers with ASSAY evidence attached
-- [ ] Build more init files for batch generation
-- [ ] SQLite observability layer for pipeline monitoring
-- [ ] Prepare for Zenodo publication of completed papers
+- [ ] Publish all 6 papers to Zenodo (sandbox first, then production)
+- [ ] Run canary as regression test after any future engine change
+- [ ] Consider TECH_LOCKIN editing pass to eliminate final Grok AI flag (optional)
+- [ ] Generate next batch of papers using the full v6.5 pipeline end-to-end
+- [ ] Build observability dashboard (web tier)

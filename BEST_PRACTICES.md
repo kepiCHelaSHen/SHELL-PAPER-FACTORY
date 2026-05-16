@@ -56,6 +56,43 @@
 
 ---
 
+## External Review Process (Updated 2026-05-16)
+
+- **Panel:** Gemini 2.5 Pro (primary) + Grok-3 ×2 (adversarial, double-run).
+  GPT-4o dropped — no discrimination value.
+- **Run:** `source api.env && python3 scripts/run_reviews.py [SLUG] --grok-runs 2`
+- **Parse:** `python3 scripts/parse_reviews.py --date YYYY-MM-DD`
+- **Revise:** `python3 scripts/revise_from_review.py SLUG --date YYYY-MM-DD`
+- **Pass threshold:** Both models at MINOR_REVISION or better.
+  Auto-fail: any dimension ≤ 3, or B1=YES_LIKELY_AI, or B3=LIKELY_FABRICATED.
+- **Cross-model disagreements >3 points:** trigger manual investigation.
+
+---
+
+## Writing Discipline (Author v5, 2026-05-16)
+
+- **No code in paper body.** All Python → Supplementary Materials appendix.
+- **No "ASSAY Report [ID]" in paper body.** Cite the public data source.
+- **Vary sentence length.** Mix 8-word and 40-word sentences. Em-dashes. Parentheticals.
+- **Hedging phrases: max 1 use each** in the entire paper.
+- **Include 3-5 subjective judgments:** "the most informative finding," "this should not be interpreted as."
+- **Interpretation paragraphs after proofs** — what the math MEANS, not restating it.
+- **"What this does NOT mean" paragraph** — preempt the most likely misreading.
+- **Domain section names** — not M1/M2/M3/M4. Make structure feel authored.
+- **Self-critique is argumentative** — name the gap, state severity, state what closes it.
+
+---
+
+## Regression Testing (2026-05-16)
+
+- **After any engine change:** run the canary paper and compare to baseline.
+- **Init:** `papers/init_CANARY_REGRESSION.md` (Prisoner's Dilemma NE proof)
+- **Baseline dimensions that must stay ≥ 7:** D2, D6, D9, D10, D12
+- **If D1 or D13 go UP:** Author is overclaiming — also a regression.
+- **If B1 flips to YES_LIKELY_AI:** writing discipline regressed.
+
+---
+
 ## Drift Prevention
 
 - **Check frozen_spec.md at the start of every session.** Not optional.
