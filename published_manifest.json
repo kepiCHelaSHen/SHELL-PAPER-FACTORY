@@ -1,11 +1,62 @@
 {
-  "DRUG_SPENDING_2026_2026-05-15_003": {
-    "sandbox": {
-      "deposition_id": 500826,
-      "record_url": "https://sandbox.zenodo.org/record/500826",
-      "doi": "10.5072/zenodo.500826",
-      "published_at": "2026-05-16T02:26:14.884342"
+  "REPLICATION_CRISIS_2026_2026-05-15_003": {
+    "production": {
+      "deposition_id": 20228802,
+      "doi": "10.5281/zenodo.20228802",
+      "record_url": "https://zenodo.org/record/20228802",
+      "published_at": "2026-05-16T03:18:34.271157"
     },
-    "status": "sandbox_only"
+    "status": "published",
+    "doi": "10.5281/zenodo.20228802"
+  },
+  "DRUG_SPENDING_2026_2026-05-15_003": {
+    "production": {
+      "deposition_id": 20228808,
+      "doi": "10.5281/zenodo.20228808",
+      "record_url": "https://zenodo.org/record/20228808",
+      "published_at": "2026-05-16T03:18:43.301694"
+    },
+    "status": "published",
+    "doi": "10.5281/zenodo.20228808"
+  },
+  "OPIOID_PRESCRIBING_2026_2026-05-15_003": {
+    "production": {
+      "deposition_id": 20228810,
+      "doi": "10.5281/zenodo.20228810",
+      "record_url": "https://zenodo.org/record/20228810",
+      "published_at": "2026-05-16T03:18:49.896615"
+    },
+    "status": "published",
+    "doi": "10.5281/zenodo.20228810"
+  },
+  "VACCINE_GAME_2026_2026-05-15_002": {
+    "production": {
+      "deposition_id": 20228813,
+      "doi": "10.5281/zenodo.20228813",
+      "record_url": "https://zenodo.org/record/20228813",
+      "published_at": "2026-05-16T03:19:01.353589"
+    },
+    "status": "published",
+    "doi": "10.5281/zenodo.20228813"
+  },
+  "TECH_LOCKIN_2026_2026-05-15_003": {
+    "production": {
+      "deposition_id": 20228817,
+      "doi": "10.5281/zenodo.20228817",
+      "record_url": "https://zenodo.org/record/20228817",
+      "published_at": "2026-05-16T03:19:07.628982"
+    },
+    "status": "published",
+    "doi": "10.5281/zenodo.20228817"
+  },
+  "HOSPITAL_PRICING_2026_2026-05-15_003": {
+    "production": {
+      "deposition_id": 20228819,
+      "doi": "10.5281/zenodo.20228819",
+      "record_url": "https://zenodo.org/record/20228819",
+      "published_at": "2026-05-16T03:19:27.721980"
+    },
+    "status": "published",
+    "doi": "10.5281/zenodo.20228819"
   }
 }
