@@ -1,0 +1,66 @@
+community: autonomous-academic-research
+author:
+  name: "Rice, James P Jr."
+  affiliation: "Independent Researcher"
+license: cc-by-4.0
+publication_type: workingpaper
+base_keywords:
+  - autonomous research
+  - adversarial validation
+  - multi-agent systems
+  - THESIS framework
+notes_template: |
+  Generated autonomously by the THESIS framework (v6.5).
+  Validated through multi-agent adversarial review (Gemini 2.5 Pro + Grok-3).
+  External review methodology: 15 scored dimensions, 12 boolean forensic checks.
+  Validation framework: Rice (2026), DOI: 10.5281/zenodo.19217024
+
+papers:
+  - slug: REPLICATION_CRISIS_2026_2026-05-15_003
+    keywords:
+      - replication crisis
+      - publication bias
+      - meta-science
+      - Bayesian inference
+
+  - slug: DRUG_SPENDING_2026_2026-05-15_003
+    keywords:
+      - pharmaceutical economics
+      - Medicare Part D
+      - Pareto distribution
+      - spending concentration
+
+  - slug: OPIOID_PRESCRIBING_2026_2026-05-15_003
+    keywords:
+      - opioid prescribing
+      - rational addiction
+      - health economics
+      - PDMPs
+
+  - slug: VACCINE_GAME_2026_2026-05-15_002
+    keywords:
+      - vaccination
+      - game theory
+      - public health
+      - Nash equilibrium
+
+  - slug: TECH_LOCKIN_2026_2026-05-15_003
+    keywords:
+      - technology adoption
+      - lock-in
+      - switching costs
+      - EV transition
+
+  - slug: HOSPITAL_PRICING_2026_2026-05-15_003
+    keywords:
+      - hospital pricing
+      - charge-to-payment ratio
+      - health care markets
+      - price opacity
+
+quality_gates:
+  min_composite_score: 7.5
+  min_reviewers: 2
+  auto_fail_dimension_below: 3
+  block_on_ai_detection: false
+  block_on_citation_fabrication: true
