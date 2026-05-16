@@ -132,6 +132,31 @@ FLAG CONDITIONS:
   market-power story (larger hospitals have more negotiating leverage).
   Present this as a key finding.
 
+OVERIDENTIFICATION TEST (REQUIRED — addresses D5 non-falsifiability):
+  The model is exactly identified by construction (opacity parameter alpha
+  maps 1:1 to observed CPR). To make it FALSIFIABLE, use the volume-CPR
+  correlation as an OVERIDENTIFYING RESTRICTION:
+  
+  PREDICTION: If opacity enables markups, then hospitals with higher volume
+  (which proxies for market power) should have higher CPR, because market
+  power both enables opacity and prevents price discipline.
+  
+  TEST: The model predicts rho(volume, CPR) > 0. The ASSAY-computed value
+  is rho = 0.36 [0.32, 0.39]. If rho were <= 0, the opacity-market-power
+  channel would be falsified — high CPR would not correlate with market
+  power, contradicting the model's mechanism.
+  
+  SECOND TEST: DRG complexity as a predictor. The model predicts that
+  higher-complexity DRGs (where information asymmetry is greater) should
+  have higher CPR. Compare DRG 652 (kidney transplant, CPR=12.66) vs
+  DRG 470 (joint replacement, CPR=5.87) — the model predicts this ordering
+  because transplants have greater opacity (fewer providers, emergency nature,
+  higher complexity). If low-complexity DRGs had HIGHER CPR, the model's
+  opacity mechanism would be contradicted.
+  
+  The Author MUST present these tests explicitly and report whether the
+  predictions survive. If they fail, confront the failure honestly.
+
 ---
 
 ## CALIBRATION INSTRUCTIONS
