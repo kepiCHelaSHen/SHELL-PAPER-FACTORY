@@ -147,6 +147,41 @@ which confounds the geographic comparison" IS a valid rejection.
 - Is the Executive Summary consistent with the body?
 - Does the Limitations section address the actual limitations (not generic boilerplate)?
 
+### R16 — Formal Model Specification
+- If regression or statistical modeling is presented:
+  - Is the model equation stated formally?
+  - Is the estimation method named (OLS, MLE, REML)?
+  - Are diagnostics reported (R², F-stat, VIF, residual checks)?
+  - Is the coefficient table complete (estimate, SE, CI, p-value)?
+- If no formal model: is the analysis purely descriptive? If so, is this
+  acknowledged explicitly? FLAG if descriptive findings are presented with
+  the authority of modeled findings.
+
+### R17 — IRB / Ethics / Privacy Statement
+- Does the report include a statement about human subjects review?
+- For public data: cite the specific exemption (45 CFR 46.104(d)(4))
+- For proprietary data: cite the DUA and de-identification standard
+- If completely absent, FLAG. Expected in all clinical evidence.
+
+### R18 — Reference Adequacy
+- Does the report cite at least 15 substantive references?
+- Are key foundational works cited (CDC guidelines, Dartmouth Atlas, seminal
+  papers in the specific domain)?
+- Are references used to POSITION findings (not just name-dropped)?
+- If fewer than 10 references, REJECT. Between 10-15, FLAG.
+
+### R19 — Literature Engagement Depth
+- Does the literature review compare findings to prior work?
+- "Our finding of X is consistent with / contradicts / extends Y (Author, Year)"
+- If the literature section only summarizes prior work without comparing to
+  the current findings, FLAG.
+
+### R20 — Regression Diagnostics (if modeling present)
+- Is multicollinearity assessed (VIF reported)?
+- Are residuals checked for normality/heteroscedasticity?
+- For mixed-effects: is ICC reported? Variance components? Convergence?
+- If regression presented without diagnostics, REJECT.
+
 ---
 
 ## OUTPUT FORMAT

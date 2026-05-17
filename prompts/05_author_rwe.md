@@ -186,7 +186,66 @@ from the integration block.
 
 ---
 
-## RULE 6 — EXECUTIVE SUMMARY (WRITTEN LAST)
+## RULE 6 — FORMAL MODEL SPECIFICATION
+
+When the study includes regression or statistical modeling, present it formally:
+
+**6A — Model equation.** State the model in mathematical notation:
+  "Let y_i denote the opioid claims rate for provider i. We estimate:
+   y_i = β₀ + β₁log(volume_i) + β₂age_i + β₃risk_i + γ·specialty_i + δ·provider_type_i + ε_i"
+
+**6B — Estimation method.** State: OLS, mixed-effects, beta regression, etc.
+Include software, seed, and convergence status.
+
+**6C — Diagnostics.** Report R², F-statistic, VIF for multicollinearity,
+residual checks. If mixed-effects: ICC, variance components, convergence.
+
+**6D — Coefficient table.** Clinical-style table with:
+| Variable | Coefficient | SE | 95% CI | p-value |
+
+**6E — Interpretation in clinical terms.** Don't just report β₁ = -0.0095.
+Say: "Each doubling of prescription volume is associated with a 0.95
+percentage-point lower opioid prescribing rate, holding specialty and
+patient mix constant."
+
+---
+
+## RULE 7 — IRB AND PRIVACY STATEMENT
+
+Every RWE report MUST include an ethics/privacy statement:
+
+"This study used publicly available, de-identified, aggregate-level data
+published by the Centers for Medicare & Medicaid Services for public use.
+No individual patient records were accessed. This analysis does not require
+Institutional Review Board review per 45 CFR 46.104(d)(4) (publicly
+available data exemption)."
+
+If using proprietary data, adapt the statement to describe the data use
+agreement and de-identification standard (Safe Harbor or Expert Determination).
+
+---
+
+## RULE 8 — LITERATURE ENGAGEMENT
+
+The report must engage substantively with at least 15 relevant works.
+Not just cite them — position the findings against them:
+
+- "Barnett et al. (2017) found X at the county level; our provider-level
+  analysis reveals Y, which suggests Z"
+- "The CDC Guideline (Dowell et al. 2016) recommended X; our data shows
+  the post-guideline landscape looks like Y"
+
+Required engagement areas for opioid RWE:
+- CDC prescribing guidelines and subsequent updates
+- Dartmouth Atlas geographic variation literature
+- PDMP effectiveness studies
+- Provider-level prescribing variation studies
+- NP/PA scope-of-practice research
+- Opioid stewardship and monitoring programs
+
+---
+
+## RULE 9 — EXECUTIVE SUMMARY (WRITTEN LAST)
 
 The Executive Summary must:
 - State the study question in one sentence

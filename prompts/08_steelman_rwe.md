@@ -120,6 +120,25 @@ For the primary finding:
 
 After attacking all vectors, provide:
 
+### A13 — Model Specification Attack
+- Is the functional form appropriate? Why OLS and not Tobit (censored) or beta
+  regression (bounded outcome)? Why not quantile regression?
+- Are the right covariates included? What's omitted?
+- Does the model's R² justify the conclusions drawn from it?
+- Example: "R² = 0.30 means 70% of variance is unexplained. The model
+  captures specialty effects but misses everything else. Drawing policy
+  conclusions from a model that explains less than a third of variation
+  is premature."
+
+### A14 — Omitted Variable Bias Attack
+- What variables SHOULD be in the model but aren't?
+- Patient acuity beyond risk score (HCC is crude)
+- Practice setting (hospital vs clinic vs independent)
+- State-level formulary restrictions
+- Insurance type mix within Medicare (dual-eligible, LIS)
+- Pain diagnosis prevalence in provider's patient panel
+- Could omitted variables flip the sign of key coefficients?
+
 ### FATAL FLAWS (any of these = REJECT)
 - A confounder that could ENTIRELY explain the primary finding with no way to rule it out
 - A denominator error that reverses the direction of the main result
