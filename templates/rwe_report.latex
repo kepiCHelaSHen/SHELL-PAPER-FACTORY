@@ -1,0 +1,82 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{fontspec}
+\setmainfont{Segoe UI}
+\setsansfont{Segoe UI}
+\setmonofont{Consolas}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{parskip}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{gray}Opioid Prescribing Variation — RWE Report}
+\fancyhead[R]{\small\color{gray}Norstella}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\usepackage{xcolor}
+\definecolor{norstella}{RGB}{0,102,179}
+\definecolor{gray}{RGB}{139,148,158}
+
+\usepackage{titlesec}
+\titleformat{\section}{\Large\bfseries\color{norstella}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=norstella,urlcolor=norstella}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf}
+
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+% Fix pandoc longtable counter issue
+\makeatletter
+\def\longtable{\@ifnextchar[{\my@longtable}{\my@longtable[c]}}
+\makeatother
+\usepackage{calc}
+
+% Pandoc CSL compatibility
+$if(csl-refs)$
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newenvironment{CSLReferences}[2]{}{}
+$endif$
+
+\title{
+  \vspace{-1cm}
+  {\small\textcolor{gray}{REAL-WORLD EVIDENCE REPORT}}\\[0.3em]
+  \textbf{Geographic and Specialty Variation in Opioid Prescribing Among Medicare Part D Providers}\\[0.3em]
+  {\large A Cross-Sectional Analysis of 810,057 Prescribers, CY2023}
+}
+\author{
+  James P Rice Jr.\\
+  \small Norstella\\[0.3em]
+  \small\textcolor{gray}{Produced by the Autonomous Evidence Synthesis Engine v6.5}
+}
+\date{\small May 2026}
+
+\begin{document}
+\maketitle
+\thispagestyle{fancy}
+
+\tableofcontents
+\newpage
+
+$body$
+
+\end{document}
