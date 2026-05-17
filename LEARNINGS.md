@@ -463,4 +463,106 @@ After any engine change: run canary, compare scores to baseline.
 Threshold: D2/D6/D9/D10/D12 must stay >= 7.
 
 ### 14.5 Publication
-Zenodo upload via `src/publish_manager.py` (sandbox first, then production).
+Zenodo upload via `python -m src.zenodo` (sandbox → review gate → production).
+
+---
+
+## 15. Single-Pass vs Pipeline: A/B Test Results (Learned 2026-05-17)
+
+### 15.1 The Experiment
+Same RWE report, same data, same frozen spec. One version written by a single
+Author agent in one pass. The other went through the full adversarial pipeline
+(Peer Reviewer R1-R15 → Steelman A1-A12 → Editor E1-E24).
+
+### 15.2 Results
+- **Single-pass:** Gemini ACCEPT, six 10s, bold authorial voice
+- **Pipeline:** Gemini MINOR_REVISION, tighter methodology, Grok scored higher
+
+### 15.3 What the Pipeline Improved
+- D2 Math Rigor: Grok 7→9 (Steelman forced cleaner statistical claims)
+- D3 Methodology: Grok 8→9 (Peer Reviewer caught confounding gaps)
+- D5 Statistical: Grok 8→9 (multiple comparisons addressed)
+- D7 Literature: Both models +1 (Steelman forced better positioning)
+- D14 Robustness: Grok 8→9 (Peer Reviewer demanded more sensitivity checks)
+
+### 15.4 What the Pipeline Degraded
+- D1 Originality: Gemini 9→7 (hedging diluted the boldness of claims)
+- D8 Argumentation: Gemini 10→9 (caveats weakened the narrative flow)
+- D10 Precision: Gemini 10→9 (more words, less punch)
+- D13 Impact: Gemini 10→9 (qualified claims feel less actionable)
+
+### 15.5 The Takeaway
+The pipeline improves RIGOR but dampens VOICE. Both modes have value:
+- **Quick-turn (single-pass):** For internal decisions, demos, exploratory evidence.
+  Bold, actionable, fast. The data speaks for itself.
+- **Full pipeline:** For external deliverables, regulatory submissions, client reports.
+  Methodologically defensible, auditable, covers edge cases.
+
+Offer both modes. Don't force everything through the pipeline.
+
+### 15.6 For RWE Specifically
+The academic pipeline (M1/M2/M3/M4 milestones) is overkill for RWE reports.
+RWE reports don't have sequential proof dependencies. Use SINGLE_DOCUMENT mode:
+Author writes entire report → Peer Reviewer reviews whole document → Steelman
+attacks whole document → Editor polishes. No milestone gating needed.
+
+---
+
+## 16. RWE Agent Architecture (Learned 2026-05-17)
+
+### 16.1 Swappable Prompts, Same Engine
+The orchestrator, peer reviewer, steelman, editor, and review pipeline are
+universal. Only the Author prompt changes between output types:
+- `05_author.md` → Academic papers (theorem-style)
+- `05_author_rwe.md` → Clinical evidence reports
+
+The RWE pipeline also has specialized validators:
+- `06_peer_reviewer_rwe.md` → 15 methodology checks (R1-R15)
+- `08_steelman_rwe.md` → 12 hostile attack vectors (A1-A12)
+
+### 16.2 In-Memory Exploration Is the Key Advantage
+The volume-tier finding (pain specialists ↑, surgeons ↓) was discovered because
+the data was in memory and the analysis was frictionless. Nobody would have
+written that SQL query because nobody knew to ask the question.
+
+Database = answering known questions.
+In-memory = discovering unknown patterns.
+
+Prospector (in-memory) discovers. ASSAY formalizes. SHELL publishes.
+
+### 16.3 RWE Reports Don't Need the Full Academic Pipeline
+Descriptive evidence with strong data doesn't benefit much from 5 rounds of
+peer review. The data is the data. The pipeline adds most value when there
+are proofs that could be wrong, claims that could overclaim, or theoretical
+arguments that need stress-testing.
+
+For RWE: single-pass Author + one round of Peer Review + Steelman is optimal.
+
+---
+
+## 17. Zenodo Publishing Pipeline (Learned 2026-05-17)
+
+### 17.1 Architecture
+Modular package at `src/zenodo/`:
+- `config.py` — YAML config + token loading
+- `api.py` — ZenodoClient class (create, upload, metadata, publish, delete)
+- `quality_gates.py` — Pre-flight checks (scores, dimensions, B1/B3)
+- `metadata.py` — Build metadata from paper + config (HTML descriptions)
+- `pdf.py` — Pandoc + xelatex (graceful fallback chain)
+- `bundle.py` — Assemble upload bundle
+- `manifest.py` — Track published state
+- `verify_sandbox.py` — Automated sandbox checks
+- `cli.py` — Main orchestrator with interactive sandbox gate
+
+### 17.2 Key Gotchas
+- Zenodo descriptions must be HTML, not plain text (renders as blob otherwise)
+- Communities use review/submission requests in new Zenodo (InvenioRDM) — must
+  accept requests after publish if you own the community
+- Published depositions are PERMANENT — cannot delete, even on sandbox
+- First pandoc run is slow (MiKTeX downloads LaTeX packages on demand)
+- File upload names cannot contain directory separators (no `figures/fig1.png`)
+
+### 17.3 Workflow
+`python -m src.zenodo --sandbox-only` → inspect sandbox records →
+`python -m src.zenodo.verify_sandbox` → if clean →
+`python -m src.zenodo` → sandbox → review gate → type 'publish' → production
