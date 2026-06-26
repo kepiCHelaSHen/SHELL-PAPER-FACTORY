@@ -204,22 +204,21 @@ print("\n=== F. SUPPRESSION SENSITIVITY ===")
 # CMS suppresses providers with < 11 claims. We have 810K who passed.
 # Estimate: ~100K-200K may be suppressed. Test with imputed 0% opioid rate.
 n_visible = len(df)
+scenarios = []
 for n_suppressed in [50000, 100000, 200000]:
     # Add zero-rate providers
     adjusted_total_claims = df['Tot_Clms'].sum() + n_suppressed * df['Tot_Clms'].median()
     adjusted_opioid_claims = df['Opioid_Tot_Clms'].sum()  # suppressed assumed 0
     adjusted_rate = adjusted_opioid_claims / adjusted_total_claims
+    scenarios.append({'suppressed': n_suppressed, 'adjusted_rate': round(adjusted_rate*100, 3)})
     print(f"With {n_suppressed:,} suppressed (rate=0): national rate = {adjusted_rate*100:.3f}% (vs {0.0416*100:.2f}%)")
 
 suppression = {
     'visible_providers': n_visible,
-    'scenarios': [
-        {'suppressed': 50000, 'adjusted_rate': round(adjusted_rate*100, 3)},
-        {'suppressed': 100000, 'adjusted_rate': round(adjusted_rate*100, 3)},
-        {'suppressed': 200000, 'adjusted_rate': round(adjusted_rate*100, 3)},
-    ]
+    'scenarios': scenarios,
 }
-json.dump(suppression, open(OUT / "suppression_sensitivity.json", "w"), indent=2)
+with open(OUT / "suppression_sensitivity.json", "w") as f:
+    json.dump(suppression, f, indent=2)
 
 print("\n=== G. OUTLIER STATE DISTRIBUTION ===")
 outlier_states = df[df['is_outlier']].groupby('Prscrbr_State_Abrvtn').size().sort_values(ascending=False)

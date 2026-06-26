@@ -19,7 +19,7 @@ import sys
 from pathlib import Path
 from datetime import date
 
-BASE = Path("C:/PROJECTS/SHELL")
+BASE = Path(__file__).resolve().parent.parent
 
 
 def extract_section(text: str, heading_pattern: str) -> str:

@@ -16,10 +16,8 @@ class ZenodoAPIError(Exception):
         super().__init__(f"Zenodo API {status_code}: {message}")
 
 
-# Shared SSL context (corporate environments)
+# Shared SSL context — use system defaults (verifies certificates)
 _ctx = ssl.create_default_context()
-_ctx.check_hostname = False
-_ctx.verify_mode = ssl.CERT_NONE
 
 
 class ZenodoClient:

@@ -13,6 +13,7 @@ Usage:
 import argparse
 import re
 from dataclasses import dataclass, field
+from filelock import FileLock
 from pathlib import Path
 from typing import Optional
 
@@ -333,6 +334,11 @@ def load_existing_ids(path: Path) -> tuple[set[str], int]:
         return set(), 0
 
     text = path.read_text(encoding="utf-8", errors="replace")
+    return _extract_ids_from_text(text)
+
+
+def _extract_ids_from_text(text: str) -> tuple[set[str], int]:
+    """Extract IDs and max number from already-loaded text (avoids re-reading file under lock)."""
     ids = set(re.findall(r"\[([A-Z]+-\d+)\]", text))
     numbers = [int(re.search(r"\d+", i).group()) for i in ids if re.search(r"\d+", i)]
     max_num = max(numbers) if numbers else 0
@@ -361,91 +367,102 @@ def is_duplicate(title: str, paper: str, existing_text: str) -> Optional[str]:
 
 def increment_recurrence(log_path: Path, finding_id: str) -> None:
     """Increment the recurrence count for an existing finding."""
-    text = log_path.read_text(encoding="utf-8", errors="replace")
-    pattern = rf"(\[{re.escape(finding_id)}\].*?Recurrence:\*\*\s*)(\d+)"
-    match = re.search(pattern, text, re.DOTALL)
-    if match:
-        old_count = int(match.group(2))
-        text = text[:match.start(2)] + str(old_count + 1) + text[match.end(2):]
-        log_path.write_text(text, encoding="utf-8")
+    lock = FileLock(str(log_path) + ".lock", timeout=30)
+    with lock:
+        text = log_path.read_text(encoding="utf-8", errors="replace")
+        pattern = rf"(\[{re.escape(finding_id)}\].*?Recurrence:\*\*\s*)(\d+)"
+        match = re.search(pattern, text, re.DOTALL)
+        if match:
+            old_count = int(match.group(2))
+            text = text[:match.start(2)] + str(old_count + 1) + text[match.end(2):]
+            log_path.write_text(text, encoding="utf-8")
 
 
 def append_finding(finding: Finding, log_path: Path) -> str:
     """Append a finding under its category header. Returns the assigned ID."""
-    text = log_path.read_text(encoding="utf-8", errors="replace")
+    lock = FileLock(str(log_path) + ".lock", timeout=30)
+    with lock:
+        text = log_path.read_text(encoding="utf-8", errors="replace")
 
-    # Check for duplicate
-    dup_id = is_duplicate(finding.title, finding.paper, text)
-    if dup_id:
-        increment_recurrence(log_path, dup_id)
-        return dup_id
+        # Check for duplicate — increment recurrence inline (already holding lock)
+        dup_id = is_duplicate(finding.title, finding.paper, text)
+        if dup_id:
+            pattern = rf"(\[{re.escape(dup_id)}\].*?Recurrence:\*\*\s*)(\d+)"
+            match = re.search(pattern, text, re.DOTALL)
+            if match:
+                old_count = int(match.group(2))
+                text = text[:match.start(2)] + str(old_count + 1) + text[match.end(2):]
+                log_path.write_text(text, encoding="utf-8")
+            return dup_id
 
-    # Assign ID
-    _, max_num = load_existing_ids(log_path)
-    finding.id = f"F-{max_num + 1:03d}"
+        # Assign ID from already-loaded text (avoid re-reading outside lock)
+        _, max_num = _extract_ids_from_text(text)
+        finding.id = f"F-{max_num + 1:03d}"
 
-    entry = (
-        f"\n### [{finding.id}] {finding.title}\n"
-        f"- **Paper:** {finding.paper} | **Run:** {finding.run} | **Severity:** {finding.severity}\n"
-        f"- {finding.detail}\n"
-        f"- **Recurrence:** {finding.recurrence}\n"
-    )
+        entry = (
+            f"\n### [{finding.id}] {finding.title}\n"
+            f"- **Paper:** {finding.paper} | **Run:** {finding.run} | **Severity:** {finding.severity}\n"
+            f"- {finding.detail}\n"
+            f"- **Recurrence:** {finding.recurrence}\n"
+        )
 
-    # Find the category header and insert before the next category
-    cat_pattern = rf"(## {re.escape(finding.category)}\n)"
-    cat_match = re.search(cat_pattern, text)
-    if cat_match:
-        insert_pos = cat_match.end()
-        # Find next ## header
-        next_header = re.search(r"\n## ", text[insert_pos:])
-        if next_header:
-            insert_pos = insert_pos + next_header.start()
+        # Find the category header and insert before the next category
+        cat_pattern = rf"(## {re.escape(finding.category)}\n)"
+        cat_match = re.search(cat_pattern, text)
+        if cat_match:
+            insert_pos = cat_match.end()
+            # Find next ## header
+            next_header = re.search(r"\n## ", text[insert_pos:])
+            if next_header:
+                insert_pos = insert_pos + next_header.start()
+            else:
+                insert_pos = len(text)
+            text = text[:insert_pos] + entry + text[insert_pos:]
         else:
-            insert_pos = len(text)
-        text = text[:insert_pos] + entry + text[insert_pos:]
-    else:
-        # Category doesn't exist yet, append at end
-        text += f"\n## {finding.category}\n{entry}"
+            # Category doesn't exist yet, append at end
+            text += f"\n## {finding.category}\n{entry}"
 
-    log_path.write_text(text, encoding="utf-8")
-    return finding.id
+        log_path.write_text(text, encoding="utf-8")
+        return finding.id
 
 
 def append_dead_end(de: DeadEnd, log_path: Path) -> str:
     """Append a dead-end under its type tag header. Returns the assigned ID."""
-    text = log_path.read_text(encoding="utf-8", errors="replace")
+    lock = FileLock(str(log_path) + ".lock", timeout=30)
+    with lock:
+        text = log_path.read_text(encoding="utf-8", errors="replace")
 
-    # Check for duplicate
-    dup_id = is_duplicate(de.title, de.paper, text)
-    if dup_id:
-        return dup_id
+        # Check for duplicate
+        dup_id = is_duplicate(de.title, de.paper, text)
+        if dup_id:
+            return dup_id
 
-    # Assign ID
-    _, max_num = load_existing_ids(log_path)
-    de.id = f"DE-{max_num + 1:03d}"
+        # Assign ID from already-loaded text (avoid re-reading outside lock)
+        _, max_num = _extract_ids_from_text(text)
+        de.id = f"DE-{max_num + 1:03d}"
 
-    entry = (
-        f"\n### [{de.id}] {de.title}\n"
-        f"- **Paper:** {de.paper} | **Version:** {de.version}\n"
-        f"- **Tried:** {de.tried}\n"
-        f"- **Failed:** {de.failed}\n"
-    )
+        entry = (
+            f"\n### [{de.id}] {de.title}\n"
+            f"- **Paper:** {de.paper} | **Version:** {de.version}\n"
+            f"- **Tried:** {de.tried}\n"
+            f"- **Failed:** {de.failed}\n"
+        )
 
-    cat_pattern = rf"(## {re.escape(de.type_tag)}\n)"
-    cat_match = re.search(cat_pattern, text)
-    if cat_match:
-        insert_pos = cat_match.end()
-        next_header = re.search(r"\n## ", text[insert_pos:])
-        if next_header:
-            insert_pos = insert_pos + next_header.start()
+        cat_pattern = rf"(## {re.escape(de.type_tag)}\n)"
+        cat_match = re.search(cat_pattern, text)
+        if cat_match:
+            insert_pos = cat_match.end()
+            next_header = re.search(r"\n## ", text[insert_pos:])
+            if next_header:
+                insert_pos = insert_pos + next_header.start()
+            else:
+                insert_pos = len(text)
+            text = text[:insert_pos] + entry + text[insert_pos:]
         else:
-            insert_pos = len(text)
-        text = text[:insert_pos] + entry + text[insert_pos:]
-    else:
-        text += f"\n## {de.type_tag}\n{entry}"
+            text += f"\n## {de.type_tag}\n{entry}"
 
-    log_path.write_text(text, encoding="utf-8")
-    return de.id
+        log_path.write_text(text, encoding="utf-8")
+        return de.id
 
 
 # --- Backfill ---

@@ -28,7 +28,7 @@ from datetime import date
 import urllib.request
 import ssl
 
-BASE = Path("C:/PROJECTS/SHELL")
+BASE = Path(__file__).resolve().parent.parent
 DATE = date.today().isoformat()
 
 # Load API keys — check env first, fall back to api.env
@@ -46,10 +46,8 @@ def load_key(env_name):
 XAI_KEY = load_key("XAI_API_KEY")
 GOOGLE_KEY = load_key("GOOGLE_API_KEY")
 
-# SSL context for environments with corporate proxies
+# SSL context — use system defaults (verifies certificates)
 ctx = ssl.create_default_context()
-ctx.check_hostname = False
-ctx.verify_mode = ssl.CERT_NONE
 
 # Review prompt — loaded once, paper content appended per call
 REVIEW_PROMPT = (BASE / "prompts" / "09_external_review.md").read_text(encoding="utf-8")
@@ -70,7 +68,13 @@ def call_openai_compatible(url, api_key, model, prompt, max_tokens):
     })
     with urllib.request.urlopen(req, timeout=600, context=ctx) as resp:
         data = json.loads(resp.read().decode("utf-8"))
-    return data["choices"][0]["message"]["content"]
+    choices = data.get("choices", [])
+    if not choices:
+        return "ERROR: Empty response from API (no choices)"
+    content = choices[0].get("message", {}).get("content", "")
+    if not content:
+        return "ERROR: No content in API response"
+    return content
 
 
 def call_gemini(prompt, max_tokens):
@@ -80,18 +84,25 @@ def call_gemini(prompt, max_tokens):
         "contents": [{"parts": [{"text": prompt}]}],
         "generationConfig": {"temperature": 0.3, "maxOutputTokens": max_tokens},
     }).encode("utf-8")
-    req = urllib.request.Request(url, data=body, headers={"Content-Type": "application/json"})
 
     # Gemini rate-limits aggressively — retry with backoff
     for attempt in range(3):
+        # Recreate Request each attempt (body stream is consumed after first use)
+        req = urllib.request.Request(url, data=body, headers={"Content-Type": "application/json"})
         try:
             with urllib.request.urlopen(req, timeout=600, context=ctx) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
-            return data["candidates"][0]["content"]["parts"][0]["text"]
+            candidates = data.get("candidates", [])
+            if not candidates:
+                return "ERROR: Empty response from Gemini (no candidates)"
+            parts = candidates[0].get("content", {}).get("parts", [])
+            if not parts or not parts[0].get("text"):
+                return "ERROR: No text in Gemini response"
+            return parts[0]["text"]
         except urllib.request.HTTPError as e:
-            if e.code == 503 and attempt < 2:
+            if e.code in (429, 503) and attempt < 2:
                 wait = 30 * (attempt + 1)
-                print(f"    Gemini 503, retrying in {wait}s...", flush=True)
+                print(f"    Gemini {e.code}, retrying in {wait}s...", flush=True)
                 time.sleep(wait)
             else:
                 raise

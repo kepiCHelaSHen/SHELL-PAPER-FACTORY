@@ -39,27 +39,6 @@ LOGS_DIR = SHELL_ROOT / "logs"
 CLAUDE_CMD = "claude.cmd" if sys.platform == "win32" else "claude"
 
 
-class TeeWriter:
-    """Writes to both a file and the original stream (stdout/stderr)."""
-
-    def __init__(self, log_file: Path, original_stream):
-        self.log_file = open(log_file, "a", encoding="utf-8", errors="replace")
-        self.original = original_stream
-
-    def write(self, text):
-        self.original.write(text)
-        self.original.flush()
-        self.log_file.write(text)
-        self.log_file.flush()
-
-    def flush(self):
-        self.original.flush()
-        self.log_file.flush()
-
-    def close(self):
-        self.log_file.close()
-
-
 def log(msg: str, log_file: Path | None = None):
     """Print a message and optionally append it to a log file."""
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -162,7 +141,12 @@ def run_paper(init_file: Path, run_num: int, meta_log: Path) -> Path | None:
         [CLAUDE_CMD, "--dangerously-skip-permissions", str(init_file)],
         cwd=str(SHELL_ROOT),
     )
-    process.wait()
+    try:
+        process.wait(timeout=3600)
+    except subprocess.TimeoutExpired:
+        process.terminate()
+        log("WARNING: Claude CLI timed out after 60 minutes — terminating", meta_log)
+        process.wait(timeout=30)
     returncode = process.returncode
 
     # Restore original signal handler

@@ -75,7 +75,6 @@ X = pd.concat([
 ], axis=1)
 X = sm.add_constant(X)
 y = model_df['opioid_claims_rate'].reset_index(drop=True)
-y = model_df['opioid_claims_rate']
 
 ols_model = sm.OLS(y, X).fit()
 print(f"R-squared: {ols_model.rsquared:.4f}")

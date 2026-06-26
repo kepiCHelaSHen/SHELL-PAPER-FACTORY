@@ -27,7 +27,7 @@ except ImportError:
 # ---------------------------------------------------------------------------
 CROSSREF_API = "https://api.crossref.org/works"
 CROSSREF_HEADERS = {
-    "User-Agent": "VerifyCitations/1.0 (mailto:your-email@example.com)"
+    "User-Agent": "VerifyCitations/1.0 (mailto:ricejam@outlook.com)"
 }
 REQUEST_DELAY_S = 1.0
 MATCH_THRESHOLD = 0.45  # minimum combined similarity to call it VERIFIED
@@ -434,8 +434,8 @@ def main() -> None:
     # --- Generate report ---
     report = generate_report(paper_path, citations, results)
 
-    # Write to outputs/ in current working directory (the project root)
-    out_dir = os.path.join(os.getcwd(), "outputs")
+    # Write to outputs/ alongside the paper file
+    out_dir = os.path.join(os.path.dirname(os.path.abspath(paper_path)), "outputs")
     os.makedirs(out_dir, exist_ok=True)
 
     out_path = os.path.join(out_dir, "citation_verification.md")
