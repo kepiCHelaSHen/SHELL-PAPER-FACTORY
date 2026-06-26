@@ -1,5 +1,5 @@
 # LEARNINGS — Accumulated Operational Knowledge
-# Updated: 2026-05-15
+# Updated: 2026-06-26
 # Read this before writing any init file, modifying the pipeline, or running papers.
 
 ---
