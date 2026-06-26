@@ -1,8 +1,8 @@
 # SHELL v6.5 — Current Status
-# Updated: 2026-05-16
+# Updated: 2026-06-26
 
-Phase:   PUBLICATION — All 6 papers at MINOR_REVISION or better
-Mode:    ZENODO PUBLICATION PREP
+Phase:   MAINTENANCE — Engine fixes, documentation sync, preparing for v7
+Mode:    POST-PUBLICATION CLEANUP
 
 ## What Is Done
 
@@ -23,7 +23,7 @@ Mode:    ZENODO PUBLICATION PREP
 - generate_appendix_fragment.py produces Data Appendix prose from any report
 - .gitignore excludes raw data files (only code/config/YAML committed)
 
-### Papers (6 publication-ready)
+### Papers (6 published to Zenodo with DOIs)
 
 | Paper | Gemini | Grok | B1 (AI) | B3 (Citations) |
 |-------|--------|------|---------|----------------|
@@ -37,9 +37,28 @@ Mode:    ZENODO PUBLICATION PREP
 All 6 pass citation integrity (B3=PASS) across all reviewers.
 5/6 pass AI detection on both models. Only TECH_LOCKIN flagged by Grok.
 
+### Additional Papers
+- RWE_OPIOID_VARIATION: 4 runs, Gemini ACCEPT (seven 10s, min 9)
+- RWE_OPIOID_VARIATION_VALIDATED: Pipeline-validated A/B test variant
+- CANARY_REGRESSION: Baseline established for regression testing
+
+### Engine Fixes Applied (2026-06-26)
+- CR-1: Fixed ASSAY citation contradiction (Peer Reviewer U8e vs Author Rule 5F)
+- Renumbered duplicate RULE 6 in Author prompt (now RULE 6 figures, RULE 7 claims)
+- Fixed LEARNINGS.md example to use public-source citation format
+- Fixed CHAIN_PROMPT template to reflect Claude-only v5 pipeline (was Grok/GPT-4o)
+- Fixed Steelman RWE verdict rubric ordering (was before A13/A14, now after)
+- Updated prompts/README.md init file references (removed nonexistent, added actual)
+- Added .obsidian/ to .gitignore
+
 ## What Is Next
-- [ ] Publish all 6 papers to Zenodo (sandbox first, then production)
-- [ ] Run canary as regression test after any future engine change
+- [x] Publish all 6 papers to Zenodo — DONE (DOIs assigned)
+- [x] Fix pipeline-breaking ASSAY citation contradiction — DONE
+- [x] Fix engine prompt inconsistencies — DONE
+- [ ] Rotate API keys before next canary run
+- [ ] Run canary as regression test to validate engine fixes
 - [ ] Consider TECH_LOCKIN editing pass to eliminate final Grok AI flag (optional)
-- [ ] Generate next batch of papers using the full v6.5 pipeline end-to-end
+- [ ] v7 Phase 2: quality improvements (formalism budget, hedging budget, dedup agent)
+- [ ] v7 Phase 3: PROSPECT → ASSAY → SHELL closed loop (no manual handoffs)
 - [ ] Build observability dashboard (web tier)
+- [ ] Migrate from CLI to API when ready for production runs

@@ -336,7 +336,7 @@ Do not reference figures you do not provide code for.
 
 ---
 
-## RULE 6 — CLAIMS VS. SUPPORT
+## RULE 7 — CLAIMS VS. SUPPORT
 
 Make only claims the proof supports. If the proof shows X, claim X.
 Do not claim X+1 because it sounds better.
@@ -349,7 +349,7 @@ Do not use: "proves" when you mean "suggests."
 
 ---
 
-## RULE 7 — NO REDUNDANT RESTATEMENTS
+## RULE 8 — NO REDUNDANT RESTATEMENTS
 
 Every time you restate the core result, it must add a new logical layer.
 The Abstract states it. The theorem proves it. The extension generalizes it.
@@ -361,7 +361,7 @@ what new layer does this restatement add? If the answer is "none," delete it.
 
 ---
 
-## RULE 8 — TIERED DEFINITIONS
+## RULE 9 — TIERED DEFINITIONS
 
 Standard textbook definitions get abbreviated treatment — one sentence, no
 ceremony. Novel objects introduced by this paper get full formal rigor.
@@ -378,7 +378,7 @@ Format:
 
 ---
 
-## RULE 9 — CONTEXTUAL ANCHORS
+## RULE 10 — CONTEXTUAL ANCHORS
 
 Any constant, threshold, or empirical value cited in a Definition must have a
 citation or brief justification at first use. Not later in the paper. Not in a
@@ -409,6 +409,6 @@ Return the full revised section.
 - Proofs in italic: *Proof.* ... ∎
 - Tables for data comparisons and payoff matrices
 - Figure references as: [Figure N: description] — every reference must have
-  accompanying Python code or data table immediately following (see RULE 5)
+  accompanying Python code or data table immediately following (see RULE 6)
 - No HTML. No LaTeX blocks. Math inline with standard notation.
 - No word count targets. Write as long as the science requires. No filler.

@@ -117,8 +117,12 @@ When ASSAY empirical data has been provided, check ALL of the following:
     ASSAY values are computed from data with CIs. If the Author treats them as
     assumptions: REJECT with instruction to use the computed values as computed.
 
-(e) **ASSAY report cited.** Is the specific ASSAY report ID cited for every
-    ASSAY-derived number? (e.g., "ASSAY Report PHI_EST, Table 1"). If not: REJECT.
+(e) **ASSAY values sourced.** Is every ASSAY-derived number traceable to a
+    public data source citation and a Data Appendix reference? (e.g., "CMS
+    Medicare Part D Spending by Drug, 2023; see Data Appendix for computation
+    details"). ASSAY report IDs must NOT appear in the paper body — they belong
+    in the Data Appendix only (see Author Rule 5F, Editor E24). If ASSAY-derived
+    values lack a public data source citation: REJECT.
 
 ---
 

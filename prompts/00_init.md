@@ -146,10 +146,11 @@ Contents:
 
   ## Confirmed Design Decisions
   Spec locked: frozen_spec.md
-  Pipeline: [PIPELINE] — multi-model triangulation, milestone-by-milestone gating
-  Author: Grok-3 (xAI, temp 0.7) — generation
-  Peer Reviewer: GPT-4o (OpenAI, temp 0.2) — validation
-  Editor: Claude — editorial quality and orchestration
+  Pipeline: v5 agent dispatch — Claude-only, milestone-by-milestone gating
+  Author: Claude (dispatched agent, fresh context per milestone)
+  Peer Reviewer: Claude (dispatched agent, binary ACCEPT/REJECT)
+  Steelman: Claude (dispatched agent, GATING for M1/M2, ADVISORY for M3/M4)
+  Editor: Claude (dispatched agent, editorial quality checks E1-E24)
   Review format: Markdown
 
   ## Milestones

@@ -26,12 +26,19 @@
 |------|---------|---------|
 | `00_init.md` | Generic project setup wizard | `claude --dangerously-skip-permissions prompts/00_init.md` |
 
-Pre-filled paper init files live in `papers/`:
+Pre-filled paper init files live in `papers/`. Current init files:
 
 | File | Purpose | Run how |
 |------|---------|---------|
-| `papers/init_common_knowledge.md` | Pre-filled: Common Knowledge paper | `claude --dangerously-skip-permissions papers/init_common_knowledge.md` |
-| `papers/init_fermi.md` | Pre-filled: Fermi Paradox paper | `claude --dangerously-skip-permissions papers/init_fermi.md` |
+| `papers/init_REPLICATION_CRISIS_2026.md` | Replication Crisis paper | `claude --dangerously-skip-permissions papers/init_REPLICATION_CRISIS_2026.md` |
+| `papers/init_DRUG_SPENDING_2026.md` | Drug Spending paper | `claude --dangerously-skip-permissions papers/init_DRUG_SPENDING_2026.md` |
+| `papers/init_TECH_LOCKIN_2026.md` | Tech Lock-in paper | `claude --dangerously-skip-permissions papers/init_TECH_LOCKIN_2026.md` |
+| `papers/init_OPIOID_PRESCRIBING_2026.md` | Opioid Prescribing paper | `claude --dangerously-skip-permissions papers/init_OPIOID_PRESCRIBING_2026.md` |
+| `papers/init_VACCINE_GAME_2026.md` | Vaccine Game Theory paper | `claude --dangerously-skip-permissions papers/init_VACCINE_GAME_2026.md` |
+| `papers/init_HOSPITAL_PRICING_2026.md` | Hospital Pricing paper | `claude --dangerously-skip-permissions papers/init_HOSPITAL_PRICING_2026.md` |
+| `papers/init_CANARY_REGRESSION.md` | Regression test canary | `claude --dangerously-skip-permissions papers/init_CANARY_REGRESSION.md` |
+| `papers/init_RWE_OPIOID_VARIATION.md` | RWE Opioid Variation report | `claude --dangerously-skip-permissions papers/init_RWE_OPIOID_VARIATION.md` |
+| `papers/init_RWE_OPIOID_VARIATION_VALIDATED.md` | RWE Opioid (pipeline-validated) | `claude --dangerously-skip-permissions papers/init_RWE_OPIOID_VARIATION_VALIDATED.md` |
 
 ## Templates (copy and fill)
 

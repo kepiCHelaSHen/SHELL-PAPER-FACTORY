@@ -13,9 +13,10 @@
   and TEST the theoretical model's predictions.
 - BAD: "The ASSAY report found phi = 7.39 for psychology. Our model addresses
   publication bias." (decorative)
-- GOOD: "Setting phi = 7.39 (ASSAY Report PHI_EST, 95% CI [5.0, 10.5]) in our
-  threshold formula yields phi* = 2.0 for psychology, confirming that the field
-  operates above its critical threshold." (calibrated)
+- GOOD: "Setting phi = 7.39 (CMS Medicare Provider Utilization, 2023; 95% CI
+  [5.0, 10.5]; see Data Appendix) in our threshold formula yields phi* = 2.0
+  for psychology, confirming that the field operates above its critical
+  threshold." (calibrated, cites public source per Rule 5F)
 
 ### 1.2 Sanity Check ASSAY Values Against Model Domains
 - Before putting any ASSAY value in an init, verify it falls within the model's

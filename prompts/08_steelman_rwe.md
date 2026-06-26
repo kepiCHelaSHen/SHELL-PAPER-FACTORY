@@ -116,10 +116,6 @@ For the primary finding:
 
 ---
 
-## VERDICT RUBRIC
-
-After attacking all vectors, provide:
-
 ### A13 — Model Specification Attack
 - Is the functional form appropriate? Why OLS and not Tobit (censored) or beta
   regression (bounded outcome)? Why not quantile regression?
@@ -138,6 +134,12 @@ After attacking all vectors, provide:
 - Insurance type mix within Medicare (dual-eligible, LIS)
 - Pain diagnosis prevalence in provider's patient panel
 - Could omitted variables flip the sign of key coefficients?
+
+---
+
+## VERDICT RUBRIC
+
+After attacking all vectors (A1-A14), classify each finding:
 
 ### FATAL FLAWS (any of these = REJECT)
 - A confounder that could ENTIRELY explain the primary finding with no way to rule it out
@@ -169,6 +171,8 @@ After attacking all vectors, provide:
 | A2 Denominator | ... | ... |
 | ... | ... | ... |
 | A12 Data Provenance | ... | ... |
+| A13 Model Specification | ... | ... |
+| A14 Omitted Variable Bias | ... | ... |
 
 ### Detailed Attacks (for SERIOUS and FATAL only)
 [Full paragraph per attack vector that scored SERIOUS or FATAL]
