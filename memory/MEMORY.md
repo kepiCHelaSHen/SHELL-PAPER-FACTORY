@@ -1,0 +1,16 @@
+- [User role](user_role.md) — Expert DBA, C-Suite IT exec. Skip basics, frame infra discussions at enterprise level.
+- [Norstella context](project_norstella.md) — Leads RWD at Norstella. SHELL/THESIS is internal tool POC. ELT pitch for Suzanne Caruso prepared.
+- [University connections](user_connections.md) — Mother retired professor, chaired at Brown and Akron. Warm intros to university research departments.
+- [API migration timing](project_api_migration.md) — Using CLI for dev, switch to API when papers converge on Run 1. Proactively recommend when ready.
+- [Product branding](project_branding.md) — SHELL → THESIS rename + ASSAY analytics engine. Don't rename yet, wait for marketing readiness.
+- [No manual workarounds](feedback_no_manual_workarounds.md) — Never suggest "just do it manually." Fix the system. The product IS the automation.
+- [Fix root causes](feedback_fix_root_cause.md) — Never hack around broken components. If Steelman is wrong, fix the Steelman. Don't bypass it.
+- [NEVER suggest manual steps](feedback_never_suggest_manual.md) — Zero tolerance. Every response must be a system fix.
+- [Pipeline observability](project_observability.md) — User needs real-time dashboard, not scattered log files. Core product requirement for web tier.
+- [Init quality costs money](feedback_init_quality.md) — Every bad init = $25-75 wasted. Sanity check ASSAY values against model domains.
+- [Test ONE before batching](feedback_test_one_first.md) — NEVER launch 8 papers without testing 1 first. Has cost $175+.
+- [ASSAY plan written](project_assay_plan.md) — Full architecture at C:\PROJECTS\ASSAY_PLAN.md.
+- [User investing real money](user_investment.md) — Added $1K to Claude for runs. Token efficiency is real spend.
+- [Single-pass vs pipeline](feedback_single_pass_vs_pipeline.md) — Pipeline improves rigor, dampens voice. Offer both modes. Don't force full pipeline on everything.
+- [Prospector project](project_prospector.md) — In-memory data exploration (50GB capacity). Discovers patterns SQL can't. Architecture: Prospector→ASSAY→SHELL.
+- [Bladder cancer RWE](project_bladder_cancer_rwe.md) — Norstella NLP data (25M rows, 8 tables, 94%+ accuracy). BCG-unresponsive report first. Pharmaverse for FDA-standard TLFs. Work on work machine with Redshift MCP.
